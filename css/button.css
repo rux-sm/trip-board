@@ -10,6 +10,41 @@
    #7  Form action containers
    ========================================================================== */
 
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --rux-btn-bg-primary:   oklch(from var(--rux-color-blue) 50% c h);
+  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 50% c h);
+  --rux-btn-bg-danger:    oklch(from var(--rux-color-red)  50% c h);
+  --rux-btn-text:         var(--rux-color-white);
+  --rux-btn-hover-lift:   0.1;
+
+  --rux-btn-height:      32px;
+  --rux-btn-radius:      var(--rux-radius-2);
+  --rux-btn-padding:     0 16px;
+  --rux-btn-gap:         8px;
+
+  --rux-btn-font-family: var(--rux-font-sans);
+  --rux-btn-font-size:   var(--rux-size-4);
+  --rux-btn-font-weight: var(--rux-weight-regular);
+
+  --rux-btn-shadow-inset:     0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --rux-btn-shadow-active:    inset 0 2px 4px rgba(0, 0, 0, 1);
+  --rux-btn-shadow-active-sm: inset 0 2px 4px rgba(0, 0, 0, 1);
+
+  --rux-btn-icon-size: var(--rux-size-6);
+  --rux-btn-icon-fill: 1;
+  --rux-btn-icon-wght: 400;
+  --rux-btn-icon-grad: 0;
+  --rux-btn-icon-opsz: 20;
+
+  --rux-btn-square-icon-size: 22px;
+  --rux-btn-square-icon-fill: 0;
+  --rux-btn-square-icon-wght: 400;
+  --rux-btn-square-icon-grad: 0;
+  --rux-btn-square-icon-opsz: 24;
+}
+
 /* ── 1. Element Reset ───────────────────────────────────────────────────── */
 
 button {
@@ -21,24 +56,24 @@ button {
 /* ── 2. Base ─────────────────────────────────────────────────────────────── */
 
 .rux-btn {
-  --btn-background:        var(--rux-button-secondary-bg);
-  --btn-text:              var(--rux-button-text);
+  --btn-background:        var(--rux-btn-bg-secondary);
+  --btn-text:              var(--rux-btn-text);
   --btn-border:            transparent;
-  --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-button-hover)) c h);
+  --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-btn-hover-lift)) c h);
   --btn-active-background: oklch(from var(--btn-background) calc(l - 0.05) c h);
 
   box-sizing:          border-box;
   display:             inline-flex;
   align-items:         center;
   justify-content:     center;
-  gap:                 8px;
-  height:              32px;
-  padding:             0 16px;
+  gap:                 var(--rux-btn-gap);
+  height:              var(--rux-btn-height);
+  padding:             var(--rux-btn-padding);
   min-width:           0px;
 
-  font-family:         var(--font-sans);
-  font-size:           var(--rux-font-size-4);
-  font-weight:         var(--rux-font-weight-regular);
+  font-family:         var(--rux-btn-font-family);
+  font-size:           var(--rux-btn-font-size);
+  font-weight:         var(--rux-btn-font-weight);
   line-height:         1;
   white-space:         nowrap;
   text-decoration:     none;
@@ -46,7 +81,7 @@ button {
   -webkit-user-select: none;
 
   cursor:           pointer;
-  border-radius:    var(--rux-radius-button);
+  border-radius:    var(--rux-btn-radius);
   border:           1px solid var(--btn-border);
   background-color: var(--btn-background);
   color:            var(--btn-text);
@@ -75,17 +110,17 @@ button {
 }
 
 .rux-btn .material-symbols-outlined {
-  font-size: var(--rux-button-icon-size);
+  font-size: var(--rux-btn-icon-size);
   font-variation-settings:
-    "FILL" var(--rux-button-icon-fill),
-    "wght" var(--rux-button-icon-wght),
-    "GRAD" var(--rux-button-icon-grad),
-    "opsz" var(--rux-button-icon-opsz);
+    "FILL" var(--rux-btn-icon-fill),
+    "wght" var(--rux-btn-icon-wght),
+    "GRAD" var(--rux-btn-icon-grad),
+    "opsz" var(--rux-btn-icon-opsz);
 }
 
-.rux-btn--primary  { --btn-background: var(--rux-button-primary-bg); }
-.rux-btn--secondary  { --btn-background: var(--rux-button-secondary-bg); }
-.rux-btn--danger  { --btn-background: var(--rux-button-danger-bg); }
+.rux-btn--primary  { --btn-background: var(--rux-btn-bg-primary); }
+.rux-btn--secondary  { --btn-background: var(--rux-btn-bg-secondary); }
+.rux-btn--danger  { --btn-background: var(--rux-btn-bg-danger); }
 
 .rux-btn--tertiary {
   --btn-background:        transparent;
@@ -110,12 +145,12 @@ button {
 .rux-btn--square[aria-pressed="true"] { background-color: var(--rux-button-primary-bg); }
 
 .rux-btn--square .material-symbols-outlined {
-  font-size: var(--rux-button-square-icon-size);
+  font-size: var(--rux-btn-square-icon-size);
   font-variation-settings:
-    "FILL" var(--rux-button-square-icon-fill),
-    "wght" var(--rux-button-square-icon-wght),
-    "GRAD" var(--rux-button-square-icon-grad),
-    "opsz" var(--rux-button-square-icon-opsz);
+    "FILL" var(--rux-btn-square-icon-fill),
+    "wght" var(--rux-btn-square-icon-wght),
+    "GRAD" var(--rux-btn-square-icon-grad),
+    "opsz" var(--rux-btn-square-icon-opsz);
   transition: font-variation-settings var(--transition-fast);
 }
 
@@ -145,7 +180,7 @@ button {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-top: var(--form-section-gap);
+  margin-top: var(--rux-fld-section-gap);
   width: 100%;
   box-sizing: border-box;
 }

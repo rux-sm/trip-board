@@ -1,3 +1,18 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --icon-bus-size:     18px;
+  --icon-bus-fill:     1;
+  --icon-bus-opsz:     20;
+  --icon-tripbar-size: 14px;
+  --icon-tripbar-fill: 1;
+  --icon-tripbar-opsz: 20;
+  --icon-status-size:  14px;
+  --icon-btn-size:     32px;
+  --icon-arrow-size:   40px;
+  --icon-arrow-offset: 4px;
+}
+
 /* ==========================================================================
    MISC UTILITIES
    ========================================================================== */
@@ -212,7 +227,7 @@
   -webkit-backdrop-filter: blur(15px); /* Required for Safari */
   
   /* iOS-style border and corners */
-  border: 1px solid var(--rux-color-border-subtle);
+  border: none;
   border-radius: var(--rux-space-6) var(--rux-space-6) 0 0 ;
   
   /* Shadow for depth */
@@ -259,8 +274,8 @@
 /* Rux UI */
 .rux-panel__footer {
   --footer-bg: var(--rux-surface-footer);
-  --footer-padding-x: var(--rux-space-4);
-  --footer-padding-y: var(--rux-space-4);
+  --footer-padding-x: var(--rux-space-3);
+  --footer-padding-y: var(--rux-space-3);
   --footer-gap: var(--rux-space-3);
 
   flex-shrink: 0;
@@ -271,7 +286,7 @@
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
  
- border-radius: 0 0 var(--rux-space-6) var(--rux-space-6);
+ border-radius: 0 0 var(--rux-space-5) var(--rux-space-5);
  
   z-index: 10;
   position: sticky;

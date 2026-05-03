@@ -1,3 +1,52 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  /* Fields */
+  --rux-fld-height:           28px;
+  --rux-fld-radius:           var(--rux-radius-2);
+  --rux-fld-padding:          0 var(--rux-space-2);
+  --rux-fld-bg:               var(--rux-bg-2);
+  --rux-fld-bg-hover:         var(--rux-bg-2);
+  --rux-fld-shadow:           inset 0 2px 4px oklch(0% 0 0 / 35%);
+  --rux-fld-disabled-opacity: 0.5;
+  --rux-fld-font-size:        var(--rux-size-4);
+  --rux-fld-font-weight:      var(--rux-weight-regular);
+
+  /* Labels */
+  --rux-fld-label-color:          var(--rux-text-2);
+  --rux-fld-label-font-size:      var(--rux-size-2);
+  --rux-fld-label-font-weight:    var(--rux-weight-medium);
+  --rux-fld-label-letter-spacing: 0.02em;
+  --rux-fld-label-margin:         var(--rux-space-2);
+  --rux-fld-label-indent:         2px;
+
+  /* Layout gaps */
+  --rux-fld-label-gap:                    8px;
+  --rux-fld-row-gap:                      8px;
+  --rux-fld-col-gap:                      8px;
+  --rux-fld-card-gap:                     var(--rux-space-4);
+  --rux-fld-section-gap:                  var(--rux-space-3);
+
+  /* Section labels */
+  --rux-fld-section-label-color:          var(--rux-text-2);
+  --rux-fld-section-label-font-size:      var(--rux-size-3);
+  --rux-fld-section-label-font-weight:    var(--rux-weight-regular);
+  --rux-fld-section-label-letter-spacing: 0.02em;
+
+  /* Field icons & chevron */
+  --icon-field-size:     18px;
+  --icon-field-fill:     1;
+  --icon-field-wght:     400;
+  --icon-field-grad:     0;
+  --icon-field-opsz:     18;
+  --icon-field-inset:    0px;
+  --icon-text-gap:       4px;
+  --chevron-size:        14px;
+  --chevron-inset:       0px;
+  --chevron-opacity:     0.8;
+  --control-radius-icon: 8px;
+}
+
 /* ==========================================================================
    FORM CONTROLS
    ========================================================================== */
@@ -22,17 +71,17 @@ textarea,
   display: block;
   width: 100%;
   box-sizing: border-box;
-  height: var(--rux-form-height);
-  padding: 0 var(--input-padding-x);
-  background-color: var(--field-bg);
+  height: var(--rux-fld-height);
+  padding: 0 var(--rux-space-2);
+  background-color: var(--rux-fld-bg);
   border: none;
-  border-radius: var(--rux-radius-control);
-  font-size: var(--input-font-size);
-  font-weight: var(--input-weight);
+  border-radius: var(--rux-fld-radius);
+  font-size: var(--rux-fld-font-size);
+  font-weight: var(--rux-fld-font-weight);
   color: var(--rux-text-primary);
   text-align: left;
   outline: none;
-  box-shadow: var(--field-shadow);
+  box-shadow: var(--rux-fld-shadow);
   cursor: text;
   transition:
     background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
@@ -59,7 +108,7 @@ input[type="number"] {
 /* Safari: fixed height without line-height leaves datetime-edit top-aligned */
 input[type="date"],
 input[type="time"] {
-  line-height: var(--form-height);
+  line-height: var(--rux-fld-height);
   color-scheme: dark; /* Natively turns default icons white */
 }
 
@@ -96,7 +145,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 /* ── 4. Native Select ────────────────────────────────────────────────────── */
 
 select {
-  padding: 0 calc(var(--chevron-inset) + var(--chevron-size) + 10px) 0 var(--input-padding-x);
+  padding: 0 calc(var(--chevron-inset) + var(--chevron-size) + 10px) 0 var(--rux-space-2);
   -webkit-appearance: none;
   appearance: none;
   color-scheme: dark;
@@ -121,9 +170,9 @@ select.select--centered {
 /* ── 5. Textarea ─────────────────────────────────────────────────────────── */
 
 textarea {
-  min-height: var(--form-height);
+  min-height: var(--rux-fld-height);
   height: auto;
-  padding: 11px var(--input-padding-x);
+  padding: 11px var(--rux-space-2);
   resize: vertical;
   line-height: 1.4;
   cursor: text;
@@ -147,7 +196,7 @@ textarea:focus-visible,
 .select-trigger:focus-visible {
   outline: none;
   border-color: var(--rux-accent-color);
-  box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);
+  box-shadow: 0 0 0 2px var(--focus-ring-color), var(--rux-fld-shadow);
 }
 
 /* ── 6b. Driver double-booking conflict highlight ──────────────────────────── */
@@ -208,7 +257,7 @@ textarea:focus-visible,
 .select-dropdown:has(select:disabled) .select-trigger,
 input:disabled,
 textarea:disabled {
-  opacity: var(--field-disabled-opacity);
+  opacity: var(--rux-fld-disabled-opacity);
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -286,22 +335,22 @@ textarea:disabled {
 
 /* Status colors on the select field itself */
 .select-trigger.status-pending {
-  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--rux-fld-bg));
   color: var(--rux-status-red);
 }
 
 .select-trigger.status-ok {
-  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--rux-fld-bg));
   color: var(--rux-status-green);
 }
 
 .select-trigger.status-assigned {
-  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--rux-fld-bg));
   color: var(--rux-status-yellow);
 }
 
 .select-trigger.status-blue {
-  background-color: color-mix(in srgb, var(--rux-status-blue) 20%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-blue) 20%, var(--rux-fld-bg));
   color: var(--rux-status-blue);
 }
 
@@ -323,15 +372,15 @@ select.is-empty:not(:focus),
 .form-group > label,
 .field-label {
   display: block;
-  font-size: var(--form-label-font-size);
-  font-weight: var(--form-label-weight);
+  font-size: var(--rux-fld-label-font-size);
+  font-weight: var(--rux-fld-label-font-weight);
   color: var(--rux-text-secondary);
   line-height: 1;
-  margin-bottom: var(--form-label-margin);
-  padding-left: var(--form-label-indent);
-  letter-spacing: var(--form-label-spacing);
+  margin-bottom: var(--rux-fld-label-margin);
+  padding-left: var(--rux-fld-label-indent);
+  letter-spacing: var(--rux-fld-label-letter-spacing);
   width: 100%;
-  text-shadow: var(--label-shadow);
+  text-shadow: var(--text-shadow);
 }
 
 /* Label text inside trip details grid rows */
@@ -410,7 +459,7 @@ select.is-empty:not(:focus),
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   width: 100%;
-  gap: var(--form-card-gap) var(--form-col-gap);
+  gap: var(--rux-fld-card-gap) var(--rux-fld-col-gap);
   align-items: start;
   padding: none;
 }
@@ -475,7 +524,7 @@ select.is-empty:not(:focus),
 .subsection-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--form-row-gap) var(--form-col-gap);
+  gap: var(--rux-fld-row-gap) var(--rux-fld-col-gap);
 }
 
 hr.form-divider {
@@ -512,7 +561,7 @@ hr.form-divider {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-top: var(--form-label-gap);
+  padding-top: var(--rux-fld-label-gap);
 }
 
 .form-divider::after {
@@ -523,9 +572,9 @@ hr.form-divider {
 }
 
 .form-divider__label {
-  font-size: var(--form-section-label-size);
-  font-weight: var(--form-section-label-weight);
-  letter-spacing: var(--form-section-label-spacing);
+  font-size: var(--rux-fld-section-label-font-size);
+  font-weight: var(--rux-fld-section-label-font-weight);
+  letter-spacing: var(--rux-fld-section-label-letter-spacing);
   color: var(--text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
@@ -536,7 +585,7 @@ hr.form-divider {
   grid-column: span 12;
   display: grid;
   grid-template-columns: subgrid;
-  row-gap: var(--form-row-gap);
+  row-gap: var(--rux-fld-row-gap);
   padding: var(--rux-space-5);
   background: var(--rux-surface-card);
   border: 1px solid var(--rux-color-border-subtle);
@@ -546,8 +595,8 @@ hr.form-divider {
 
 .form-section-card__label {
   grid-column: 1 / -1;
-  font-size: var(--form-section-label-size);
-  font-weight: var(--form-section-label-weight);
+  font-size: var(--rux-fld-section-label-font-size);
+  font-weight: var(--rux-fld-section-label-font-weight);
   letter-spacing: 0.08em;
   color: var(--text-secondary);
   text-transform: uppercase;

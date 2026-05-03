@@ -1,3 +1,27 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  /* App shell sizing */
+  --layout-container-max: 100%;
+  --layout-panel-gap:     var(--rux-space-3);
+  --card-padding:         16px;
+  --size-header-row:      40px;
+  --size-header-action:   40px;
+  --size-toolbar-action:  32px;
+
+  /* Panel / sidebar geometry */
+  --panel-width:           384px;
+  --panel-header-h:        3rem;
+  --panel-body-top-gap:    0.75rem;
+  --panel-footer-h:        3rem;
+  --panel-body-bottom-gap: 1.25rem;
+  --panel-body-left-gap:   1rem;
+
+  /* Z-index stack */
+  --z-dropdown: 1000;
+  --z-modal:    10100;
+}
+
 /* ==========================================================================
    4-OBJECTS / LAYOUT
    Structural wrappers, grid systems, no cosmetics

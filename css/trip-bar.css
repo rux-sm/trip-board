@@ -1,3 +1,85 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --tripbar-height:         99px;
+  --tripbar-radius:         7px;
+  --tripbar-lane-step:      100px;
+  --tripbar-bg-mix-percent: 100%;
+  --tripbar-dim-opacity:    0.60;
+  --tripbar-text-shadow:    0 1px 2px rgba(0, 0, 0, 1);
+  --tripbar-shadow-hover:   0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
+  --tripbar-color:          var(--rux-status-blue-alpha);
+  --tripbar-border-color:   var(--rux-color-accent);
+
+  --tripbar-badge-text-color:   var(--rux-text-1);
+  --tripbar-r1-color:           var(--rux-text-1);
+  --tripbar-r2-color:           var(--rux-text-2);
+  --tripbar-r4-color:           var(--rux-text-1);
+  --tripbar-time-color:         var(--tripbar-r4-color);
+  --tripbar-time-color-flagged: var(--rux-status-yellow);
+  --tripbar-r5-color:           var(--rux-text-1);
+  --tripbar-r6-color:           var(--rux-text-2);
+  --tripbar-r7-color:           var(--rux-text-1);
+
+  --tripbar-hover-brightness-from: 1.05;
+  --tripbar-hover-brightness-to:   1.15;
+  --tripbar-hover-saturate-from:   1;
+  --tripbar-hover-saturate-to:     1.25;
+
+  --tripbar-inset:        0px;
+  --tripbar-inset-left:   0px;
+  --tripbar-inset-right:  1px;
+  --tripbar-inset-top:    0px;
+  --tripbar-inset-bottom: 0px;
+  --tripbar-padding-x:    0px;
+  --tripbar-padding-y:    0px;
+  --tripbar-row-gap:      1px;
+  --tripbar-gap-inline:   2px;
+  --tripbar-gap-drivers:  6px;
+
+  --tripbar-r1-font-size:      var(--rux-size-3);
+  --tripbar-r1-row-height:     14px;
+  --tripbar-r1-font-weight:    var(--rux-weight-medium);
+  --tripbar-r1-line-height:    14px;
+  --tripbar-r1-letter-spacing: 0.02em;
+
+  --tripbar-r2-font-size:      var(--rux-size-2);
+  --tripbar-r2-row-height:     12px;
+  --tripbar-r2-font-weight:    var(--rux-weight-medium);
+  --tripbar-r2-line-height:    12px;
+  --tripbar-r2-letter-spacing: 0.02em;
+
+  --tripbar-r3-row-height: 12px;
+
+  --tripbar-r4-font-size:      var(--rux-size-3);
+  --tripbar-r4-row-height:     13px;
+  --tripbar-r4-font-weight:    var(--rux-weight-medium);
+  --tripbar-r4-line-height:    13px;
+  --tripbar-r4-letter-spacing: 0em;
+
+  --tripbar-r5-row-height: 14px;
+
+  --tripbar-r6-font-size:      var(--rux-size-1);
+  --tripbar-r6-row-height:     12px;
+  --tripbar-r6-font-weight:    var(--rux-weight-regular);
+  --tripbar-r6-line-height:    12px;
+  --tripbar-r6-letter-spacing: 0.02em;
+
+  --tripbar-r7-font-size:      var(--rux-size-3);
+  --tripbar-r7-row-height:     14px;
+  --tripbar-r7-font-weight:    var(--rux-weight-bold);
+  --tripbar-r7-line-height:    14px;
+  --tripbar-r7-letter-spacing: 0.05em;
+
+  --tripbar-mini-badge:            14px;
+  --tripbar-badge-radius:          0;
+  --tripbar-danger-size:           16px;
+  --tripbar-danger-font:           var(--rux-size-2);
+  --tripbar-danger-offset:         4px;
+  --tripbar-multi-badge-font-size: var(--rux-size-2);
+  --tripbar-multi-bus-indent:      0px;
+}
+
 /* ==========================================================================
    Trip Bar (BEM - Step 12a)
    JS adds schedule-grid__trip-bar class; legacy trip-bar kept for print clone

@@ -1,0 +1,176 @@
+# Rux UI: CSS Architecture & Token System
+
+## Core Philosophy
+
+Rux UI uses a **Three-Tier Design Token System**. The tiers create a strict dependency chain:
+
+```
+Tier 1 Primitives  →  Tier 2 Semantics  →  Tier 3 Component
+(variables.css)        (variables.css)        (component file)
+```
+
+`variables.css` contains only Tiers 1 and 2. Component-specific tokens always live
+in their own CSS file. This keeps `variables.css` short, scannable, and stable.
+
+---
+
+## Tier 1 — Primitives
+
+**Purpose:** Raw values. No semantic meaning. The source of truth for every scale.
+
+**Location:** `:root` in `variables.css`
+
+**Naming:** `--rux-{category}-{key}`
+
+| Category | Prefix | Example |
+|----------|--------|---------|
+| Color seeds | `--rux-color-` | `--rux-color-blue` |
+| Font families | `--rux-font-` | `--rux-font-sans` |
+| Font size scale | `--rux-size-` | `--rux-size-4` |
+| Font weight scale | `--rux-weight-` | `--rux-weight-medium` |
+| Spacing scale | `--rux-space-` | `--rux-space-3` |
+| Radius scale | `--rux-radius-` | `--rux-radius-2` |
+| Motion (duration) | `--rux-duration-` | `--rux-duration-1` |
+| Motion (easing) | `--rux-ease-` | `--rux-ease-1` |
+
+**Rules:**
+- Never use a Tier 1 token directly in component CSS. Always go through Tier 2.
+- Use full color names: `blue`, `gray`, `red` — never `blu`, `gry`.
+- `bg` is the one allowed abbreviation (universally understood).
+
+---
+
+## Tier 2 — Semantics
+
+**Purpose:** Design-language roles. Maps Tier 1 values to intent.
+Surfaces, text roles, borders, status colors, accent.
+
+**Location:** `:root` in `variables.css`
+
+**Naming:** `--rux-{category}-{role-or-number}`
+
+| Category | Pattern | Example |
+|----------|---------|---------|
+| Surface elevations | `--rux-bg-{n}` | `--rux-bg-2` (higher = lighter in dark mode) |
+| Text roles | `--rux-text-{n}` | `--rux-text-1` (primary), `--rux-text-2` (secondary) |
+| Border roles | `--rux-border-{n}` | `--rux-border-2` (default) |
+| Status colors | `--rux-status-{color}` | `--rux-status-red`, `--rux-status-green` |
+| Accent | `--rux-color-accent` | — |
+
+**Rules:**
+- Component CSS references ONLY Tier 2 tokens (never Tier 1 directly).
+- Tier 2 tokens have no component names in them — they describe roles, not elements.
+
+---
+
+## Tier 3 — Component
+
+**Purpose:** Component-specific sizing, spacing, typography, and color. Defined once
+at the top of a component file and consumed throughout that file.
+
+**Location:** Top of the component's own CSS file — NOT in `variables.css`.
+
+**Naming:** `--rux-{comp}-{property}` using the component's short prefix.
+
+| Component | Prefix | File |
+|-----------|--------|------|
+| Button | `btn` | `button.css` |
+| Form fields | `fld` | `form.css` |
+| Trip bar | `trp` | `primitives.css` (or `tripbar.css`) |
+| Panel / sidebar | `panel` | `layout.css` |
+| Modal | `modal` | `modal.css` |
+| Dropdown | `dd` | `dropdown.css` |
+
+**Placement rule:**
+
+```css
+/* Single-selector component → scope to the class */
+.btn {
+  --rux-btn-height: 32px;
+  height: var(--rux-btn-height);
+}
+
+/* Multi-selector component (e.g. input, select, textarea all share tokens)
+   → :root block at the TOP of the component file */
+
+/* form.css */
+:root {
+  --rux-fld-height:   28px;
+  --rux-fld-radius:   var(--rux-radius-2);
+  --rux-fld-bg:       var(--rux-bg-2);
+  --rux-fld-shadow:   inset 0 2px 4px oklch(0% 0 0 / 35%);
+}
+
+input, select, textarea {
+  height: var(--rux-fld-height);
+  background: var(--rux-fld-bg);
+}
+```
+
+**Rules:**
+- Tier 3 tokens reference ONLY Tier 2 tokens or literal values.
+- Never reference a Tier 1 token from a Tier 3 token.
+- Never put a Tier 3 token in `variables.css`.
+
+---
+
+## The Anti-Pollution Rule
+
+`variables.css` must contain zero component names.
+Any token whose name includes `btn`, `fld`, `trp`, `panel`, `modal`, `tripbar`,
+`card`, `bus`, `icon`, `header`, `badge`, `dropdown` — or any other UI element —
+belongs in a component file, not in `variables.css`.
+
+**When in doubt:** If you can draw the thing on screen, its tokens do not belong in
+`variables.css`.
+
+---
+
+## What belongs in `variables.css`
+
+```
+✓  Color seeds            --rux-color-blue
+✓  Font families          --rux-font-sans
+✓  Size / weight scales   --rux-size-4, --rux-weight-medium
+✓  Spacing / radius       --rux-space-3, --rux-radius-2
+✓  Motion                 --rux-duration-1, --rux-ease-1
+✓  Surface elevations     --rux-bg-1 … --rux-bg-5
+✓  Text roles             --rux-text-1, --rux-text-2, --rux-text-3
+✓  Border roles           --rux-border-1, --rux-border-2, --rux-border-3
+✓  Status colors          --rux-status-red, --rux-status-green …
+✓  Accent                 --rux-color-accent
+
+✗  Button tokens          → button.css
+✗  Field tokens           → form.css
+✗  Trip bar tokens        → primitives.css
+✗  Layout / panel tokens  → layout.css
+✗  Z-index values         → layout.css
+✗  Shadow recipes         → component file that uses them
+✗  COMPAT / old aliases   → delete once callers are updated
+```
+
+---
+
+## COMPAT Section (Temporary)
+
+Migration aliases (old token names pointing to new ones) are allowed during
+a transition, but must live at the bottom of `variables.css` under a clearly
+marked `COMPAT` comment and must be deleted once the referencing files are
+updated. A COMPAT section that has existed longer than one refactor cycle
+should be treated as technical debt.
+
+---
+
+## Quick Reference — Token Flow
+
+```
+oklch(50% 0.2 260)          ← literal value
+       ↓
+--rux-color-blue             ← Tier 1  (variables.css)
+       ↓
+--rux-bg-2                   ← Tier 2  (variables.css)
+       ↓
+--rux-fld-bg                 ← Tier 3  (form.css :root)
+       ↓
+background: var(--rux-fld-bg) ← component CSS rule
+```

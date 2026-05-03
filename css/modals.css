@@ -1,3 +1,17 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --env-ink:         var(--rux-text-1);
+  --env-rule:        var(--rux-border-2);
+  --env-border:      1px;
+  --env-pad:         0.25in;
+  --env-panel-pad:   0.375in;
+  --env-section-gap: 0.125in;
+  --env-label-size:  0.625rem;
+  --env-tiny-size:   0.5625rem;
+  --env-pickup:      color-mix(in srgb, var(--rux-color-accent) 12%, transparent);
+}
+
 /* ==========================================================================
    5-COMPONENTS / MODALS
    Base modal structure and variants (BEM)

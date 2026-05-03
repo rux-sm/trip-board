@@ -1,3 +1,42 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  /* Schedule grid dimensions */
+  --schedule-row-height:         100px;
+  --bus-col-w:                   34px;
+  --week-picker-height:          32px;
+  --day-row-h:                   34px;
+  --schedule-edge-inset-right:   16px;
+  --print-scale:                 1;    /* runtime — JS overrides */
+  --sync-progress:               0%;   /* runtime — JS overrides */
+  --waiting-list-dynamic-height: var(--schedule-row-height); /* runtime — JS overrides */
+
+  /* Day header */
+  --day-header-date-color:          var(--rux-text-1);
+  --day-header-date-size:           var(--rux-size-4);
+  --day-header-date-weight:         var(--rux-weight-semibold);
+  --day-header-date-letter-spacing: 0;
+  --day-header-date-line-height:    var(--rux-line-height-1);
+  --day-header-name-color:          var(--rux-text-1);
+  --day-header-name-size:           var(--rux-size-4);
+  --day-header-name-weight:         var(--rux-weight-regular);
+  --day-header-name-letter-spacing: 0;
+  --day-header-name-line-height:    var(--rux-line-height-1);
+
+  /* Bus column */
+  --bus-num-color:          var(--rux-text-1);
+  --bus-num-size:           var(--rux-size-4);
+  --bus-num-weight:         var(--rux-weight-medium);
+  --bus-num-letter-spacing: 0;
+  --bus-num-line-height:    var(--rux-line-height-1);
+  --bus-lift-color:         var(--rux-color-accent);
+  --bus-sleeper-color:      var(--rux-text-1);
+  --bus-accent-color:       var(--rux-bg-4);
+  --bus-grid-row-gap:       4px;
+  --bus-driver-block-gap:   4px;
+  --bus-header-margin:      4px;
+}
+
 /* Print styles moved to css/print.css */
 
 /* ==========================================================================
@@ -18,7 +57,7 @@
   z-index: 1000;
   height: var(--app-height);
   padding-inline: var(--rux-space-4);
-  background-color: var(--app-bg);
+  background-color: var(--rux-bg-1);
   box-shadow: none;
 }
 
@@ -547,15 +586,15 @@
 }
 
 .quote-calculator__select-mini {
-  background-color: var(--field-bg);
+  background-color: var(--rux-fld-bg);
   border: 1px solid var(--rux-color-border-default);
   border-radius: var(--rux-radius-control);
   color: var(--text-primary);
   font-size: inherit;
-  padding: 0 var(--input-padding-x);
+  padding: 0 var(--rux-space-2);
   outline: none;
   cursor: pointer;
-  height: var(--form-height);
+  height: var(--rux-fld-height);
   box-sizing: border-box;
 }
 
@@ -1232,13 +1271,13 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
 #busGrid.bus-assign {
   display: flex;
   flex-direction: column;
-  gap: var(--form-section-gap);
+  gap: var(--rux-fld-section-gap);
 }
 
 .bus-assign__row-group {
   display: flex;
   flex-direction: row;
-  gap: var(--form-col-gap);
+  gap: var(--rux-fld-col-gap);
   align-items: flex-start;
 }
 
@@ -1257,13 +1296,13 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
 .bus-assign__driver-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--form-col-gap);
+  gap: var(--rux-fld-col-gap);
 }
 
 .bus-assign-header {
   display: grid;
   grid-template-columns: 64px 1fr 1fr;
-  column-gap: var(--form-col-gap);
+  column-gap: var(--rux-fld-col-gap);
   margin-top: none;
   margin-bottom: var(--bus-header-margin);
 }

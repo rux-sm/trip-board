@@ -1,4 +1,23 @@
-/* ========================================================================== 
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --font-sans: var(--rux-font-sans);
+  --font-mono: var(--rux-font-mono);
+
+  --heading-1-size:           var(--rux-size-5);
+  --heading-1-weight:         var(--rux-weight-regular);
+  --heading-1-line-height:    var(--rux-line-height-3);
+  --heading-1-letter-spacing: 0.5px;
+  --heading-1-color:          var(--rux-text-1);
+
+  --heading-2-size:           var(--rux-size-7);
+  --heading-2-weight:         var(--rux-weight-regular);
+  --heading-2-line-height:    var(--rux-line-height-2);
+  --heading-2-letter-spacing: 0.05px;
+  --heading-2-color:          var(--rux-text-1);
+}
+
+/* ==========================================================================
    GLOBAL SELECT/OPTION & FOCUS STYLES FOR DARK THEME
    ========================================================================== */
 
