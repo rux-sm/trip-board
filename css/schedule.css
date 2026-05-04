@@ -287,7 +287,7 @@
   height: auto;
   overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid var(--rux-border-2);
+  border: none;
   border-radius: var(--rux-radius-section);
 }
 
@@ -590,9 +590,17 @@
   border-inline-end: none;
 }
 
-.schedule-grid tbody tr:last-child > .schedule-grid__cell,
-.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+/* Main schedule tbody last row: closing bottom border + bottom corner radius */
+.schedule-grid tbody:not(#waitingBody) tr:last-child > .schedule-grid__cell,
+.schedule-grid tbody:not(#waitingBody) tr:last-child > .schedule-grid__bus-cell {
   border-bottom: none;
+}
+.schedule-grid tbody:not(#waitingBody) tr:last-child > td:first-child,
+.schedule-grid tbody:not(#waitingBody) tr:last-child > .schedule-grid__bus-cell {
+  border-bottom-left-radius: var(--rux-radius-control);
+}
+.schedule-grid tbody:not(#waitingBody) tr:last-child > td:last-child {
+  border-bottom-right-radius: var(--rux-radius-control);
 }
 
 /* ==========================================================================
@@ -755,18 +763,42 @@
 .waiting-list-row td {
   background-color: var(--rux-bg-1) !important;
   vertical-align: top;
+  border-top: none;
   height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
 }
 
+/* Spacer row — transparent gap row; gap is real DOM space, not border */
+.schedule-grid__wl-spacer td {
+  height: var(--rux-space-4);
+  border: none !important;
+  background: var(--rux-bg-2);
+  padding: 0;
+  pointer-events: none;
+}
+
 .waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--rux-bg-1) !important;
-  border-top: 1px solid var(--rux-border-1);
+  background-color: var(--rux-bg-3) !important;
   color: var(--rux-text-2);
   font-size: 0.6875rem;
   text-align: center;
   width: var(--bus-col-w);
+}
+
+/* Waiting list box: visible border on all 4 sides + corner radii */
+.waiting-list-row td {
+  border-bottom: none !important;
+}
+.waiting-list-row td:first-child {
+  border-left: none;
+  border-top-left-radius: var(--rux-radius-surface);
+  border-bottom-left-radius: var(--rux-radius-surface);
+}
+.waiting-list-row td:last-child {
+  border-right: none;
+  border-top-right-radius: var(--rux-radius-surface);
+  border-bottom-right-radius: var(--rux-radius-surface);
 }
 
 .waiting-list-row .schedule-grid__bus-indicator .material-symbols-outlined {
@@ -1146,7 +1178,7 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
 #driver-col-hl {
   position: absolute;
   pointer-events: none;
-  border: 2px solid var(--rux-text-2);
+  border: 2px solid var(--rux-border-3);
   border-radius: 0px;
   z-index: 100;
 }

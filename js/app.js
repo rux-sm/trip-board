@@ -2352,6 +2352,14 @@ function buildAgendaRows() {
     bars.className = "schedule-grid__row-bars";
     tr.cells[1].appendChild(bars);
 
+    // Spacer row — true DOM gap above the waiting list row.
+    // Lives in #waitingBody so it vanishes with it when toggled off.
+    const spacer = document.createElement("tr");
+    spacer.className = "schedule-grid__wl-spacer";
+    const spacerCell = document.createElement("td");
+    spacerCell.colSpan = 8; // 1 bus col + 7 day cols
+    spacer.appendChild(spacerCell);
+    waitingBody.appendChild(spacer);
     waitingBody.appendChild(tr);
   }
 
@@ -2640,8 +2648,8 @@ function _renderAgendaInner() {
 
   // Waiting List Mapping
   const waitingBody = dom.waitingBody;
-  if (waitingBody && waitingBody.rows.length > 0) {
-    const wRow = waitingBody.rows[0];
+  const wRow = waitingBody?.querySelector(".waiting-list-row");
+  if (wRow) {
     const wBars = wRow.querySelector(".schedule-grid__row-bars");
     if (wBars) barsByRowIdx.set("WAITING", wBars);
   }
@@ -3525,7 +3533,7 @@ function _renderAgendaInner() {
     const maxTop = Math.max(0, effectiveRowH - barH - 1); // -1 for safety margin
 
     if (isWaitingList) {
-      const wlTr = waitingBody?.rows?.[0];
+      const wlTr = waitingBody?.querySelector(".waiting-list-row");
       if (wlTr) {
         const h = `${effectiveRowH}px`;
         wlTr.style.setProperty("--waiting-list-dynamic-height", h);
@@ -3552,9 +3560,10 @@ function _renderAgendaInner() {
 
   // When no trips on waiting list, keep row at single height
   const wlLanes = (lanesByBus["WAITING_LIST"] || []).length;
-  if (wlLanes === 0 && waitingBody?.rows?.[0]) {
+  const wlTr0 = waitingBody?.querySelector(".waiting-list-row");
+  if (wlLanes === 0 && wlTr0) {
     const h = `${rowH}px`;
-    const wlTr = waitingBody.rows[0];
+    const wlTr = wlTr0;
     wlTr.style.setProperty("--waiting-list-dynamic-height", h);
     for (let c = 0; c < wlTr.cells.length; c++) {
       wlTr.cells[c].style.setProperty("--waiting-list-dynamic-height", h);
