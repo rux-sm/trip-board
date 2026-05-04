@@ -448,7 +448,7 @@ select.is-empty:not(:focus),
   font-variant-numeric: normal;
   border: none;
   border-radius: 0;
-  text-align: center;
+  text-align: left;
   width: 100%;
   max-width: 100%;
 }
