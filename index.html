@@ -1359,78 +1359,76 @@
                   class="agenda-header"
                   data-js="schedule-agenda-header"
                 >
-                  <div class="rux-header rux-header--schedule">
-                    <div class="agenda-header__date-left">
-                      <div
-                        id="dateWrapper"
-                        class="date-picker-wrapper"
-                      >
-                        <h2 class="rux-header__title">
-                          <span
-                            class="agenda-header__week-date"
-                            id="headerWeek"
-                            aria-label="Active week"
-                          ></span>
-                        </h2>
-                      </div>
+                  <div class="agenda-header__date-left">
+                    <div
+                      id="dateWrapper"
+                      class="date-picker-wrapper"
+                    >
+                      <h2 class="rux-header__title">
+                        <span
+                          class="agenda-header__week-date"
+                          id="headerWeek"
+                          aria-label="Active week"
+                        ></span>
+                      </h2>
                     </div>
-                    <div class="agenda-header__sync-center">
-                      <span
-                        id="weekSyncStatus"
-                        class="schedule-sync-status is-loading"
-                        role="status"
-                        aria-live="polite"
-                        aria-atomic="true"
-                      >
-                        Loading…
-                      </span>
-                    </div>
-                    <div class="rux-header__actions">
+                  </div>
+                  <div class="agenda-header__sync-center">
+                    <span
+                      id="weekSyncStatus"
+                      class="schedule-sync-status is-loading"
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      Loading…
+                    </span>
+                  </div>
+                  <div class="rux-header__actions">
+                    <button
+                      id="prevWeekBtn"
+                      class="rux-btn rux-btn--tertiary"
+                      type="button"
+                      aria-label="Previous Week"
+                      title="Previous Week"
+                    >
+                      <span class="material-symbols-outlined">keyboard_arrow_left</span>
+                    </button>
+                    <button
+                      id="nextWeekBtn"
+                      class="rux-btn rux-btn--tertiary"
+                      type="button"
+                      aria-label="Next Week"
+                      title="Next Week"
+                    >
+                      <span class="material-symbols-outlined">keyboard_arrow_right</span>
+                    </button>
+                    <div class="weekpicker-trigger-wrap">
                       <button
-                        id="prevWeekBtn"
+                        id="agendaLeftBtn"
                         class="rux-btn rux-btn--tertiary"
                         type="button"
-                        aria-label="Previous Week"
-                        title="Previous Week"
+                        aria-label="Select week"
+                        title="Select week"
                       >
-                        <span class="material-symbols-outlined">keyboard_arrow_left</span>
+                        Week
                       </button>
-                      <button
-                        id="nextWeekBtn"
-                        class="rux-btn rux-btn--tertiary"
-                        type="button"
-                        aria-label="Next Week"
-                        title="Next Week"
-                      >
-                        <span class="material-symbols-outlined">keyboard_arrow_right</span>
-                      </button>
-                      <div class="weekpicker-trigger-wrap">
-                        <button
-                          id="agendaLeftBtn"
-                          class="rux-btn rux-btn--tertiary"
-                          type="button"
-                          aria-label="Select week"
-                          title="Select week"
-                        >
-                          Week
-                        </button>
-                        <input
-                          type="date"
-                          id="weekPicker"
-                          class="weekpicker weekpicker-trigger-input"
-                          aria-label="Select week"
-                        />
-                      </div>
-                      <button
-                        id="todayBtn"
-                        class="rux-btn rux-btn--tertiary"
-                        type="button"
-                        aria-label="Go to today"
-                        title="Go to today"
-                      >
-                        Today
-                      </button>
+                      <input
+                        type="date"
+                        id="weekPicker"
+                        class="weekpicker weekpicker-trigger-input"
+                        aria-label="Select week"
+                      />
                     </div>
+                    <button
+                      id="todayBtn"
+                      class="rux-btn rux-btn--tertiary"
+                      type="button"
+                      aria-label="Go to today"
+                      title="Go to today"
+                    >
+                      Today
+                    </button>
                   </div>
                 </div>
 

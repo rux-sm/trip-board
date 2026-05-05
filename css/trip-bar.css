@@ -116,7 +116,7 @@
   --trip-accent-color: var(--rux-color-blue);
 
   /* Background LCHA */
-  --tripbar-bg-l: 60%;
+  --tripbar-bg-l: 65%;
   --tripbar-bg-c: 0.2;
   --tripbar-bg-h: 0;
   --tripbar-bg-a: 20%;
@@ -146,7 +146,7 @@
 
   background: var(--tripbar-bg);
   border: 1px solid var(--tripbar-border-color);
-  border-left: 7px solid var(--tripbar-border-left-color);
+  border-left: 8px solid var(--tripbar-border-left-color);
 }
 
 /* Hover: subtle lift + gentle brighten */

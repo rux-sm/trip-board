@@ -1672,6 +1672,11 @@ function hasSelectedBusForTrip() {
   return v && v !== "None";
 }
 
+function confirmDiscardIfDirty(msg = "You have unsaved trip changes. Discard them?") {
+  if (!state.tripFormDirty) return true;
+  return confirm(msg);
+}
+
 function maybeApplyPendingDefaults() {
   if (!dom.tripForm || dom.action?.value !== "create") return;
 
@@ -2566,10 +2571,11 @@ function showConflictsPanel(conflicts) {
   dom.conflictList.innerHTML = html;
 
   dom.conflictList.querySelectorAll("[data-tripkey]").forEach((el) => {
-    const open = () =>
-      isMobileOnly()
-        ? openTripDetailsModal(el.dataset.tripkey)
-        : openTripForEdit(el.dataset.tripkey);
+    const open = () => {
+      if (isMobileOnly()) return openTripDetailsModal(el.dataset.tripkey);
+      if (!confirmDiscardIfDirty()) return;
+      openTripForEdit(el.dataset.tripkey);
+    };
 
     el.addEventListener("click", open);
     el.addEventListener("keydown", (e) => {
@@ -4393,8 +4399,9 @@ function setSelectOptions(sel, options, selectedValue) {
     opt.textContent = o.label;
     sel.appendChild(opt);
   }
-  const has = options.some((o) => String(o.value) === String(prev));
-  sel.value = has ? String(prev) : "None";
+  const prevTrimmed = String(prev).trim();
+  const match = options.find((o) => String(o.value).trim() === prevTrimmed);
+  sel.value = match ? match.value : "None";
 }
 
 function getBusOptions() {
@@ -4635,6 +4642,7 @@ function updateWeekDates() {
 }
 
 function changeWeek(direction) {
+  if (!confirmDiscardIfDirty()) return;
   // Abort any in-flight requests to prevent stale data
   if (state.activeAbortController) {
     state.activeAbortController.abort();
@@ -6153,11 +6161,11 @@ async function openTripForEdit(tripKey) {
       const row = state.busRows[n - 1];
       if (!row) return;
 
-      if (a.busId) row.busSel.value = String(a.busId);
-      if (a.driver1) row.d1Sel.value = String(a.driver1);
-      if (a.driver2) row.d2Sel.value = String(a.driver2);
-      if (a.driver3) row.d3Sel.value = String(a.driver3);
-      if (a.driver4) row.d4Sel.value = String(a.driver4);
+      if (a.busId)   row.busSel.value = String(a.busId).trim();
+      if (a.driver1) row.d1Sel.value  = String(a.driver1).trim();
+      if (a.driver2) row.d2Sel.value  = String(a.driver2).trim();
+      if (a.driver3) row.d3Sel.value  = String(a.driver3).trim();
+      if (a.driver4) row.d4Sel.value  = String(a.driver4).trim();
       row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
       row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
       row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
@@ -7040,31 +7048,37 @@ async function loadDriversAndBuses(forceRefresh = false) {
     api.listBuses(true, forceRefresh),
   ]);
 
-  state.driversList = driversResp?.ok && driversResp.drivers ? driversResp.drivers : [];
-  state.busesList = busesResp?.ok && busesResp.buses ? busesResp.buses : [];
+  const freshDrivers = driversResp?.ok && driversResp.drivers?.length ? driversResp.drivers : null;
+  const freshBuses   = busesResp?.ok  && busesResp.buses?.length   ? busesResp.buses   : null;
+
+  // Only replace existing state when the response has valid data — a transient API
+  // failure returning an empty list must not wipe good state that other code depends on.
+  if (freshDrivers) {
+    state.driversList = freshDrivers
+      .map((d) => ({
+        ...d,
+        driverId: String(d.driverId || "").trim(),
+        driverName:
+          d.driverName && String(d.driverName).trim()
+            ? String(d.driverName).trim()
+            : String(d.driverId || "").trim(),
+      }))
+      .filter((d) => d.driverName);
+  }
+
+  if (freshBuses) {
+    state.busesList = freshBuses
+      .map((b) => ({
+        ...b,
+        busId: String(b.busId || "").trim(),
+        busName: b.busName && String(b.busName).trim() ? String(b.busName).trim() : `Bus ${b.busId}`,
+      }))
+      .filter((b) => b.busId);
+  }
 
   // Save drivers to cache (but not buses)
   if (state.driversList.length)
     CACHE.set("cache_drivers", state.driversList, CONFIG.CACHE_TTL_DRIVERS);
-
-  state.busesList = state.busesList
-    .map((b) => ({
-      ...b,
-      busId: String(b.busId || "").trim(),
-      busName: b.busName && String(b.busName).trim() ? String(b.busName).trim() : `Bus ${b.busId}`,
-    }))
-    .filter((b) => b.busId);
-
-  state.driversList = state.driversList
-    .map((d) => ({
-      ...d,
-      driverId: String(d.driverId || "").trim(),
-      driverName:
-        d.driverName && String(d.driverName).trim()
-          ? String(d.driverName).trim()
-          : String(d.driverId || "").trim(),
-    }))
-    .filter((d) => d.driverName);
 
   refreshBusSelectOptions();
 
@@ -7404,6 +7418,7 @@ function wireDelegatedBarEvents() {
   dom.ctxEditTripInfoBtn?.addEventListener("click", async () => {
     if (activeContextTripKey) {
       if (dom.tripKey.value !== activeContextTripKey) {
+        if (!confirmDiscardIfDirty()) return;
         await openTripForEdit(activeContextTripKey);
       }
       openItineraryModal();
@@ -7415,6 +7430,7 @@ function wireDelegatedBarEvents() {
     if (!activeContextTripKey) return;
     const tripKey = activeContextTripKey; // capture before menu close clears it
     closeTripContextMenu();
+    if (!confirmDiscardIfDirty()) return;
     await openTripForEdit(tripKey);
   });
 
@@ -7475,6 +7491,7 @@ function wireDelegatedBarEvents() {
     // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
     const wasOpenKey = dom.tripKey?.value;
     if (wasOpenKey !== capturedTripKey) {
+      if (!confirmDiscardIfDirty("You have unsaved changes. Loading this trip to remove its PDF will discard them. Continue?")) return;
       toastShow("Loading trip to remove PDF...", "loading", {
         indeterminate: true,
         source: "pdf-delete",
@@ -7505,6 +7522,7 @@ function wireDelegatedBarEvents() {
     const capturedTripKey = activeContextTripKey;
     closeTripContextMenu();
     if (dom.tripKey?.value !== capturedTripKey) {
+      if (!confirmDiscardIfDirty("You have unsaved changes. Loading this trip will discard them. Continue?")) return;
       await openTripForEdit(capturedTripKey);
     }
     $("contactStatus").value = "Not Required";
@@ -7517,6 +7535,7 @@ function wireDelegatedBarEvents() {
     const capturedTripKey = activeContextTripKey;
     closeTripContextMenu();
     if (dom.tripKey?.value !== capturedTripKey) {
+      if (!confirmDiscardIfDirty("You have unsaved changes. Loading this trip will discard them. Continue?")) return;
       await openTripForEdit(capturedTripKey);
     }
     $("itineraryStatus").value = "Not Required";
@@ -8070,6 +8089,7 @@ function wireEvents() {
   }, CONFIG.AUTO_REFRESH_INTERVAL);
 
   dom.todayBtn?.addEventListener("click", () => {
+    if (!confirmDiscardIfDirty()) return;
     state.currentDate = startOfWeek(new Date());
     updateWeekDates();
   });
@@ -8083,6 +8103,10 @@ function wireEvents() {
     }
   });
   dom.weekPicker?.addEventListener("change", (e) => {
+    if (!confirmDiscardIfDirty()) {
+      e.target.value = toLocalDateInputValue(state.currentDate);
+      return;
+    }
     const d = parseYMD(e.target.value);
     if (d) {
       state.currentDate = startOfWeek(d);
@@ -8822,6 +8846,7 @@ function wireSettingsMenu() {
 
   // 1. Jump directly to Today
   dom.todayBtn2?.addEventListener("click", () => {
+    if (!confirmDiscardIfDirty()) return;
     state.currentDate = startOfWeek(new Date());
     updateWeekDates();
     closeSettings();

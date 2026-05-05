@@ -28,9 +28,15 @@
   --rux-btn-font-size:   var(--rux-size-4);
   --rux-btn-font-weight: var(--rux-weight-regular);
 
-  --rux-btn-shadow-inset:     0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  --rux-btn-shadow-active:    inset 0 2px 4px rgba(0, 0, 0, 1);
-  --rux-btn-shadow-active-sm: inset 0 2px 4px rgba(0, 0, 0, 1);
+  --rux-btn-shadow-inset:
+    0 1px 2px oklch(0% 0 0 / 55%),
+    0 2px 8px oklch(0% 0 0 / 35%),
+    inset 0 1px 0 oklch(100% 0 0 / 18%),
+    inset 0 -1px 0 oklch(0% 0 0 / 30%);
+  --rux-btn-shadow-active:
+    inset 0 2px 4px oklch(0% 0 0 / 60%),
+    inset 0 1px 2px oklch(0% 0 0 / 30%);
+  --rux-btn-shadow-active-sm: inset 0 2px 4px oklch(0% 0 0 / 60%);
 
   --rux-btn-icon-size: var(--rux-size-6);
   --rux-btn-icon-fill: 1;
@@ -61,6 +67,7 @@ button {
   --btn-border:            transparent;
   --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-btn-hover-lift)) c h);
   --btn-active-background: oklch(from var(--btn-background) calc(l - 0.05) c h);
+  --btn-shadow:            none;
 
   box-sizing:          border-box;
   display:             inline-flex;
@@ -85,6 +92,7 @@ button {
   border:           1px solid var(--btn-border);
   background-color: var(--btn-background);
   color:            var(--btn-text);
+  box-shadow:       var(--btn-shadow);
 
   transition:
     background-color var(--transition-fast),
@@ -94,7 +102,7 @@ button {
 }
 
 .rux-btn:hover  { background-color: var(--btn-hover-background); }
-.rux-btn:active { background-color: var(--btn-active-background); transform: scale(0.97); }
+.rux-btn:active { background-color: var(--btn-active-background); transform: scale(0.97); --btn-shadow: var(--rux-btn-shadow-active); }
 
 .rux-btn:focus-visible {
   outline: 3px solid var(--rux-color-white);
@@ -118,9 +126,9 @@ button {
     "opsz" var(--rux-btn-icon-opsz);
 }
 
-.rux-btn--primary  { --btn-background: var(--rux-btn-bg-primary); }
-.rux-btn--secondary  { --btn-background: var(--rux-btn-bg-secondary); }
-.rux-btn--danger  { --btn-background: var(--rux-btn-bg-danger); }
+.rux-btn--primary   { --btn-background: var(--rux-btn-bg-primary);   --btn-shadow: var(--rux-btn-shadow-inset); }
+.rux-btn--secondary { --btn-background: var(--rux-btn-bg-secondary); --btn-shadow: var(--rux-btn-shadow-inset); }
+.rux-btn--danger    { --btn-background: var(--rux-btn-bg-danger);    --btn-shadow: var(--rux-btn-shadow-inset); }
 
 .rux-btn--tertiary {
   --btn-background:        transparent;
@@ -160,6 +168,7 @@ button {
   --btn-background:        var(--rux-btn-bg-secondary);
   --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-btn-hover-lift)) c h);
   --btn-active-background: var(--rux-btn-bg-primary);
+  --btn-shadow:            var(--rux-btn-shadow-inset);
 
   width:     100%;
   min-width: 0;
@@ -171,6 +180,7 @@ button {
 .rux-btn--toggle[aria-pressed="true"],
 .rux-btn--toggle.is-active {
   background-color:       var(--rux-btn-bg-primary);
+  --btn-shadow:           var(--rux-btn-shadow-active);
   --rux-button-icon-fill: 1;
 }
 

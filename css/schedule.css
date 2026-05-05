@@ -49,25 +49,36 @@
 
 /* --- The Toolbar Container --- */
 .agenda-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--rux-bg-2);
-  border-bottom: none;
-  width: 100%;
-  height: auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.rux-header.rux-header--schedule {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  column-gap: 8px;
-  height: auto;
-  padding: var(--rux-space-3) 0;
-  position: relative;
+  column-gap: var(--rux-header-gap);
+  height: 57px;
+  flex-shrink: 0;
+  padding-inline: var(--rux-space-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  margin-top: calc(-1 * var(--rux-layout-spacing));
+  margin-inline: calc(-1 * var(--rux-layout-spacing));
+  width: calc(100% + 2 * var(--rux-layout-spacing));
+
+  background: transparent;
+ 
+  border-bottom: 1px solid color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  border-radius: var(--rux-radius-9) var(--rux-radius-9) 0 0;
+  box-shadow: none;
+}
+
+.agenda-header .rux-header__title {
+  font-size: var(--rux-size-6);
+  font-weight: var(--rux-weight-semibold);
+  color: var(--rux-text-1);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* --- Left / Right containers --- */
@@ -82,7 +93,7 @@
   overflow: hidden;
 }
 
-.rux-header.rux-header--schedule .rux-header__actions {
+.agenda-header .rux-header__actions {
   grid-column: 3;
   justify-self: end;
   display: inline-flex;

@@ -185,8 +185,8 @@
   position: sticky;
   top: 0;
   background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
 
   border-bottom: 1px solid color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
@@ -217,12 +217,12 @@
   --footer-bg:        var(--rux-bg-2);
   --footer-padding-x: var(--rux-layout-spacing);
   --footer-padding-y: var(--rux-layout-spacing);
-  --footer-gap:       var(--rux-layout-spacing);
+  --footer-gap:       var(--rux-space-3);
 
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: var(--rux-footer-gap);
+  gap: var(--rux-space-3);
   flex-wrap: wrap;
   padding: var(--rux-footer-padding-y) var(--rux-footer-padding-x);
 
@@ -232,8 +232,8 @@
   bottom: 0;
 
  background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
 
   border-top: 1px solid color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
