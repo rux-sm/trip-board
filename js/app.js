@@ -726,6 +726,25 @@ function resetRequirementToggles() {
 }
 
 // ======================================================
+// 7.5) ASSIGNMENT NORMALIZATION
+// ======================================================
+function normalizeAssignment(a) {
+  if (!a || typeof a !== "object") return null;
+  return {
+    busId: String(a.busId || "").trim(),
+    busNumber: Number(a.busNumber) || 0,
+    driver1: String(a.driver1 || "").trim(),
+    driver2: String(a.driver2 || "").trim(),
+    driver3: String(a.driver3 || "").trim(),
+    driver4: String(a.driver4 || "").trim(),
+    driver1Status: String(a.driver1Status || "").trim(),
+    driver2Status: String(a.driver2Status || "").trim(),
+    driver3Status: String(a.driver3Status || "").trim(),
+    driver4Status: String(a.driver4Status || "").trim(),
+  };
+}
+
+// ======================================================
 // 8) LIFT UTILS
 // ======================================================
 function truthyLift(v) {
@@ -2112,18 +2131,8 @@ function applyWeekRespToState(resp) {
   for (const a of asnList) {
     const k = String(a.tripKey || "").trim();
     if (!k) continue;
-    (state.assignmentsByTripKey[k] ||= []).push({
-      busId: String(a.busId || "").trim(),
-      busNumber: Number(a.busNumber) || 0,
-      driver1: String(a.driver1 || "").trim(),
-      driver2: String(a.driver2 || "").trim(),
-      driver1Status: String(a.driver1Status || "").trim(),
-      driver2Status: String(a.driver2Status || "").trim(),
-      driver3: String(a.driver3 || "").trim(),
-      driver4: String(a.driver4 || "").trim(),
-      driver3Status: String(a.driver3Status || "").trim(),
-      driver4Status: String(a.driver4Status || "").trim(),
-    });
+    const normalized = normalizeAssignment(a);
+    if (normalized) (state.assignmentsByTripKey[k] ||= []).push(normalized);
   }
 
   // Refresh note only when not dirty — preserves in-progress edits
@@ -6251,18 +6260,28 @@ async function openTripForEdit(tripKey) {
     // getBusAssignments returning a partial record (transient GAS error, partial write)
     // and against the race where driver options aren't loaded yet when values are set.
     const mergedAssigns = rawAssigns.map((a) => {
-      const local = localAssigns.find((l) => l.busNumber === Number(a.busNumber));
-      return {
-        ...a,
-        driver1:       a.driver1       || local?.driver1       || "",
-        driver2:       a.driver2       || local?.driver2       || "",
-        driver3:       a.driver3       || local?.driver3       || "",
-        driver4:       a.driver4       || local?.driver4       || "",
-        driver1Status: a.driver1Status || local?.driver1Status || "",
-        driver2Status: a.driver2Status || local?.driver2Status || "",
-        driver3Status: a.driver3Status || local?.driver3Status || "",
-        driver4Status: a.driver4Status || local?.driver4Status || "",
+      const normalizedA = normalizeAssignment(a);
+      // Find local assignment by busNumber first, then by busId as fallback
+      let local = localAssigns.find((l) => l.busNumber === normalizedA.busNumber && normalizedA.busNumber > 0);
+      if (!local && normalizedA.busId) {
+        local = localAssigns.find((l) => l.busId === normalizedA.busId);
+      }
+      const merged = {
+        ...normalizedA,
+        driver1:       normalizedA.driver1       || local?.driver1       || "",
+        driver2:       normalizedA.driver2       || local?.driver2       || "",
+        driver3:       normalizedA.driver3       || local?.driver3       || "",
+        driver4:       normalizedA.driver4       || local?.driver4       || "",
+        driver1Status: normalizedA.driver1Status || local?.driver1Status || "",
+        driver2Status: normalizedA.driver2Status || local?.driver2Status || "",
+        driver3Status: normalizedA.driver3Status || local?.driver3Status || "",
+        driver4Status: normalizedA.driver4Status || local?.driver4Status || "",
       };
+      // Log if local fallback filled missing data
+      if (local && (!normalizedA.driver1 || !normalizedA.driver2 || !normalizedA.driver3 || !normalizedA.driver4)) {
+        console.warn(`Trip ${tripKey}: Merged assignment for bus ${normalizedA.busId || normalizedA.busNumber} using local fallback data.`);
+      }
+      return merged;
     });
 
     // Ensure driver/bus select options are populated before setting values —
@@ -8283,6 +8302,8 @@ function wireEvents() {
       if (res.ok) {
         state.savedNotesValue = notes;
         state.notesDirty = false;
+        clearCacheForCurrentView();
+        refreshWeekData({ silent: true });
         toast("Notes saved ✓", "success", 1500);
       } else {
         toast("Failed to save notes", "danger", 2500);
@@ -8556,6 +8577,7 @@ function wireEvents() {
 
         optimisticAssignments.push({
           busId,
+          busNumber: i + 1,
           driver1,
           driver2,
           driver3,
