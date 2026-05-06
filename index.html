@@ -1339,13 +1339,13 @@
                       </div>
                     </div>
 
-                    <!-- ── Section 5: Bus Assignment ───────────────────── -->
+                    <!-- ── Section 5: Dispatch ─────────────────────────── -->
                     <div
                       id="assignmentsOverridesSection"
                       class="form-section-card"
                       data-js="trip-assignments-section"
                     >
-                      <div class="form-section-card__label">Bus Assignment</div>
+                      <div class="form-section-card__label">Dispatch</div>
                       <div class="form-group col-12">
                         <div class="bus-assign-header">
                           <span class="field-label">Bus</span>
@@ -2091,6 +2091,22 @@
             Print
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Quick Edit Popover -->
+    <div id="tripQuickEdit" class="trip-quick-edit is-hidden" role="dialog" aria-label="Quick edit trip">
+      <div class="trip-quick-edit__arrow"></div>
+      <div class="trip-quick-edit__header">
+        <span class="trip-quick-edit__title"></span>
+        <button type="button" class="rux-btn rux-btn--square trip-quick-edit__close" id="quickEditCloseBtn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <nav class="trip-quick-edit__tabs" id="quickEditTabs"></nav>
+      <div class="trip-quick-edit__body" id="quickEditBody"></div>
+      <div class="trip-quick-edit__footer">
+        <button type="button" class="rux-btn rux-btn--primary" id="quickEditSaveBtn">Save</button>
       </div>
     </div>
 

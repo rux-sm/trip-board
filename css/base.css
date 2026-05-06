@@ -656,6 +656,179 @@ samp {
   display: none;
 }
 
+/* ==========================================================================
+   TRIP QUICK-EDIT POPOVER
+   ========================================================================== */
+
+.trip-quick-edit {
+  position: absolute;
+  z-index: 900;
+  width: 320px;
+  background: var(--rux-bg-4);
+  border: 1px solid var(--rux-border-2);
+  border-radius: var(--rux-radius-overlay);
+  box-shadow: 0 8px 24px oklch(0% 0 0 / 60%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trip-quick-edit.is-hidden { display: none; }
+
+.trip-quick-edit__arrow {
+  position: absolute;
+  left: -6px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--rux-bg-4);
+  border-left: 1px solid var(--rux-border-2);
+  border-bottom: 1px solid var(--rux-border-2);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.trip-quick-edit__arrow.arrow-right {
+  left: auto;
+  right: -6px;
+  border-left: none;
+  border-bottom: none;
+  border-right: 1px solid var(--rux-border-2);
+  border-top: 1px solid var(--rux-border-2);
+}
+
+.trip-quick-edit__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rux-space-3) var(--rux-space-4);
+  border-bottom: 1px solid var(--rux-border-1);
+  gap: var(--rux-space-3);
+}
+
+.trip-quick-edit__title {
+  font-size: var(--rux-size-4);
+  font-weight: var(--rux-weight-semibold);
+  color: var(--rux-text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.trip-quick-edit__tabs {
+  display: flex;
+  gap: 2px;
+  padding: var(--rux-space-2) var(--rux-space-3);
+  border-bottom: 1px solid var(--rux-border-1);
+}
+
+.trip-quick-edit__tab {
+  all: unset;
+  box-sizing: border-box;
+  padding: 4px 10px;
+  border-radius: var(--rux-radius-control);
+  font-size: var(--rux-size-3);
+  font-weight: var(--rux-weight-medium);
+  cursor: pointer;
+  color: var(--rux-text-2);
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.trip-quick-edit__tab:hover { color: var(--rux-text-1); }
+
+.trip-quick-edit__tab.is-active {
+  background: var(--rux-bg-3);
+  color: var(--rux-text-1);
+}
+
+.trip-quick-edit__body {
+  padding: var(--rux-space-4);
+  overflow-y: auto;
+  max-height: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rux-space-3);
+}
+
+.trip-quick-edit__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trip-quick-edit__label {
+  font-size: var(--rux-size-3);
+  font-weight: var(--rux-weight-medium);
+  color: var(--rux-text-2);
+}
+
+.trip-quick-edit__value {
+  font-size: var(--rux-size-4);
+  color: var(--rux-text-1);
+}
+
+.trip-quick-edit__input {
+  width: 100%;
+  height: var(--rux-fld-height);
+  background: var(--rux-fld-bg);
+  border: 1px solid var(--rux-fld-border-color);
+  border-radius: var(--rux-fld-radius);
+  color: var(--rux-text-1);
+  font-size: var(--rux-fld-font);
+  padding-inline: var(--rux-space-3);
+  box-sizing: border-box;
+}
+
+.trip-quick-edit__select {
+  width: 100%;
+  height: var(--rux-fld-height);
+  background: var(--rux-fld-bg);
+  border: 1px solid var(--rux-fld-border-color);
+  border-radius: var(--rux-fld-radius);
+  color: var(--rux-text-1);
+  font-size: var(--rux-fld-font);
+  padding-inline: var(--rux-space-3);
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.trip-quick-edit__bus-header {
+  font-size: var(--rux-size-3);
+  font-weight: var(--rux-weight-semibold);
+  color: var(--rux-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--rux-space-2) 0 var(--rux-space-1);
+  margin-top: var(--rux-space-2);
+  border-top: 1px solid var(--rux-border-1);
+}
+
+.trip-quick-edit__bus-header:first-child { border-top: none; margin-top: 0; }
+
+.trip-quick-edit__driver-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 32px;
+  gap: var(--rux-space-2);
+  align-items: center;
+  padding: var(--rux-space-1) 0;
+}
+
+.trip-quick-edit__toggle-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rux-space-2);
+}
+
+.trip-quick-edit__footer {
+  padding: var(--rux-space-3) var(--rux-space-4);
+  border-top: 1px solid var(--rux-border-1);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--rux-space-2);
+}
+
 .dropdown-menu[hidden],
 .dropdown__menu[hidden] {
   display: none;

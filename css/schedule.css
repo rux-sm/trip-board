@@ -665,7 +665,10 @@
 }
 
 .schedule-grid__header-cell {
-  background: var(--rux-bg-1);
+    background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
   padding: 0;
   height: var(--day-row-h);
   position: sticky;
@@ -685,11 +688,13 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--rux-bg-1);
+  background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
-  overflow: hidden;
 }
 
 /* Header cells: center day labels in the cell */
@@ -724,8 +729,10 @@
 }
 
 .schedule-grid__header-cell--today {
-  background: var(--rux-bg-1);
-  /*border: 1px solid var(--red);*/
+  background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
 }
 
 .schedule-grid__header-cell--today .schedule-grid__day-date {
@@ -790,7 +797,10 @@
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--rux-bg-3) !important;
+   background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
   color: var(--rux-text-2);
   font-size: 0.6875rem;
   text-align: center;
@@ -842,7 +852,10 @@
   z-index: 500;
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
-  background: var(--rux-bg-1);
+  background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
   font-size: var(--bus-num-size);
   /* 14px */
   font-weight: var(--bus-num-weight);
@@ -853,7 +866,6 @@
   height: var(--schedule-row-height);
   padding: 0 !important;
 
-  overflow: hidden;
   text-shadow: var(--text-shadow);
   /* border-inline-end: from general rule — single line, no ::after */
 }

@@ -6175,6 +6175,102 @@ function setTripFormFromState(tripKey) {
 // ======================================================
 let tripLoadInFlight = false;
 
+function populateFormFromData(t, assigns) {
+  $("destination").value = t.destination || "";
+  $("customer").value = t.customer || "";
+  $("contactName").value = t.contactName || "";
+  $("phone").value = t.phone || "";
+
+  $("tripDate").value = String(t.departureDate || "").slice(0, 10);
+  $("arrivalDate").value = String(t.arrivalDate || "").slice(0, 10);
+  $("departureTime").value = normalizeTime(t.departureTime) || "";
+  $("spotTime").value = normalizeTime(t.spotTime) || "";
+  $("arrivalTime").value = normalizeTime(t.arrivalTime) || "";
+
+  $("itineraryStatus").value = t.itineraryStatus || "";
+  $("contactStatus").value = t.contactStatus || "";
+  $("paymentStatus").value = t.paymentStatus || "";
+  $("driverStatus").value = t.driverStatus || "";
+  $("invoiceStatus").value = t.invoiceStatus || "";
+  $("invoiceNumber").value = t.invoiceNumber || "";
+  $("tripColor").value = t.tripColor || "";
+  setRequirementTogglesFromTrip(t);
+
+  ["paymentStatus", "driverStatus", "invoiceStatus", "tripColor"].forEach((id) => {
+    const el = $(id);
+    if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  updateInvoiceNumberVisibility();
+
+  if ($("itinerary")) dom.itineraryField.value = t.itinerary || "";
+  if ($("itineraryPdfUrl")) $("itineraryPdfUrl").value = t.itineraryPdfUrl || "";
+  if ($("paymentType")) $("paymentType").value = t.paymentType || "";
+  if ($("estimatedMileage")) $("estimatedMileage").value = t.estimatedMileage || "";
+  if ($("quotedPrice")) {
+    const qp = String(t.quotedPrice || "");
+    $("quotedPrice").value = qp && !qp.startsWith("$") ? "$" + qp : qp;
+  }
+  if ($("tripMiles")) $("tripMiles").value = t.tripMiles || "";
+  if ($("datePaid")) $("datePaid").value = t.datePaid || "";
+  if ($("notes")) $("notes").value = t.notes || "";
+  if ($("comments")) $("comments").value = t.comments || "";
+  if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
+  if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
+  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
+
+  setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
+  dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
+  setModeEdit(String(t.tripKey), String(t.tripId || ""));
+
+  const fallbackDriverStatus = t.driverStatus || "Pending";
+  state.busRows.forEach((r) => {
+    r.busSel.value = "None";
+    r.d1Sel.value = "None"; r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
+    r.d2Sel.value = "None"; r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
+    r.d3Sel.value = "None"; r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
+    r.d4Sel.value = "None"; r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
+  });
+
+  refreshBusSelectOptions();
+  (assigns || []).forEach((a) => {
+    const n = Number(a.busNumber);
+    if (!n || n < 1 || n > 10) return;
+    const row = state.busRows[n - 1];
+    if (!row) return;
+    if (a.busId)   row.busSel.value = String(a.busId).trim();
+    if (a.driver1) row.d1Sel.value  = String(a.driver1).trim();
+    if (a.driver2) row.d2Sel.value  = String(a.driver2).trim();
+    if (a.driver3) row.d3Sel.value  = String(a.driver3).trim();
+    if (a.driver4) row.d4Sel.value  = String(a.driver4).trim();
+    row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
+    row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
+    row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
+    row.d4StatusSel.value = String(a.driver4Status || "").trim() || "Pending";
+    if (a.driver1Pay && row.d1Pay) row.d1Pay.value = String(a.driver1Pay).trim();
+    if (a.driver2Pay && row.d2Pay) row.d2Pay.value = String(a.driver2Pay).trim();
+    if (a.driver3Pay && row.d3Pay) row.d3Pay.value = String(a.driver3Pay).trim();
+    if (a.driver4Pay && row.d4Pay) row.d4Pay.value = String(a.driver4Pay).trim();
+  });
+
+  updateBusRowVisibility();
+  state.busRows.forEach((r) => {
+    r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  syncBusPanelState();
+  syncBusSelectEmptyState();
+  refreshEmptyStateUI();
+  if (typeof syncEmptyFields === "function") syncEmptyFields();
+}
+
 async function openTripForEdit(tripKey) {
   if (tripLoadInFlight) {
     toast("Trip is already loading…", "info", 1200);
@@ -6212,110 +6308,7 @@ async function openTripForEdit(tripKey) {
   const panelAlreadyOpen = getCardPanel("trip") !== null;
 
   // Helper to populate the form fully
-  const populateFormFromData = (t, assigns) => {
-    $("destination").value = t.destination || "";
-    $("customer").value = t.customer || "";
-    $("contactName").value = t.contactName || "";
-    $("phone").value = t.phone || "";
-
-    $("tripDate").value = String(t.departureDate || "").slice(0, 10);
-    $("arrivalDate").value = String(t.arrivalDate || "").slice(0, 10);
-    $("departureTime").value = normalizeTime(t.departureTime) || "";
-    $("spotTime").value = normalizeTime(t.spotTime) || "";
-    $("arrivalTime").value = normalizeTime(t.arrivalTime) || "";
-
-    $("itineraryStatus").value = t.itineraryStatus || "";
-    $("contactStatus").value = t.contactStatus || "";
-    $("paymentStatus").value = t.paymentStatus || "";
-    $("driverStatus").value = t.driverStatus || "";
-    $("invoiceStatus").value = t.invoiceStatus || "";
-    $("invoiceNumber").value = t.invoiceNumber || "";
-    $("tripColor").value = t.tripColor || "";
-    setRequirementTogglesFromTrip(t);
-
-    // Sync custom dropdown triggers
-    [
-      "paymentStatus",
-      "driverStatus",
-      "invoiceStatus",
-      "tripColor",
-    ].forEach((id) => {
-      const el = $(id);
-      if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-    updateInvoiceNumberVisibility();
-
-    if ($("itinerary")) dom.itineraryField.value = t.itinerary || "";
-    if ($("itineraryPdfUrl")) $("itineraryPdfUrl").value = t.itineraryPdfUrl || "";
-    if ($("paymentType")) $("paymentType").value = t.paymentType || "";
-    if ($("estimatedMileage")) $("estimatedMileage").value = t.estimatedMileage || "";
-    if ($("quotedPrice")) {
-      const qp = String(t.quotedPrice || "");
-      $("quotedPrice").value = qp && !qp.startsWith("$") ? "$" + qp : qp;
-    }
-    if ($("tripMiles")) $("tripMiles").value = t.tripMiles || "";
-    if ($("datePaid")) $("datePaid").value = t.datePaid || "";
-    if ($("notes")) $("notes").value = t.notes || "";
-    if ($("comments")) $("comments").value = t.comments || "";
-
-    if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
-    if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
-    if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
-
-    if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
-
-    setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
-    dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
-    setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
-
-    const fallbackDriverStatus = t.driverStatus || "Pending";
-    state.busRows.forEach((r) => {
-      r.busSel.value = "None";
-      r.d1Sel.value = "None"; r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
-      r.d2Sel.value = "None"; r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
-      r.d3Sel.value = "None"; r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
-      r.d4Sel.value = "None"; r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
-    });
-
-    refreshBusSelectOptions();
-    (assigns || []).forEach((a) => {
-      const n = Number(a.busNumber);
-      if (!n || n < 1 || n > 10) return;
-      const row = state.busRows[n - 1];
-      if (!row) return;
-
-      if (a.busId)   row.busSel.value = String(a.busId).trim();
-      if (a.driver1) row.d1Sel.value  = String(a.driver1).trim();
-      if (a.driver2) row.d2Sel.value  = String(a.driver2).trim();
-      if (a.driver3) row.d3Sel.value  = String(a.driver3).trim();
-      if (a.driver4) row.d4Sel.value  = String(a.driver4).trim();
-      row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
-      row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
-      row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
-      row.d4StatusSel.value = String(a.driver4Status || "").trim() || "Pending";
-      if (a.driver1Pay && row.d1Pay) row.d1Pay.value = String(a.driver1Pay).trim();
-      if (a.driver2Pay && row.d2Pay) row.d2Pay.value = String(a.driver2Pay).trim();
-      if (a.driver3Pay && row.d3Pay) row.d3Pay.value = String(a.driver3Pay).trim();
-      if (a.driver4Pay && row.d4Pay) row.d4Pay.value = String(a.driver4Pay).trim();
-    });
-
-    updateBusRowVisibility();
-    state.busRows.forEach((r) => {
-      r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d3StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
-      r.d4StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-    syncBusPanelState();
-    syncBusSelectEmptyState();
-    refreshEmptyStateUI();
-    if (typeof syncEmptyFields === "function") syncEmptyFields();
-  };
+  // populateFormFromData is now a module-level function above openTripForEdit
 
   if (panelAlreadyOpen) {
     // Panel is visible — lock inputs so old data stays readable but not editable
@@ -7404,6 +7397,7 @@ window.addEventListener("keydown", (e) => {
 function showTripContextMenu(x, y, tripKey) {
   if (!dom.ctxMenu) return;
 
+  closeQuickEditPopover();
   closeAllFloatingMenus();
 
   activeContextTripKey = tripKey;
@@ -7531,6 +7525,351 @@ function handleScheduleInteraction(e, isContext) {
       console.warn("Missing busId or dateStr", { busId, dateStr });
     }
   }
+}
+
+// ======================================================
+// 34B) TRIP BAR QUICK-EDIT POPOVER
+// ======================================================
+
+let quickEditTripKey = null;
+
+const QUICK_EDIT_TABS = [
+  { id: "billing",   label: "Billing"   },
+  { id: "bus",       label: "Dispatch"  },
+  { id: "envelope",  label: "Envelope"  },
+  { id: "checklist", label: "Checklist" },
+];
+
+function closeQuickEditPopover() {
+  const el = $("tripQuickEdit");
+  if (el) el.classList.add("is-hidden");
+  quickEditTripKey = null;
+}
+
+function renderQuickEditTab(tabId, trip, assigns) {
+  const body = $("quickEditBody");
+  if (!body) return;
+  body.innerHTML = "";
+
+  if (tabId === "billing") {
+    const fields = [
+      { label: "Contract",       key: "paymentStatus",  type: "select", options: [["",""],["Pending Quote","Unconfirmed"],["Contract Signed","Contract Signed"],["PO Received","PO Received"],["Not Required","Not Required"]] },
+      { label: "Invoice",        key: "invoiceStatus",  type: "select", options: [["",""],["Pending Invoice","Pending"],["Invoiced","Invoiced"],["Deposit Received","Deposit Paid"],["Paid in Full","Paid in Full"]] },
+      { label: "Invoice #",      key: "invoiceNumber",  type: "text"   },
+      { label: "PO / Payment",   key: "paymentType",    type: "text"   },
+      { label: "Est. Mileage",   key: "estimatedMileage", type: "text"   },
+      { label: "Quoted Price",   key: "quotedPrice",      type: "text"   },
+      { label: "Trip Miles",     key: "tripMiles",        type: "text"   },
+      { label: "Date Paid",      key: "datePaid",         type: "date"   },
+      { label: "Notes",          key: "notes",            type: "text"   },
+    ];
+    fields.forEach(({ label, key, type, options }) => {
+      const wrap = document.createElement("div");
+      wrap.className = "trip-quick-edit__field";
+      const lbl = document.createElement("span");
+      lbl.className = "trip-quick-edit__label";
+      lbl.textContent = label;
+      wrap.appendChild(lbl);
+      let input;
+      if (type === "select") {
+        input = document.createElement("select");
+        input.className = "trip-quick-edit__select";
+        options.forEach(([val, txt]) => {
+          const o = document.createElement("option");
+          o.value = val; o.textContent = txt;
+          input.appendChild(o);
+        });
+        input.value = trip[key] || "";
+      } else {
+        input = document.createElement("input");
+        input.type = type === "date" ? "date" : "text";
+        input.className = "trip-quick-edit__input";
+        input.value = trip[key] || "";
+        if (key === "quotedPrice") {
+          input.addEventListener("blur", () => {
+            const v = input.value.trim();
+            if (v && !v.startsWith("$")) input.value = "$" + v;
+          });
+        }
+      }
+      input.dataset.key = key;
+      wrap.appendChild(input);
+      body.appendChild(wrap);
+    });
+
+  } else if (tabId === "bus") {
+    if (!assigns.length) {
+      const empty = document.createElement("span");
+      empty.className = "trip-quick-edit__label";
+      empty.textContent = "No bus assignments";
+      body.appendChild(empty);
+      return;
+    }
+
+    const STATUS_STATES = [
+      { value: "Pending",   icon: "schedule",    cls: "status-pending"  },
+      { value: "Assigned",  icon: "pending",      cls: "status-assigned" },
+      { value: "Confirmed", icon: "check_circle", cls: "status-ok"       },
+    ];
+
+    const makeStatusCycle = (currentValue, busNumber, statusKey) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.dataset.busNumber = busNumber;
+      btn.dataset.statusKey = statusKey;
+      btn.dataset.value = currentValue || "Pending";
+      const sync = () => {
+        const s = STATUS_STATES.find(st => st.value === btn.dataset.value) || STATUS_STATES[0];
+        btn.innerHTML = `<span class="material-symbols-outlined">${s.icon}</span>`;
+        btn.className = `driver-status-cycle ${s.cls}`;
+      };
+      sync();
+      btn.addEventListener("click", () => {
+        const cur = STATUS_STATES.findIndex(st => st.value === btn.dataset.value);
+        btn.dataset.value = STATUS_STATES[(cur + 1) % STATUS_STATES.length].value;
+        sync();
+      });
+      return btn;
+    };
+
+    assigns.forEach((a) => {
+      // Bus header
+      const header = document.createElement("div");
+      header.className = "trip-quick-edit__bus-header";
+      header.textContent = `Bus ${a.busId}`;
+      body.appendChild(header);
+
+      // One row per assigned driver
+      const slots = [
+        { name: a.driver1, pay: a.driver1Pay, status: a.driver1Status, payKey: "driver1Pay", statusKey: "driver1Status" },
+        { name: a.driver2, pay: a.driver2Pay, status: a.driver2Status, payKey: "driver2Pay", statusKey: "driver2Status" },
+        { name: a.driver3, pay: a.driver3Pay, status: a.driver3Status, payKey: "driver3Pay", statusKey: "driver3Status" },
+        { name: a.driver4, pay: a.driver4Pay, status: a.driver4Status, payKey: "driver4Pay", statusKey: "driver4Status" },
+      ].filter(s => s.name && s.name !== "None" && s.name !== "");
+
+      slots.forEach(({ name, pay, status, payKey, statusKey }) => {
+        const row = document.createElement("div");
+        row.className = "trip-quick-edit__driver-row";
+
+        const nameEl = document.createElement("span");
+        nameEl.className = "trip-quick-edit__value";
+        nameEl.textContent = name;
+
+        const payInput = document.createElement("input");
+        payInput.type = "text";
+        payInput.className = "trip-quick-edit__input";
+        payInput.placeholder = "$";
+        payInput.value = pay || "";
+        payInput.dataset.busNumber = a.busNumber;
+        payInput.dataset.payKey = payKey;
+
+        const statusBtn = makeStatusCycle(status, a.busNumber, statusKey);
+
+        row.appendChild(nameEl);
+        row.appendChild(payInput);
+        row.appendChild(statusBtn);
+        body.appendChild(row);
+      });
+    });
+
+  } else if (tabId === "envelope") {
+    const fields = [
+      { label: "Pick Up Address",    key: "envelopePickup"       },
+      { label: "Trip Contact",       key: "envelopeTripContact"  },
+      { label: "Contact Phone",      key: "envelopeTripPhone"    },
+      { label: "Driver Instructions",key: "envelopeTripNotes"    },
+    ];
+    fields.forEach(({ label, key }) => {
+      const wrap = document.createElement("div");
+      wrap.className = "trip-quick-edit__field";
+      const lbl = document.createElement("span");
+      lbl.className = "trip-quick-edit__label";
+      lbl.textContent = label;
+      wrap.appendChild(lbl);
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "trip-quick-edit__input";
+      input.value = trip[key] || "";
+      input.dataset.key = key;
+      wrap.appendChild(input);
+      body.appendChild(wrap);
+    });
+
+  } else if (tabId === "checklist") {
+    const items = [
+      { key: "tripReminderSent", label: "Reminder Sent",  icon: "notifications" },
+      { key: "driverInfoSent",   label: "Driver Info Sent", icon: "send"         },
+      { key: "tripReviewed",     label: "Reviewed",         icon: "task_alt"     },
+    ];
+    const row = document.createElement("div");
+    row.className = "trip-quick-edit__toggle-row";
+    items.forEach(({ key, label, icon }) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `rux-btn rux-btn--toggle${key === "tripReviewed" ? " rux-btn--toggle-reviewed" : ""}`;
+      const isOn = !!trip[key] && trip[key] !== false && trip[key] !== "false";
+      btn.setAttribute("aria-pressed", String(isOn));
+      btn.dataset.key = key;
+      btn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">${icon}</span>${label}`;
+      btn.addEventListener("click", () => {
+        const pressed = btn.getAttribute("aria-pressed") === "true";
+        btn.setAttribute("aria-pressed", String(!pressed));
+      });
+      row.appendChild(btn);
+    });
+    body.appendChild(row);
+
+  } else if (tabId === "details") {
+    const fields = [
+      { label: "Destination",    key: "destination",   readonly: true  },
+      { label: "Customer",       key: "customer",      readonly: true  },
+      { label: "Departure",      key: "departureDate", readonly: true  },
+      { label: "Arrival",        key: "arrivalDate",   readonly: true  },
+      { label: "Depart Time",    key: "departureTime", readonly: true  },
+      { label: "Trip Color",     key: "tripColor",     type: "select",
+        options: [["","None"],["blue","Blue"],["green","Green"],["one-way","One-Way"],["out-of-service","Out of Service"]] },
+    ];
+    fields.forEach(({ label, key, readonly, type, options }) => {
+      const wrap = document.createElement("div");
+      wrap.className = "trip-quick-edit__field";
+      const lbl = document.createElement("span");
+      lbl.className = "trip-quick-edit__label";
+      lbl.textContent = label;
+      wrap.appendChild(lbl);
+      if (readonly) {
+        const val = document.createElement("span");
+        val.className = "trip-quick-edit__value";
+        val.textContent = trip[key] || "—";
+        wrap.appendChild(val);
+      } else if (type === "select") {
+        const sel = document.createElement("select");
+        sel.className = "trip-quick-edit__select";
+        sel.dataset.key = key;
+        options.forEach(([v, t]) => { const o = document.createElement("option"); o.value = v; o.textContent = t; sel.appendChild(o); });
+        sel.value = trip[key] || "";
+        wrap.appendChild(sel);
+      }
+      body.appendChild(wrap);
+    });
+  }
+}
+
+function showQuickEditPopover(tripKey, barEl) {
+  const trip = state.tripByKey?.[String(tripKey)];
+  if (!trip) return;
+  const assigns = (state.assignmentsByTripKey?.[String(tripKey)] || [])
+    .filter(a => a.busId && a.busId !== "None");
+
+  quickEditTripKey = tripKey;
+
+  const el = $("tripQuickEdit");
+  const titleEl = el.querySelector(".trip-quick-edit__title");
+  const tabsEl = $("quickEditTabs");
+
+  titleEl.textContent = trip.destination || "Trip";
+
+  // Build tabs
+  tabsEl.innerHTML = "";
+  QUICK_EDIT_TABS.forEach((tab, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "trip-quick-edit__tab" + (i === 0 ? " is-active" : "");
+    btn.textContent = tab.label;
+    btn.dataset.tab = tab.id;
+    btn.addEventListener("click", () => {
+      tabsEl.querySelectorAll(".trip-quick-edit__tab").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      renderQuickEditTab(tab.id, trip, assigns);
+    });
+    tabsEl.appendChild(btn);
+  });
+
+  renderQuickEditTab("billing", trip, assigns);
+  el.classList.remove("is-hidden");
+
+  // Position
+  const scrollX = window.scrollX, scrollY = window.scrollY;
+  const barRect = barEl.getBoundingClientRect();
+  const popW = 320, popH = 460;
+  const arrow = el.querySelector(".trip-quick-edit__arrow");
+
+  let left = barRect.right + 10 + scrollX;
+  let top  = barRect.top  + scrollY;
+  arrow.classList.remove("arrow-right");
+
+  if (left + popW > window.innerWidth + scrollX - 16) {
+    left = barRect.left - popW - 10 + scrollX;
+    arrow.classList.add("arrow-right");
+  }
+  if (top + popH > window.innerHeight + scrollY - 16) {
+    top = window.innerHeight + scrollY - popH - 16;
+  }
+  if (top < scrollY + 8) top = scrollY + 8;
+
+  el.style.left = `${left}px`;
+  el.style.top  = `${top}px`;
+}
+
+function collectQuickEditData() {
+  const body = $("quickEditBody");
+  if (!body) return { tripEdits: {}, assignEdits: [] };
+  const tripEdits = {};
+  body.querySelectorAll("[data-key]").forEach(el => {
+    if (el.tagName === "SELECT" || el.tagName === "INPUT") {
+      tripEdits[el.dataset.key] = el.value;
+    } else if (el.tagName === "BUTTON" && el.dataset.key) {
+      tripEdits[el.dataset.key] = el.getAttribute("aria-pressed") === "true";
+    }
+  });
+  const assignEdits = [];
+  body.querySelectorAll("[data-bus-number]").forEach(el => {
+    const bn = String(el.dataset.busNumber);
+    let entry = assignEdits.find(a => a.busNumber === bn);
+    if (!entry) { entry = { busNumber: bn }; assignEdits.push(entry); }
+    if (el.dataset.payKey)    entry[el.dataset.payKey]    = el.value;
+    if (el.dataset.statusKey) entry[el.dataset.statusKey] = el.dataset.value;
+  });
+  return { tripEdits, assignEdits };
+}
+
+function saveQuickEdit() {
+  if (!quickEditTripKey) return;
+  const trip = state.tripByKey?.[String(quickEditTripKey)];
+  if (!trip) return;
+
+  const { tripEdits, assignEdits } = collectQuickEditData();
+
+  closeQuickEditPopover();
+
+  if (!confirmDiscardIfDirty("You have unsaved trip changes. Save quick edit instead?")) return;
+
+  // Merge edits into existing state — no API call, panel stays closed
+  const merged = { ...trip, ...tripEdits };
+  const baseAssigns = (state.assignmentsByTripKey?.[String(merged.tripKey)] || []).map(a => {
+    const edit = assignEdits.find(e => String(e.busNumber) === String(a.busNumber));
+    return edit ? { ...a, ...edit } : a;
+  });
+
+  populateFormFromData(merged, baseAssigns);
+  state.tripFormDirty = true;
+  dom.saveBtn.click();
+}
+
+function wireQuickEditPopover() {
+  $("quickEditSaveBtn")?.addEventListener("click", saveQuickEdit);
+  $("quickEditCloseBtn")?.addEventListener("click", closeQuickEditPopover);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && quickEditTripKey) closeQuickEditPopover();
+  });
+  document.addEventListener("click", (e) => {
+    if (!quickEditTripKey) return;
+    const el = $("tripQuickEdit");
+    const path = e.composedPath ? e.composedPath() : [e.target];
+    const insidePopover = path.some(n => n === el);
+    const onBar = path.some(n => n?.classList?.contains?.("schedule-grid__trip-bar"));
+    if (!insidePopover && !onBar) closeQuickEditPopover();
+  });
 }
 
 function wireDelegatedBarEvents() {
@@ -7826,6 +8165,19 @@ function wireDelegatedBarEvents() {
         // Selection (all devices)
       const clickedBar = e.target.closest(".schedule-grid__trip-bar");
       selectTripBar(clickedBar || null);
+
+      // Quick-edit popover on desktop left-click
+      if (!isMobileOnly() && clickedBar) {
+        const tripKey = clickedBar.dataset.tripkey;
+        if (tripKey) {
+          if (quickEditTripKey === tripKey) {
+            closeQuickEditPopover();
+          } else {
+            showQuickEditPopover(tripKey, clickedBar);
+          }
+        }
+        return;
+      }
 
       // Only handle Taps on touch devices for the general context menu
       if (isMobileOnly()) {
@@ -9911,6 +10263,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   wireSettingsMenu();
   wireEvents();
   wireDelegatedBarEvents();
+  wireQuickEditPopover();
 
   window.addEventListener(
     "resize",
