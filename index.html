@@ -970,7 +970,30 @@
                       />
                     </div>
 
-                    <div class="form-group col-8">
+                    <div class="form-group col-4">
+                      <label for="busesNeeded">Buses</label>
+                      <select id="busesNeeded" name="busesNeeded" required>
+                        <option value="" disabled selected>-</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    </div>
+
+                    </div>
+
+                    <!-- ── Section 2: Estimate ─────────────────────────── -->
+                    <div class="form-section-card">
+                      <div class="form-section-card__label">Estimate</div>
+
+                    <div class="form-group col-6">
                       <label for="tripColor">Trip Type</label>
                       <select
                         id="tripColor"
@@ -988,35 +1011,40 @@
                       </select>
                     </div>
 
+                    <div class="form-group col-6">
+                      <label for="quotedPrice">Quoted Price</label>
+                      <div class="fld-affix fld-affix--prefix">
+                        <span class="fld-affix__prefix">$</span>
+                        <input type="text" id="quotedPrice" name="quotedPrice" placeholder="" />
+                      </div>
+                    </div>
+
                     <div class="form-group col-4">
-                      <label for="busesNeeded">Buses</label>
-                      <select
-                        id="busesNeeded"
-                        name="busesNeeded"
-                        required
-                      >
-                        <option
-                          value=""
-                          disabled
-                          selected
-                        >
-                          -
-                        </option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
+                      <label for="estimatedMileage">Est. Mileage</label>
+                      <div class="fld-affix fld-affix--suffix">
+                        <input type="text" id="estimatedMileage" name="estimatedMileage" placeholder="" />
+                        <span class="fld-affix__suffix">mi</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-4">
+                      <label for="drivingHours">Driving Hours</label>
+                      <div class="fld-affix fld-affix--suffix">
+                        <input type="text" id="drivingHours" name="drivingHours" />
+                        <span class="fld-affix__suffix">hr</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-4">
+                      <label for="onDutyHours">On-Duty Hours</label>
+                      <div class="fld-affix fld-affix--suffix">
+                        <input type="text" id="onDutyHours" name="onDutyHours" />
+                        <span class="fld-affix__suffix">hr</span>
+                      </div>
                     </div>
                     </div>
 
-                    <!-- ── Section 2: Billing ──────────────────────────── -->
+                    <!-- ── Section 3: Billing ──────────────────────────── -->
                     <div class="form-section-card">
                       <div class="form-section-card__label">Billing</div>
 
@@ -1085,33 +1113,11 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="estimatedMileage">Estimated Mileage</label>
-                      <input
-                        type="text"
-                        id="estimatedMileage"
-                        name="estimatedMileage"
-                        placeholder=""
-                      />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="quotedPrice">Quoted Price</label>
-                      <input
-                        type="text"
-                        id="quotedPrice"
-                        name="quotedPrice"
-                        placeholder=""
-                      />
-                    </div>
-
-                    <div class="form-group col-6">
                       <label for="tripMiles">Trip Miles</label>
-                      <input
-                        type="text"
-                        id="tripMiles"
-                        name="tripMiles"
-                        placeholder=""
-                      />
+                      <div class="fld-affix fld-affix--suffix">
+                        <input type="text" id="tripMiles" name="tripMiles" placeholder="" />
+                        <span class="fld-affix__suffix">mi</span>
+                      </div>
                     </div>
 
                     <div class="form-group col-6">
@@ -1214,16 +1220,6 @@
                       data-js="trip-requirements-section"
                     >
                       <div class="form-section-card__label">Requirements</div>
-                      <div class="form-grid col-12">
-                        <div class="form-group col-6">
-                          <label for="drivingHours">Driving Hours</label>
-                          <input type="text" id="drivingHours" name="drivingHours" />
-                        </div>
-                        <div class="form-group col-6">
-                          <label for="onDutyHours">On-Duty Hours</label>
-                          <input type="text" id="onDutyHours" name="onDutyHours" />
-                        </div>
-                      </div>
                       <div
                         class="rux-btn--toggle-grid col-12"
                         role="group"
@@ -1495,51 +1491,51 @@
                     aria-atomic="true"
                   ></span>
                   <div class="rux-header__actions">
-                    <button
-                      id="prevWeekBtn"
-                      class="rux-btn rux-btn--secondary"
-                      type="button"
-                      aria-label="Previous Week"
-                      title="Previous Week"
-                    >
-                      <span class="material-symbols-outlined">keyboard_arrow_left</span>
-                      Prev
-                    </button>
-                    <button
-                      id="todayBtn"
-                      class="rux-btn rux-btn--secondary"
-                      type="button"
-                      aria-label="Go to today"
-                      title="Go to today"
-                    >
-                      Today
-                    </button>
-                    <button
-                      id="nextWeekBtn"
-                      class="rux-btn rux-btn--secondary"
-                      type="button"
-                      aria-label="Next Week"
-                      title="Next Week"
-                    >
-                      Next
-                      <span class="material-symbols-outlined">keyboard_arrow_right</span>
-                    </button>
-                    <div class="weekpicker-trigger-wrap">
+                    <div class="rux-btn-group">
                       <button
-                        id="agendaLeftBtn"
+                        id="prevWeekBtn"
+                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        type="button"
+                        aria-label="Previous Week"
+                        title="Previous Week"
+                      >
+                        <span class="material-symbols-outlined">keyboard_arrow_left</span>
+                      </button>
+                      <button
+                        id="todayBtn"
                         class="rux-btn rux-btn--secondary"
                         type="button"
-                        aria-label="Select week"
-                        title="Select week"
+                        aria-label="Go to today"
+                        title="Go to today"
                       >
-                        Date
+                        Today
                       </button>
-                      <input
-                        type="date"
-                        id="weekPicker"
-                        class="weekpicker weekpicker-trigger-input"
-                        aria-label="Select week"
-                      />
+                      <div class="weekpicker-trigger-wrap">
+                        <button
+                          id="agendaLeftBtn"
+                          class="rux-btn rux-btn--secondary rux-btn--icon"
+                          type="button"
+                          aria-label="Select week"
+                          title="Select week"
+                        >
+                          <span class="material-symbols-outlined">calendar_today</span>
+                        </button>
+                        <input
+                          type="date"
+                          id="weekPicker"
+                          class="weekpicker weekpicker-trigger-input"
+                          aria-label="Select week"
+                        />
+                      </div>
+                      <button
+                        id="nextWeekBtn"
+                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        type="button"
+                        aria-label="Next Week"
+                        title="Next Week"
+                      >
+                        <span class="material-symbols-outlined">keyboard_arrow_right</span>
+                      </button>
                     </div>
                   </div>
                 </div>

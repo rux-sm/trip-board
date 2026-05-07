@@ -462,11 +462,35 @@ select.is-empty:not(:focus),
   max-width: 100%;
 }
 
-/* ── 11. Form Grid Layout ────────────────────────────────────────────────── */
+/* ── 11. Field Affixes (prefix / suffix) ────────────────────────────────── */
+
+.fld-affix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fld-affix__prefix,
+.fld-affix__suffix {
+  position: absolute;
+  font-size: var(--rux-fld-font-size);
+  color: var(--rux-text-2);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.fld-affix__prefix { left:  var(--rux-space-2); }
+.fld-affix__suffix { right: var(--rux-space-2); }
+
+.fld-affix--prefix input { padding-left:  2rem; }
+.fld-affix--suffix input { padding-right: 2.5rem; }
+
+/* ── 12. Form Grid Layout ────────────────────────────────────────────────── */
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   width: 100%;
   gap: var(--rux-fld-card-gap) var(--rux-fld-col-gap);
   align-items: start;
@@ -483,6 +507,7 @@ select.is-empty:not(:focus),
 .col-12 {
   margin-top: 0;
   margin-bottom: 0;
+  min-width: 0;
 }
 
 /* Column spans */
@@ -593,8 +618,9 @@ hr.form-divider {
 .form-section-card {
   grid-column: span 12;
   display: grid;
-  grid-template-columns: subgrid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   row-gap: var(--rux-fld-row-gap);
+  column-gap: var(--rux-fld-col-gap);
   padding: var(--rux-space-4);
   background: var(--rux-bg-4);
   border: 1px solid var(--rux-bg-2);

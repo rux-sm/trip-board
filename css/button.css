@@ -14,13 +14,13 @@
 
 :root {
   --rux-btn-bg-primary:   oklch(from var(--rux-color-blue) 50% c h);
-  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 50% c h);
+  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 40% c h);
   --rux-btn-bg-danger:    oklch(from var(--rux-color-red)  50% c h);
   --rux-btn-text:         var(--rux-color-white);
   --rux-btn-hover-lift:   0.1;
 
-  --rux-btn-height:      28px;
-  --rux-btn-radius:      var(--rux-radius-2);
+  --rux-btn-height:      32px;
+  --rux-btn-radius:      var(--rux-radius-3);
   --rux-btn-padding:     0 12px;
   --rux-btn-gap:         4px;
 
@@ -152,8 +152,8 @@ button {
   --btn-hover-background:  oklch(from var(--rux-bg-2) calc(l + var(--rux-btn-hover-lift)) c h);
   --btn-active-background: var(--rux-btn-bg-primary);
 
-  width:     28px;
-  min-width: 28px;
+  width:     32px;
+  min-width: 32px;
   padding:   0;
 }
 
@@ -170,13 +170,16 @@ button {
   transition: font-variation-settings var(--transition-fast);
 }
 
-/* ── 5. Toggle — full-width requirement toggles ─────────────────────────── */
+/* ── 5. Toggle — chip-style requirement toggles ─────────────────────────── */
 
 .rux-btn--toggle {
-  --btn-background:        var(--rux-btn-bg-secondary);
-  --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-btn-hover-lift)) c h);
-  --btn-active-background: var(--rux-btn-bg-primary);
-  --btn-shadow:            var(--rux-btn-shadow-inset);
+  --btn-background:        var(--rux-bg-3);
+  --btn-hover-background:  var(--rux-bg-4);
+  --btn-active-background: var(--rux-bg-4);
+  --btn-shadow:            none;
+  --btn-text:              var(--rux-text-2);
+  --btn-border:            transparent;
+  --rux-btn-icon-fill:     0;
 
   width:     100%;
   min-width: 0;
@@ -185,15 +188,21 @@ button {
 
 .rux-btn--toggle:active { transform: none; }
 
+.rux-btn--toggle .material-symbols-outlined {
+  transition: font-variation-settings var(--transition-fast);
+}
+
 .rux-btn--toggle[aria-pressed="true"],
 .rux-btn--toggle.is-active {
-  background-color:       var(--rux-btn-bg-primary);
-  --btn-shadow:           var(--rux-btn-shadow-active);
-  --rux-button-icon-fill: 1;
+  --btn-background:    var(--rux-btn-bg-primary);
+  --btn-border:        var(--rux-btn-bg-primary);
+  --btn-text:          var(--rux-text-1);
+  --rux-btn-icon-fill: 1;
 }
 
 .rux-btn--toggle-reviewed[aria-pressed="true"] {
-  background-color: oklch(from var(--rux-color-green) 38% c h);
+  --btn-background: oklch(from var(--rux-color-green) 22% c h);
+  --btn-border:     oklch(from var(--rux-color-green) 50% c h / 0.5);
 }
 
 /* ── 6. Toggle Grid & Requirement Label ─────────────────────────────────── */
@@ -226,4 +235,46 @@ button {
 
 .form-actions > .rux-btn {
   flex: 1;
+}
+
+/* ── 8. Button Group — segmented row ────────────────────────────────────── */
+
+.rux-btn-group {
+  display: inline-flex;
+  border-radius: var(--rux-btn-radius);
+  box-shadow: 0 1px 2px oklch(0% 0 0 / 40%), 0 2px 8px oklch(0% 0 0 / 20%);
+}
+
+/* Reset radius, min-width, and external shadow on all buttons */
+.rux-btn-group > .rux-btn,
+.rux-btn-group > * > .rux-btn {
+  border-radius: 0;
+  min-width: 0;
+  --btn-shadow: inset 0 1px 0 oklch(100% 0 0 / 10%), inset 0 -1px 0 oklch(0% 0 0 / 40%);
+}
+
+/* First item: left radius */
+.rux-btn-group > .rux-btn:first-child {
+  border-top-left-radius: var(--rux-btn-radius);
+  border-bottom-left-radius: var(--rux-btn-radius);
+}
+
+/* Last item: right radius — handles both .rux-btn and wrapper > .rux-btn as last child */
+.rux-btn-group > .rux-btn:last-child,
+.rux-btn-group > :last-child > .rux-btn {
+  border-top-right-radius: var(--rux-btn-radius);
+  border-bottom-right-radius: var(--rux-btn-radius);
+}
+
+/* Dividers: left border on every button except the first */
+.rux-btn-group > * + .rux-btn,
+.rux-btn-group > .rux-btn + * > .rux-btn {
+  border-left-color: oklch(0% 0 0 / 0.3);
+}
+
+/* Icon-only buttons in the group are square */
+.rux-btn-group > .rux-btn--icon,
+.rux-btn-group > * > .rux-btn--icon {
+  width: var(--rux-btn-height);
+  padding: 0;
 }
