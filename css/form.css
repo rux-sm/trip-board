@@ -623,9 +623,9 @@ hr.form-divider {
   column-gap: var(--rux-fld-col-gap);
   padding: var(--rux-space-4);
   background: var(--rux-bg-4);
-  border: 1px solid var(--rux-bg-2);
+  border: 1px solid var(--rux-bg-4);
   border-radius: var(--rux-radius-section);
-  box-shadow: none;
+  box-shadow: var(--rux-btn-shadow-inset);
 }
 
 .form-section-card__label {

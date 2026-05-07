@@ -80,7 +80,7 @@
 /* Margin below center schedule card only */
 .o-app-layout__main {
 
-  padding-top: var(--rux-layout-spacing);
+  padding-top:none;
   padding-bottom: var(--rux-layout-spacing);
 }
 
@@ -177,22 +177,21 @@
 
 .o-app-layout__sidebar--left>.rux-card,
 .o-app-layout__sidebar--right>.rux-card {
-  position: fixed;
-  top: calc(var(--size-header-row) + var(--rux-layout-spacing));
-  bottom: var(--rux-layout-spacing);
+  flex: 1;
+  min-height: 0;
   width: var(--panel-width);
+  margin-bottom: var(--rux-layout-spacing);
   box-shadow: none;
-  transition:none;
+  transition: none;
 }
 
 .o-app-layout__sidebar--left>.rux-card {
-  left: var(--rux-layout-spacing);
+  margin-left: var(--rux-layout-spacing);
   border-radius: var(--rux-radius-9);
   transform: translateX(0);
 }
 
 .o-app-layout__sidebar--right>.rux-card {
-  right: var(--rux-layout-spacing);
   border-radius: var(--rux-radius-9);
   transform: translateX(0);
 }

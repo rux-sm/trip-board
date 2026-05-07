@@ -23,10 +23,10 @@
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 1000;
-  height: var(--app-height);
-  padding-inline: var(--rux-space-4);
-  background-color: var(--rux-bg-2);
+  z-index: 1002;
+  height: auto;
+  padding: var(--rux-space-3);
+  background-color: var(--rux-bg-1);
   box-shadow: none;
 }
 

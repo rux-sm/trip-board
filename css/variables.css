@@ -13,7 +13,7 @@
 
   --rux-color-black:  oklch(0% 0 250);
   --rux-color-white:  oklch(100% 0 250);
-  --rux-color-gray:   oklch(50% 0.008 250);
+  --rux-color-gray:   oklch(50% 0.004 250);
   --rux-color-red:    oklch(50% 0.2 25);
   --rux-color-orange: oklch(50% 0.2 65);
   --rux-color-yellow: oklch(50% 0.2 100);
@@ -123,13 +123,20 @@
 
   /* 2A. Surfaces
      Number suffix = elevation level. Higher = lighter in dark mode.
+
+      0%       Canvas
+      0%       App Header
+      18.22%   Panel
+      20.9%    Panel Card
+      28.91%   Form Field
+      46.76%   Scrollbar
   ──────────────────────────────────────────────────────────────── */
 
   --rux-bg-1:       oklch(from var(--rux-color-gray) 0% c h);         /* App canvas — pure black */
-  --rux-bg-field:   oklch(from var(--rux-color-gray) 26.38% c h); 
-  --rux-bg-2:       oklch(from var(--rux-color-gray) 26.38% c h);     /* Panels, sidebar, inputs */
+  --rux-bg-field:   oklch(from var(--rux-color-gray) 28.91% c h); 
+  --rux-bg-2:       oklch(from var(--rux-color-gray) 18.22% c h);     /* Panels, sidebar, inputs */
   --rux-bg-3:       oklch(from var(--rux-color-gray) 36.38% c h);     /* Headers, footers, menus */
-  --rux-bg-4:       oklch(from var(--rux-color-gray) 36.38% c h);     /* Cards, grouped sections */
+  --rux-bg-4:       oklch(from var(--rux-color-gray) 20.9% c h);        /* Cards, grouped sections */
   --rux-bg-5:       oklch(from var(--rux-color-gray) 32% c h);        /* Modals — highest elevation */
   --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h);        /* Scrim / backdrop */
 
@@ -211,6 +218,6 @@
   --card-shadow-right:   4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   /* Layout */
-  --rux-layout-spacing: var(--rux-space-4);
+  --rux-layout-spacing: var(--rux-space-3);
 
 }
