@@ -96,6 +96,14 @@
   gap: 4px;
 }
 
+.rux-app__separator {
+  width: 1px;
+  height: 20px;
+  background: var(--rux-border-2);
+  flex-shrink: 0;
+  margin-inline: 2px;
+}
+
 /* Page-level heading utility */
 .rux-heading {
   font-family: var(--font-sans);
@@ -190,7 +198,7 @@
   overflow: hidden;
 
   border-bottom: 1px solid color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
-  border-radius: var(--rux-radius-9);
+  border-radius: var(--rux-radius-9) var(--rux-radius-9) 0 0;
   box-shadow: none;
 }
 
@@ -237,7 +245,7 @@
   overflow: hidden;
 
   border-top: 1px solid color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
-  border-radius: var(--rux-radius-9);
+  border-radius:  0 0 var(--rux-radius-9) var(--rux-radius-9);
   box-shadow: none;
 }
 
