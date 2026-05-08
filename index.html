@@ -965,21 +965,21 @@
                       />
                     </div>
 
-                    <div class="form-group col-4">
-                      <label for="busesNeeded">Buses</label>
-                      <select id="busesNeeded" name="busesNeeded" required>
-                        <option value="" disabled selected>-</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
+                    <div class="form-group col-12">
+                      <label>Buses</label>
+                      <div class="bus-seg" id="busesNeededSeg" role="group" aria-label="Number of buses">
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="1" aria-pressed="false">1</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="2" aria-pressed="false">2</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="3" aria-pressed="false">3</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="4" aria-pressed="false">4</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="5" aria-pressed="false">5</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="6" aria-pressed="false">6</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="7" aria-pressed="false">7</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="8" aria-pressed="false">8</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="9" aria-pressed="false">9</button>
+                        <button type="button" class="rux-btn rux-btn--toggle" data-value="10" aria-pressed="false">10</button>
+                      </div>
+                      <input type="hidden" id="busesNeeded" name="busesNeeded" value="">
                     </div>
 
                     </div>
@@ -987,32 +987,6 @@
                     <!-- ── Section 2: Estimate ─────────────────────────── -->
                     <div class="form-section-card">
                       <div class="form-section-card__label">Estimate</div>
-
-                    <div class="form-group col-6">
-                      <label for="tripColor">Trip Type</label>
-                      <select
-                        id="tripColor"
-                        name="tripColor"
-                      >
-                        <option value="" selected>Round-Trip</option>
-                        <option value="Cyan">Round-Trip 2</option>
-                        <option value="Green">Round-Trip 3</option>
-                        <option value="One-Way">One-Way</option>
-                        <option value="Purple">MVM</option>
-                        <option value="Yellow">Hold – Pending Info</option>
-                        <option value="Orange">Bid Submitted</option>
-                        <option value="Pink">Date TBD</option>
-                        <option value="Out of Service">Out of Service</option>
-                      </select>
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="quotedPrice">Quoted Price</label>
-                      <div class="fld-affix fld-affix--prefix">
-                        <span class="fld-affix__prefix">$</span>
-                        <input type="text" id="quotedPrice" name="quotedPrice" placeholder="" />
-                      </div>
-                    </div>
 
                     <div class="form-group col-4">
                       <label for="estimatedMileage">Est. Mileage</label>
@@ -1037,6 +1011,33 @@
                         <span class="fld-affix__suffix">hr</span>
                       </div>
                     </div>
+
+                    <div class="form-group col-6">
+                      <label for="tripColor">Trip Type</label>
+                      <select
+                        id="tripColor"
+                        name="tripColor"
+                      >
+                        <option value="" disabled selected>–</option>
+                        <option value="Round-Trip">Round-Trip</option>
+                        <option value="Cyan">Round-Trip 2</option>
+                        <option value="Green">Round-Trip 3</option>
+                        <option value="One-Way">One-Way</option>
+                        <option value="Purple">MVM</option>
+                        <option value="Yellow">Hold – Pending Info</option>
+                        <option value="Orange">Bid Submitted</option>
+                        <option value="Pink">Date TBD</option>
+                        <option value="Out of Service">Out of Service</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                      <label for="quotedPrice">Quoted Price</label>
+                      <div class="fld-affix fld-affix--prefix">
+                        <span class="fld-affix__prefix">$</span>
+                        <input type="text" id="quotedPrice" name="quotedPrice" class="text-right" placeholder="" />
+                      </div>
+                    </div>
                     </div>
 
                     <!-- ── Section 3: Billing ──────────────────────────── -->
@@ -1047,7 +1048,7 @@
                     <input type="hidden" id="contactStatus" name="contactStatus" value="" />
 
                     <div class="form-group col-6">
-                      <label for="paymentStatus">Contract</label>
+                      <label for="paymentStatus">Contract Status</label>
                       <select
                         id="paymentStatus"
                         name="paymentStatus"
@@ -1066,7 +1067,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="invoiceStatus">Invoice</label>
+                      <label for="invoiceStatus">Invoice Status</label>
                       <select
                         id="invoiceStatus"
                         name="invoiceStatus"
@@ -1085,7 +1086,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="paymentType">PO</label>
+                      <label for="paymentType">PO Number</label>
                       <input
                         type="text"
                         id="paymentType"
@@ -1108,7 +1109,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="tripMiles">Trip Miles</label>
+                      <label for="tripMiles">Post Trip Miles</label>
                       <div class="fld-affix fld-affix--suffix">
                         <input type="text" id="tripMiles" name="tripMiles" placeholder="" />
                         <span class="fld-affix__suffix">mi</span>
@@ -1116,7 +1117,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="datePaid">Date Paid</label>
+                      <label for="datePaid">Date Paid in Full</label>
                       <input
                         type="date"
                         id="datePaid"
@@ -1125,7 +1126,7 @@
                     </div>
 
                     <div class="form-group col-12">
-                      <label for="notes">Notes</label>
+                      <label for="notes">Payment Method / Notes</label>
                       <input
                         type="text"
                         id="notes"

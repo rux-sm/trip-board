@@ -49,7 +49,7 @@ if (document.readyState === "loading") {
 // Adds/removes .is-empty so CSS can dim unfilled placeholders
 (function initEmptyFieldTracking() {
   const DATE_TIME = 'input[type="date"], input[type="time"]';
-  const PLACEHOLDER_SELECTS = "#busesNeeded, #tripColor";
+  const PLACEHOLDER_SELECTS = "#tripColor";
   const ALL = DATE_TIME + ", " + PLACEHOLDER_SELECTS;
 
   function sync(el) {
@@ -875,7 +875,7 @@ function sanitizeWeekResp(resp) {
         estimatedMileage: asStr(t?.estimatedMileage),
         drivingHours: asStr(t?.drivingHours),
         onDutyHours:  asStr(t?.onDutyHours),
-        quotedPrice: asStr(t?.quotedPrice),
+        quotedPrice: asStr(t?.quotedPrice).replace(/^\$/, ""),
         driverInfoSent: !!t?.driverInfoSent && t?.driverInfoSent !== "false",
         tripReminderSent: !!t?.tripReminderSent && t?.tripReminderSent !== "false",
         tripReviewed: !!t?.tripReviewed && t?.tripReviewed !== "false",
@@ -1742,6 +1742,12 @@ function maybeApplyPendingDefaults() {
   });
 
   if (changed) ids.forEach((id) => updateStatusSelect($(id)));
+
+  const tc = $("tripColor");
+  if (tc && !tc.value) {
+    tc.value = "Round-Trip";
+    tc.dispatchEvent(new Event("change", { bubbles: true }));
+  }
 }
 
 function updateInvoiceNumberColor() {
@@ -2134,7 +2140,7 @@ function applyWeekRespToState(resp) {
   state.tripByKey = {};
   for (const t of state.trips) state.tripByKey[t.tripKey] = t;
 
-  const asnList = ok ? asArray(resp.assignments) : [];
+  let asnList = ok ? asArray(resp.assignments) : [];
 
   // DEFENSIVE: Also filter assignments for pending-delete trips
   if (state.pendingWrite?.action === "delete" && state.pendingWrite?.tripKey) {
@@ -3406,7 +3412,7 @@ function _renderAgendaInner() {
         bar.classList.add("out-of-service");
       } else if (tripColor === "one-way") {
         bar.classList.add("one-way");
-      } else if (tripColor) {
+      } else if (tripColor && tripColor !== "round-trip") {
         bar.classList.add(`color-${tripColor}`);
       }
 
@@ -4635,6 +4641,13 @@ function setBusesNeededAndSync(value) {
   syncBusPanelState();
 }
 
+function syncBusSegButtons() {
+  const val = dom.busesNeeded.value;
+  document.querySelectorAll("#busesNeededSeg .rux-btn--toggle").forEach((btn) => {
+    btn.setAttribute("aria-pressed", String(btn.dataset.value === val));
+  });
+}
+
 function buildBusRowsOnce() {
   dom.busGrid.innerHTML = "";
   state.busRows.length = 0;
@@ -4644,17 +4657,24 @@ function buildBusRowsOnce() {
     const input = document.createElement("input");
     input.type = "text";
     input.name = name;
-    input.className = "bus-assign__pay-input";
-    input.placeholder = "$";
+    input.className = "bus-assign__pay-input text-right";
     return input;
   };
 
   const makeDriverRow = (dSel, dStatusSel, payInput) => {
     const row = document.createElement("div");
     row.className = "bus-assign__driver-row";
+
+    const payWrapper = document.createElement("div");
+    payWrapper.className = "fld-affix fld-affix--prefix";
+    const payPrefix = document.createElement("span");
+    payPrefix.className = "fld-affix__prefix";
+    payPrefix.textContent = "$";
+    payWrapper.append(payPrefix, payInput);
+
     row.appendChild(dStatusSel);
     row.appendChild(dSel);
-    row.appendChild(payInput);
+    row.appendChild(payWrapper);
     return row;
   };
 
@@ -4973,6 +4993,7 @@ function clearTripInfoCardForNextTrip() {
   setSelectToPlaceholder("invoiceStatus");
 
   dom.busesNeeded.value = "";
+  syncBusSegButtons();
   updateBusRowVisibility();
   syncBusPanelState();
   refreshBusSelectOptions();
@@ -6231,10 +6252,7 @@ function populateFormFromData(t, assigns) {
   if ($("estimatedMileage")) $("estimatedMileage").value = t.estimatedMileage || "";
   if ($("drivingHours")) $("drivingHours").value = t.drivingHours || "";
   if ($("onDutyHours"))  $("onDutyHours").value  = t.onDutyHours  || "";
-  if ($("quotedPrice")) {
-    const qp = String(t.quotedPrice || "");
-    $("quotedPrice").value = qp && !qp.startsWith("$") ? "$" + qp : qp;
-  }
+  if ($("quotedPrice")) $("quotedPrice").value = String(t.quotedPrice || "");
   if ($("tripMiles")) $("tripMiles").value = t.tripMiles || "";
   if ($("datePaid")) $("datePaid").value = t.datePaid || "";
   if ($("notes")) $("notes").value = t.notes || "";
@@ -6272,10 +6290,10 @@ function populateFormFromData(t, assigns) {
     row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
     row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
     row.d4StatusSel.value = String(a.driver4Status || "").trim() || "Pending";
-    if (a.driver1Pay && row.d1Pay) row.d1Pay.value = String(a.driver1Pay).trim();
-    if (a.driver2Pay && row.d2Pay) row.d2Pay.value = String(a.driver2Pay).trim();
-    if (a.driver3Pay && row.d3Pay) row.d3Pay.value = String(a.driver3Pay).trim();
-    if (a.driver4Pay && row.d4Pay) row.d4Pay.value = String(a.driver4Pay).trim();
+    if (a.driver1Pay && row.d1Pay) row.d1Pay.value = String(a.driver1Pay).trim().replace(/^\$/, "");
+    if (a.driver2Pay && row.d2Pay) row.d2Pay.value = String(a.driver2Pay).trim().replace(/^\$/, "");
+    if (a.driver3Pay && row.d3Pay) row.d3Pay.value = String(a.driver3Pay).trim().replace(/^\$/, "");
+    if (a.driver4Pay && row.d4Pay) row.d4Pay.value = String(a.driver4Pay).trim().replace(/^\$/, "");
   });
 
   updateBusRowVisibility();
@@ -6467,7 +6485,8 @@ async function verifyWriteResult() {
   const delays = [200, 400, 800, 1500, 3000, 6000];
 
   let exists = false;
-  let serverTrip = null;
+  let writeVerified = false;
+  let needsFullRefresh = false;
 
   try {
     // DELETE: Wait for trip to disappear
@@ -6482,10 +6501,9 @@ async function verifyWriteResult() {
       if (!exists) {
         toastProgress(100, "Deleted ✓");
         toastHide(300);
-
-        // Final sync: clear in-memory week cache so next explicit load
-        // will refetch, but avoid a full background refresh here to
-        // keep rapid delete/edit flows smooth.
+        writeVerified = true;
+        // Clear in-memory cache so next explicit load re-fetches,
+        // but skip a background refresh here to keep delete/edit flows smooth.
         state.weekCache.clear();
       } else {
         toast("Delete may have failed — restoring", "danger", 3000);
@@ -6496,7 +6514,6 @@ async function verifyWriteResult() {
       for (let i = 0; i < delays.length; i++) {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
-        serverTrip = exists ? resp.trip : null;
         if (exists) break;
         await delay(delays[i]);
       }
@@ -6504,16 +6521,13 @@ async function verifyWriteResult() {
       if (exists) {
         toastProgress(100, "Saved ✓");
         toastHide(300);
-
-        // Sync server-derived field values (e.g. itineraryStatus) back to
-        // state — the optimistic object may differ from what GAS stored.
-        refreshWeekData({ silent: true });
+        writeVerified = true;
       } else {
-        // Verification timed out — the save may still have landed (GAS was
-        // slow). Fetch the real server state instead of blindly rolling back;
-        // if the write succeeded the trip will appear, if it failed it won't.
+        // Verification timed out — the save may still have landed (GAS was slow).
+        // Fetch the real server state; pendingWrite is cleared first in finally so
+        // the silent-refresh guard does not block the call.
         toast("Verification timed out — reloading from server…", "warning", 3000);
-        refreshWeekData({ silent: false });
+        needsFullRefresh = true;
       }
     }
   } catch (e) {
@@ -6529,9 +6543,19 @@ async function verifyWriteResult() {
   } finally {
     stopProgressCreep();
     clearVerifyFallback();
-    state.pendingWrite = null;
+    state.pendingWrite = null; // Clear BEFORE triggering any refresh
     dom.saveBtn.disabled = false;
     dom.action.value = dom.tripKey.value ? "update" : "create";
+
+    // Refresh after pendingWrite is cleared so the silent-refresh guard doesn't block.
+    if (writeVerified && action !== "delete") {
+      // Pull canonical server values (e.g. computed itineraryStatus) back into state.
+      refreshWeekData({ silent: true });
+    } else if (needsFullRefresh) {
+      // Timeout: do a full visible refresh; localStorage cache was already cleared
+      // at form-submit time so no stale snapshot will be shown first.
+      refreshWeekData({ silent: false });
+    }
   }
 
   function rollbackState() {
@@ -7613,12 +7637,6 @@ function renderQuickEditTab(tabId, trip, assigns) {
         input.type = type === "date" ? "date" : "text";
         input.className = "trip-quick-edit__input";
         input.value = trip[key] || "";
-        if (key === "quotedPrice") {
-          input.addEventListener("blur", () => {
-            const v = input.value.trim();
-            if (v && !v.startsWith("$")) input.value = "$" + v;
-          });
-        }
       }
       input.dataset.key = key;
       wrap.appendChild(input);
@@ -8932,6 +8950,14 @@ function wireEvents() {
     updateBusRowVisibility();
     syncBusPanelState();
     maybeApplyPendingDefaults();
+    syncBusSegButtons();
+  });
+
+  document.querySelectorAll("#busesNeededSeg .bus-seg__btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setBusesNeededAndSync(btn.dataset.value);
+      syncBusSegButtons();
+    });
   });
 
   $("tripDate").addEventListener("change", () => {
@@ -8954,11 +8980,6 @@ function wireEvents() {
     checkDriverDoubleBookings();
   });
 
-  $("quotedPrice")?.addEventListener("blur", () => {
-    const el = $("quotedPrice");
-    const v = el.value.trim();
-    if (v && !v.startsWith("$")) el.value = "$" + v;
-  });
 
   dom.hiddenIframe.addEventListener("load", () => {
     if (!state.pendingWrite) return;
@@ -9047,6 +9068,11 @@ function wireEvents() {
 
     if (dom.saveBtn.disabled) return;
     if (dom.action.value === "delete") return;
+
+    if (!dom.busesNeeded.value) {
+      toast("Select the number of buses.", "danger", 2500);
+      return;
+    }
 
     const dep = $("tripDate").value;
     const arr = $("arrivalDate").value;
@@ -9316,6 +9342,7 @@ function wireEvents() {
     );
 
     dom.busesNeeded.value = "";
+    syncBusSegButtons();
     updateBusRowVisibility();
     syncBusPanelState();
     refreshBusSelectOptions();

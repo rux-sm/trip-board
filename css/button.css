@@ -163,9 +163,8 @@ button {
 
 .rux-btn--toggle {
   --btn-background:        var(--rux-bg-3);
-  --btn-hover-background:  var(--rux-bg-4);
   --btn-active-background: var(--rux-bg-4);
-  --btn-shadow:            none;
+  --btn-shadow:            var(--rux-btn-shadow-inset);
   --btn-text:              var(--rux-text-2);
   --btn-border:            none;
   --rux-btn-icon-fill:     0;

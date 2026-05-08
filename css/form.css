@@ -639,3 +639,14 @@ hr.form-divider {
   padding-bottom: var(--rux-space-3);
   border-bottom: none;
 }
+
+/* ── Bus Segmented Selector ─────────────────────────────── */
+.bus-seg {
+  display: flex;
+  gap: var(--rux-space-1);
+}
+
+.bus-seg .rux-btn--toggle {
+  flex: 1;
+  min-width: 0;
+}
