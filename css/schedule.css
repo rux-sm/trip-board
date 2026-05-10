@@ -3,9 +3,9 @@
 :root {
   /* Schedule grid dimensions */
   --schedule-row-height:         100px;
-  --bus-col-w:                   34px;
+  --bus-col-w:                   32px;
   --week-picker-height:          32px;
-  --day-row-h:                   34px;
+  --day-row-h:                   32px;
   --schedule-edge-inset-right:   16px;
   --print-scale:                 1;    /* runtime — JS overrides */
   --sync-progress:               0%;   /* runtime — JS overrides */
@@ -15,22 +15,22 @@
   --day-header-date-color:          var(--rux-text-1);
   --day-header-date-size:           var(--rux-size-4);
   --day-header-date-weight:         var(--rux-weight-semibold);
-  --day-header-date-letter-spacing: 0;
+  --day-header-date-letter-spacing: -0.02em;
   --day-header-date-line-height:    var(--rux-line-height-1);
-  --day-header-name-color:          var(--rux-text-1);
+  --day-header-name-color:          var(--rux-text-2);
   --day-header-name-size:           var(--rux-size-4);
-  --day-header-name-weight:         var(--rux-weight-regular);
-  --day-header-name-letter-spacing: 0;
+  --day-header-name-weight:         var(--rux-weight-semibold);
+  --day-header-name-letter-spacing: -0.02em;
   --day-header-name-line-height:    var(--rux-line-height-1);
 
   /* Bus column */
   --bus-num-color:          var(--rux-text-1);
   --bus-num-size:           var(--rux-size-4);
-  --bus-num-weight:         var(--rux-weight-medium);
-  --bus-num-letter-spacing: 0;
+  --bus-num-weight:         var(--rux-weight-semibold);
+  --bus-num-letter-spacing: -0.02em;
   --bus-num-line-height:    var(--rux-line-height-1);
-  --bus-lift-color:         var(--rux-color-accent);
-  --bus-sleeper-color:      var(--rux-text-1);
+  --bus-lift-color:         oklch(from var(--rux-color-white) 50% c h);
+  --bus-sleeper-color:      oklch(from var(--rux-color-white) 50% c h);
   --bus-accent-color:       var(--rux-bg-4);
   --bus-grid-row-gap:       4px;
   --bus-driver-block-gap:   4px;
@@ -646,6 +646,7 @@
   width: var(--bus-col-w);
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
+  
 }
 
 .schedule-grid__col-day {
@@ -781,20 +782,13 @@
 .waiting-list-row td {
   background-color: var(--rux-bg-1) !important;
   vertical-align: top;
-  border-top: none;
+  border-top: 1px solid var(--rux-border-2) !important;
   height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
 }
 
-/* Spacer row — transparent gap row; gap is real DOM space, not border */
-.schedule-grid__wl-spacer td {
-  height: var(--rux-space-4);
-  border: none !important;
-  background: var(--rux-bg-2);
-  padding: 0;
-  pointer-events: none;
-}
+
 
 .waiting-list-row .schedule-grid__bus-cell {
    background: color-mix(in srgb, var(--rux-bg-2) 25%, transparent);
@@ -813,12 +807,12 @@
 }
 .waiting-list-row td:first-child {
   border-left: none;
-  border-top-left-radius: var(--rux-radius-surface);
+  border-top-left-radius: 0px;
   border-bottom-left-radius: var(--rux-radius-surface);
 }
 .waiting-list-row td:last-child {
   border-right: none;
-  border-top-right-radius: var(--rux-radius-surface);
+  border-top-right-radius: 0px;
   border-bottom-right-radius: var(--rux-radius-surface);
 }
 

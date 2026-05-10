@@ -44,7 +44,7 @@
 }
 
 .schedule-viewport::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--rux-bg-1);
 }
 
 .schedule-viewport::-webkit-scrollbar-thumb {
