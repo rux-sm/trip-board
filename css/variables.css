@@ -13,7 +13,7 @@
 
   --rux-color-black:  oklch(0% 0 250);
   --rux-color-white:  oklch(100% 0 250);
-  --rux-color-gray:   oklch(50% 0.004 250);
+  --rux-color-gray:   oklch(50% 0.006 250);
   --rux-color-red:    oklch(50% 0.2 25);
   --rux-color-orange: oklch(50% 0.2 65);
   --rux-color-yellow: oklch(50% 0.2 100);
@@ -133,10 +133,10 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-bg-1:       oklch(from var(--rux-color-gray) 0% c h);         /* App canvas — pure black */
-  --rux-bg-field:   oklch(from var(--rux-color-gray) 24.78% c h); 
-  --rux-bg-2:       oklch(from var(--rux-color-gray) 24.78% c h);     /* Panels, sidebar, inputs */
-  --rux-bg-3:       oklch(from var(--rux-color-gray) 38% c h);     /* Headers, footers, menus */
-  --rux-bg-4:       oklch(from var(--rux-color-gray) 30.52% c h);        /* Cards, grouped sections */
+  --rux-bg-field:   oklch(from var(--rux-color-gray) 20% c h); 
+  --rux-bg-2:       oklch(from var(--rux-color-gray) 20% c h);     /* Panels, sidebar, inputs */
+  --rux-bg-3:       oklch(from var(--rux-color-gray) 20% c h);     /* Headers, footers, menus */
+  --rux-bg-4:       oklch(from var(--rux-color-gray) 26% c h);        /* Cards, grouped sections */
   --rux-bg-5:       oklch(from var(--rux-color-gray) 32% c h);        /* Modals — highest elevation */
   --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h);        /* Scrim / backdrop */
 
@@ -182,7 +182,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-border-1: oklch(from var(--rux-color-white) l c h /  4%); /* Subtle */
-  --rux-border-2: oklch(from var(--rux-color-white) l c h / 16%); /* Default */
+  --rux-border-2: oklch(from var(--rux-color-white) l c h / 10%); /* Default */
   --rux-border-3: oklch(from var(--rux-color-white) l c h / 24%); /* Strong */
 
   /* 2E. Semantic Radius Aliases
@@ -225,6 +225,6 @@
   --card-shadow-right:  4px 4px 12px oklch(0% 0 0 / 40%);
 
   /* Layout */
-  --rux-layout-spacing: var(--rux-space-3);
+  --rux-layout-spacing: var(--rux-space-4);
 
 }

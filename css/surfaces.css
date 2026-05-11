@@ -25,7 +25,9 @@
   top: 0;
   z-index: 1002;
   height: auto;
-  padding: var(--rux-space-3);
+  padding-top: var(--rux-space-3);
+  padding-bottom: var(--rux-space-2);
+  padding-inline: var(--rux-space-3);
   background-color: var(--rux-bg-1);
   box-shadow: none;
 }
@@ -184,7 +186,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 57px;
+  height: 52px;
   width: auto;
   flex-shrink: 0;
   padding-inline:var(--rux-space-7);
@@ -207,7 +209,7 @@
   margin: 0;
   padding: 0;
   font-family: var(--rux-font-sans);
-  font-size: var(--rux-size-8);
+  font-size: var(--rux-size-6);
   font-weight: var(--rux-weight-semibold);
   color: var(--rux-text-1);
   line-height: var(--rux-line-height-1);

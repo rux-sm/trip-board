@@ -29,11 +29,11 @@
   --rux-btn-font-weight: var(--rux-weight-regular);
 
 
-  --rux-btn-shadow-inset: var(--rux-surface-shadow-inset);
+  /*--rux-btn-shadow-inset: var(--rux-surface-shadow-inset);
 
   --rux-btn-shadow-active:
     inset 0 2px 4px oklch(0% 0 0 / 50%),
-    inset 0 1px 2px oklch(0% 0 0 / 30%);
+    inset 0 1px 2px oklch(0% 0 0 / 30%);*/
 
 --rux-btn-icon-size: var(--rux-size-6);
   --rux-btn-icon-fill: 1;

@@ -468,6 +468,13 @@ const state = {
   // Card panel assignments: tracks which card is in which panel (left/right)
   // Format: { "trip" | "drivers" | "notes": "left" | "right" | null }
   cardPanelAssignments: {},
+
+  // Data integrity guards
+  pendingRefreshDeferred: false,   // queued silent refresh blocked by pendingWrite or open form
+  tripFormOpen: false,             // true while trip editor panel is visible
+  mutationId: 0,                   // increments with each optimistic mutation for ghost-entry detection
+  checklistWriteTs: {},            // { [tripKey]: ms timestamp } — tracks last local checkbox write
+  checklistAbortControllers: {},   // { [tripKey]: AbortController } — cancels in-flight setChecklist
 };
 
 // ======================================================
@@ -1132,7 +1139,7 @@ const api = {
     return fetchAPI("getChecklist", { date });
   },
 
-  async setChecklist(tripKey, date, saved) {
+  async setChecklist(tripKey, date, saved, signal) {
     const body = new URLSearchParams({
       action: "setChecklist",
       tripKey,
@@ -1148,6 +1155,7 @@ const api = {
       body,
       mode: "cors",
       credentials: "omit",
+      signal,
     }).then((r) => r.json());
     if (!resp?.ok) console.warn("[checklist setChecklist] GAS error:", resp?.error, resp);
     return resp;
@@ -2075,6 +2083,27 @@ function getAnyCachedWeek(key) {
   return state.weekCache.get(key)?.resp || null;
 }
 
+// Surgically evict only the week(s) that contain tripDate, leaving adjacent prefetched
+// weeks intact. Falls back to the current view's week when tripDate is absent or unparseable.
+function clearCacheForTrip(tripDate) {
+  let start, end;
+  if (tripDate) {
+    const d = parseYMD(tripDate);
+    if (d) {
+      const ws = startOfWeek(d);
+      start = ymd(ws);
+      end = ymd(addDays(ws, 6));
+    }
+  }
+  if (!start) {
+    const range = getWeekRange();
+    start = range.start;
+    end = range.end;
+  }
+  state.weekCache.delete(weekKey(start, end));
+  try { localStorage.removeItem(weekCacheKey(start, end)); } catch (_) {}
+}
+
 async function fetchWeekDataCached(start, end, notesKey, force = false) {
   const key = weekKey(start, end);
 
@@ -2117,6 +2146,13 @@ async function fetchWeekDataCached(start, end, notesKey, force = false) {
 }
 
 function applyWeekRespToState(resp) {
+  // Guard: don't overwrite live state while a mutation is in-flight or the trip form is open.
+  // Set the deferred flag so the caller can retry once the mutation/form clears.
+  if (state.pendingWrite || state.tripFormOpen) {
+    state.pendingRefreshDeferred = true;
+    return;
+  }
+
   const ok = !!resp?.ok;
 
   let trips = ok ? asArray(resp.trips) : [];
@@ -4156,11 +4192,27 @@ async function renderTodoCard() {
           card.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
         }
       }
+      // Record local write timestamp so syncChecklistFromServer can discard stale responses
+      state.checklistWriteTs[tripKey] = Date.now();
+
+      // Abort any in-flight request for this trip before starting a new debounce cycle
+      if (state.checklistAbortControllers[tripKey]) {
+        state.checklistAbortControllers[tripKey].abort();
+        delete state.checklistAbortControllers[tripKey];
+      }
+
       // Debounce server persist — waits 600ms after last change for this trip before POSTing
       clearTimeout(syncTimers[tripKey]);
       syncTimers[tripKey] = setTimeout(() => {
         const latest = JSON.parse(localStorage.getItem(savedKey) || "{}");
-        api.setChecklist(tripKey, todayYMD, latest).catch((err) => console.warn("[checklist sync]", err));
+        const controller = new AbortController();
+        state.checklistAbortControllers[tripKey] = controller;
+        api.setChecklist(tripKey, todayYMD, latest, controller.signal)
+          .then(() => { delete state.checklistAbortControllers[tripKey]; })
+          .catch((err) => {
+            if (err?.name !== "AbortError") console.warn("[checklist sync]", err);
+            delete state.checklistAbortControllers[tripKey];
+          });
       }, 600);
     });
   });
@@ -4170,6 +4222,9 @@ async function renderTodoCard() {
 }
 
 async function syncChecklistFromServer(date) {
+  // Capture timestamp before the async fetch so we can discard server data that
+  // arrived after a local checkbox change made during the round-trip.
+  const syncStartTs = Date.now();
   try {
     const resp = await api.getChecklist(date);
     if (!resp?.ok || !resp.rows?.length) return;
@@ -4177,6 +4232,8 @@ async function syncChecklistFromServer(date) {
     for (const row of resp.rows) {
       const tripKey  = String(row.tripKey || "").trim();
       if (!tripKey) continue;
+      // If the user clicked a checkbox after this fetch started, local state is newer
+      if ((state.checklistWriteTs[tripKey] || 0) > syncStartTs) continue;
       const trip = (state.trips || []).find((tr) => tr.tripKey === tripKey);
       const saved = {};
       for (const k of KEYS) saved[k] = String(row[k] || "").toLowerCase() === "true";
@@ -4400,9 +4457,11 @@ function toggleCard(cardType) {
 // Legacy function for backward compatibility (if needed)
 function setSidePanelMode(mode) {
   if (mode === "off") {
+    state.tripFormOpen = false;
     // Close all cards
     Object.keys(CARD_CONFIG).forEach((cardType) => hideCard(cardType));
   } else {
+    if (mode === "trip") state.tripFormOpen = true;
     // Ensure card is shown exclusively on the left
     const currentPanel = getCardPanel(mode);
     if (!currentPanel) {
@@ -4850,8 +4909,10 @@ async function loadTripsForWeek(reqId) {
 
 async function refreshWeekData({ silent = false } = {}) {
   // CRITICAL: Skip background refresh if a delete/save is pending
-  // to avoid applying stale data before the server mutation completes
+  // to avoid applying stale data before the server mutation completes.
+  // Queue the refresh so it fires once the mutation clears.
   if (silent && state.pendingWrite) {
+    state.pendingRefreshDeferred = true;
     return;
   }
 
@@ -6481,6 +6542,7 @@ async function verifyWriteResult() {
 
   const { action, tripKey, originalTrips, originalTripByKey, originalAssignments } =
     state.pendingWrite;
+  const optimisticSnapshot = state.pendingWrite.optimisticSnapshot || null;
 
   startProgressCreep({ from: 70, to: 95, label: "Verifying… " });
 
@@ -6509,14 +6571,32 @@ async function verifyWriteResult() {
         // but skip a background refresh here to keep delete/edit flows smooth.
         state.weekCache.clear();
       } else {
-        toast("Delete may have failed — restoring", "danger", 3000);
+        toast("Delete may have failed — data restored. Refresh to confirm.", "danger", 8000);
         rollbackState();
       }
     } else {
-      // CREATE/UPDATE: Wait for trip to appear
+      // CREATE/UPDATE: Wait for trip to appear AND confirm it reflects our specific write,
+      // not a stale GAS cache hit from a previous version of the record.
       for (let i = 0; i < delays.length; i++) {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
+        if (exists) {
+          const snap = state.pendingWrite?.optimisticSnapshot;
+          if (snap) {
+            const s = resp.trip;
+            const origTrip = originalTripByKey[tripKey] || {};
+            const baseMatch =
+              s.destination === snap.destination &&
+              s.departureDate === snap.departureDate &&
+              s.departureTime === snap.departureTime;
+            const STATUS_FIELDS = ["driverStatus", "paymentStatus", "contactStatus", "itineraryStatus"];
+            const statusMatch = STATUS_FIELDS.every((f) => {
+              if (origTrip[f] === snap[f]) return true; // field didn't change — skip
+              return s[f] === snap[f];                  // field changed — must match snapshot
+            });
+            if (!baseMatch || !statusMatch) exists = false; // stale cache hit — keep polling
+          }
+        }
         if (exists) break;
         await delay(delays[i]);
       }
@@ -6539,9 +6619,9 @@ async function verifyWriteResult() {
     // Restore previous state as a safe fallback; user can retry.
     rollbackState();
     toast(
-      "Connection error — could not verify save. Please check your connection and try again.",
+      "Connection error — save unconfirmed. Data restored. Please retry.",
       "danger",
-      3000,
+      8000,
     );
   } finally {
     stopProgressCreep();
@@ -6550,26 +6630,52 @@ async function verifyWriteResult() {
     dom.saveBtn.disabled = false;
     dom.action.value = dom.tripKey.value ? "update" : "create";
 
+    // Flush any pre-write in-flight weekData fetch so the post-write refresh
+    // cannot reuse a stale promise that was started before the write completed.
+    // Without this, fetchWeekDataCached's in-flight dedup would return pre-write
+    // data, reverting all trip fields after the background refresh.
+    {
+      const { start: _fwStart, end: _fwEnd } = getWeekRange();
+      state.weekInFlight.delete(weekKey(_fwStart, _fwEnd));
+      if (optimisticSnapshot?.departureDate) {
+        clearCacheForTrip(optimisticSnapshot.departureDate);
+        if (optimisticSnapshot.arrivalDate && optimisticSnapshot.arrivalDate !== optimisticSnapshot.departureDate) {
+          clearCacheForTrip(optimisticSnapshot.arrivalDate);
+        }
+      }
+    }
+
     // Refresh after pendingWrite is cleared so the silent-refresh guard doesn't block.
+    // Clear the deferred flag before each call to prevent a double-refresh.
     if (writeVerified && action !== "delete") {
       // Pull canonical server values (e.g. computed itineraryStatus) back into state.
+      state.pendingRefreshDeferred = false;
       refreshWeekData({ silent: true });
     } else if (needsFullRefresh) {
       // Timeout: do a full visible refresh; localStorage cache was already cleared
       // at form-submit time so no stale snapshot will be shown first.
+      state.pendingRefreshDeferred = false;
       refreshWeekData({ silent: false });
+    } else if (state.pendingRefreshDeferred) {
+      // A refresh was queued while pendingWrite was set — fire it now.
+      state.pendingRefreshDeferred = false;
+      refreshWeekData({ silent: true });
     }
   }
 
   function rollbackState() {
-    if (originalTrips) {
-      state.trips = originalTrips;
-      state.tripByKey = originalTripByKey;
-      state.assignmentsByTripKey = originalAssignments;
-      scheduleAgendaReflow();
-      updateDriverWeekIfVisible();
-      try { state.weekCache.clear(); } catch (_) {}
-      if (CACHE?.clearAll) CACHE.clearAll();
+    if (!originalTrips) return;
+    state.trips = originalTrips;
+    state.tripByKey = originalTripByKey;
+    state.assignmentsByTripKey = originalAssignments;
+    scheduleAgendaReflow();
+    updateDriverWeekIfVisible();
+    // Surgically evict only the ghost trip's week(s) rather than nuking everything
+    const snap = state.pendingWrite?.optimisticSnapshot;
+    const ghostDate = snap?.departureDate || getWeekRange().start;
+    clearCacheForTrip(ghostDate);
+    if (snap?.arrivalDate && snap.arrivalDate !== snap.departureDate) {
+      clearCacheForTrip(snap.arrivalDate);
     }
   }
 }
@@ -9019,13 +9125,18 @@ function wireEvents() {
     const originalTripByKey = { ...state.tripByKey };
     const originalAssignments = { ...state.assignmentsByTripKey };
 
+    // Capture date before removing from state so clearCacheForTrip can derive the week key
+    const tripDate = state.tripByKey[key]?.departureDate || null;
+    const tripArrival = state.tripByKey[key]?.arrivalDate || null;
+
     // 1. Remove from state
     state.trips = state.trips.filter((t) => String(t.tripKey) !== key);
     delete state.tripByKey[key];
     delete state.assignmentsByTripKey[key];
 
-    // 2. Invalidate cache for current view
-    clearCacheForCurrentView();
+    // 2. Evict only the affected week(s) from cache
+    clearCacheForTrip(tripDate);
+    if (tripArrival && tripArrival !== tripDate) clearCacheForTrip(tripArrival);
 
     // 3. Re-render UI
     scheduleAgendaReflow();
@@ -9043,6 +9154,7 @@ function wireEvents() {
     state.pendingWrite = {
       action: "delete",
       tripKey: key,
+      mutationId: ++state.mutationId,
       originalTrips,
       originalTripByKey,
       originalAssignments,
@@ -9186,11 +9298,14 @@ function wireEvents() {
     $("driverStatus").value = worst;
     $("driverStatus").dispatchEvent(new Event("change", { bubbles: true }));
 
-    // Auto-derive contact status from contact fields (preserve "Not Required" if already set)
+    // Auto-derive contact status from contact fields.
+    // Only auto-derive when the field is in a default/unset state — preserve any
+    // explicit user choice (e.g. "Assigned") so it isn't silently overridden to Pending.
     const envelopeContact = String($("envelopeTripContact")?.value || "").trim();
     const envelopePhone = String($("envelopeTripPhone")?.value || "").trim();
     let contactStatusValue = $("contactStatus").value;
-    if (contactStatusValue !== "Not Required") {
+    const AUTO_DERIVE_CONTACT = ["", "Pending", "Received"];
+    if (contactStatusValue !== "Not Required" && AUTO_DERIVE_CONTACT.includes(contactStatusValue)) {
       contactStatusValue = (envelopeContact && envelopePhone) ? "Received" : "Pending";
       $("contactStatus").value = contactStatusValue;
     }
@@ -9211,6 +9326,10 @@ function wireEvents() {
       itineraryStatus: (() => {
         const cur = $("itineraryStatus").value;
         if (cur === "Not Required") return cur;
+        // Only auto-derive when the field is in an unset/default state.
+        // Preserve explicit user choices (e.g. "Assigned") instead of silently forcing to Pending.
+        const AUTO_DERIVE_ITINERARY = ["", "Pending", "Received"];
+        if (!AUTO_DERIVE_ITINERARY.includes(cur)) return cur;
         const hasPdf = !!(existingTrip?.itineraryPdfUrl);
         const hasContent = !!(dom.itineraryField?.value?.trim());
         const derived = (hasPdf || hasContent) ? "Received" : "Pending";
@@ -9286,8 +9405,11 @@ function wireEvents() {
     scheduleAgendaReflow();
     updateDriverWeekIfVisible();
 
-    // Invalidate cache
-    clearCacheForCurrentView();
+    // Evict only the affected week(s) — leaves adjacent prefetched weeks intact
+    clearCacheForTrip(optimisticTrip.departureDate);
+    if (optimisticTrip.arrivalDate && optimisticTrip.arrivalDate !== optimisticTrip.departureDate) {
+      clearCacheForTrip(optimisticTrip.arrivalDate);
+    }
 
     toast("Saving…", "info", 1000);
 
@@ -9305,6 +9427,8 @@ function wireEvents() {
     state.pendingWrite = {
       action,
       tripKey: key,
+      mutationId: ++state.mutationId,
+      optimisticSnapshot: { ...optimisticTrip },
       originalTrips,
       originalTripByKey,
       originalAssignments,
@@ -9372,6 +9496,7 @@ function wireEvents() {
 
     // Form has just been reset after save/delete; treat as clean.
     state.tripFormDirty = false;
+    state.tripFormOpen = false;
     if (typeof syncEmptyFields === "function") syncEmptyFields();
   }
 

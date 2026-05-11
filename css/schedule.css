@@ -51,7 +51,7 @@
 .agenda-header {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
+  align-items: bottom;
   column-gap: var(--rux-header-gap);
   height: auto;
   flex-shrink: 0;
@@ -77,7 +77,7 @@
 }
 
 .agenda-header .rux-header__title {
-  font-size: var(--rux-size-8);
+  font-size: var(--rux-size-6);
   font-weight: var(--rux-weight-semibold);
   color: var(--rux-text-1);
   -webkit-font-smoothing: antialiased;
@@ -87,7 +87,7 @@
 .agenda-header__date-left {
   grid-column: 1;
   display: flex;
-  align-items: center;
+  align-items: bottom;
   justify-content: flex-start;
   gap: 8px;
   /* Perfect tight gap for the arrow buttons */
@@ -197,7 +197,7 @@
 
 /* Treat the entire date as one unified line of natural text */
 .agenda-header__week-date {
-  font-size: var(--rux-size-8);
+  font-size: var(--rux-size-6);
   line-height: normal;
   white-space: nowrap;
   padding-left: 8px;
