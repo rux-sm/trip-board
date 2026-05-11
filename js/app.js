@@ -6580,23 +6580,6 @@ async function verifyWriteResult() {
       for (let i = 0; i < delays.length; i++) {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
-        if (exists) {
-          const snap = state.pendingWrite?.optimisticSnapshot;
-          if (snap) {
-            const s = resp.trip;
-            const origTrip = originalTripByKey[tripKey] || {};
-            const baseMatch =
-              s.destination === snap.destination &&
-              s.departureDate === snap.departureDate &&
-              s.departureTime === snap.departureTime;
-            const STATUS_FIELDS = ["driverStatus", "paymentStatus", "contactStatus", "itineraryStatus"];
-            const statusMatch = STATUS_FIELDS.every((f) => {
-              if (origTrip[f] === snap[f]) return true; // field didn't change — skip
-              return s[f] === snap[f];                  // field changed — must match snapshot
-            });
-            if (!baseMatch || !statusMatch) exists = false; // stale cache hit — keep polling
-          }
-        }
         if (exists) break;
         await delay(delays[i]);
       }
@@ -6648,13 +6631,16 @@ async function verifyWriteResult() {
     // Refresh after pendingWrite is cleared so the silent-refresh guard doesn't block.
     // Clear the deferred flag before each call to prevent a double-refresh.
     if (writeVerified && action !== "delete") {
-      // Pull canonical server values (e.g. computed itineraryStatus) back into state.
+      // Optimistic state is already correct — don't fetch from GAS immediately.
+      // GAS CacheService lags behind the write and would overwrite correct local
+      // state with stale pre-write data. Canonical sync happens on the next
+      // 5-minute interval or user navigation.
       state.pendingRefreshDeferred = false;
-      refreshWeekData({ silent: true });
     } else if (needsFullRefresh) {
-      // Timeout: do a full visible refresh; localStorage cache was already cleared
-      // at form-submit time so no stale snapshot will be shown first.
+      // Verification timed out — optimistic accuracy uncertain. Wait for GAS cache
+      // to propagate before fetching, then do a full visible refresh.
       state.pendingRefreshDeferred = false;
+      await delay(1500);
       refreshWeekData({ silent: false });
     } else if (state.pendingRefreshDeferred) {
       // A refresh was queued while pendingWrite was set — fire it now.
