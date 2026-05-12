@@ -2,20 +2,14 @@
 // 27) ITINERARY MODAL
 // ======================================================
 function openItineraryModal() {
-  state.lastFocusedElement = document.activeElement;
   dom.itineraryModalField.value = dom.itineraryField.value || "";
-  dom.itineraryModal.hidden = false;
-  dom.itineraryModalField.focus();
+  openModalA11y(dom.itineraryModal, dom.itineraryModalField);
 }
 
 function closeItineraryModal() {
   dom.itineraryField.value = dom.itineraryModalField.value || "";
   dom.itineraryField.dispatchEvent(new Event("input", { bubbles: true }));
-  dom.itineraryModal.hidden = true;
-  if (state.lastFocusedElement) {
-    state.lastFocusedElement.focus();
-    state.lastFocusedElement = null;
-  }
+  closeModalA11y(dom.itineraryModal);
 }
 
 // ======================================================
@@ -113,10 +107,8 @@ function renderTripDetailsModalFromData(t, assigns) {
   }
 
   dom.tripDetailsBody.innerHTML = html;
-  state.lastFocusedElement = document.activeElement;
-  dom.tripDetailsModal.hidden = false;
   const firstBtn = dom.tripDetailsModal.querySelector("button");
-  if (firstBtn) firstBtn.focus();
+  openModalA11y(dom.tripDetailsModal, firstBtn);
 }
 
 async function openTripDetailsModal(tripKey) {
@@ -179,11 +171,7 @@ async function openTripDetailsModal(tripKey) {
 }
 
 function closeTripDetailsModal() {
-  dom.tripDetailsModal.hidden = true;
-  if (state.lastFocusedElement) {
-    state.lastFocusedElement.focus();
-    state.lastFocusedElement = null;
-  }
+  closeModalA11y(dom.tripDetailsModal);
 }
 
 // ======================================================

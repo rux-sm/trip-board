@@ -259,13 +259,6 @@ if (dom.closeNextDayReportBackdrop) {
     closeModalA11y(dom.nextDayReportModal);
   });
 }
-if (dom.nextDayReportModal) {
-  document.addEventListener("keydown", (e) => {
-    if (!dom.nextDayReportModal.hidden && e.key === "Escape") {
-      closeModalA11y(dom.nextDayReportModal);
-    }
-  });
-}
 if (dom.printNextDayReportBtn) {
   dom.printNextDayReportBtn.addEventListener("click", () => {
     const printWindow = window.open("", "", "height=800,width=1000");

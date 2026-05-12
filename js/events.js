@@ -342,6 +342,23 @@ function wireDelegatedBarEvents() {
 // ======================================================
 function wireEvents() {
   // Delegated handler for conflict list — avoids accumulating listeners on each re-render
+  // Single Escape handler for all modals — replaces per-modal document.addEventListener calls
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const modalClosers = [
+      { el: dom.itineraryModal,            close: closeItineraryModal },
+      { el: dom.tripDetailsModal,          close: closeTripDetailsModal },
+      { el: dom.envelopeModal,             close: closeEnvelopeModal },
+      { el: dom.nextDayReportModal,        close: () => closeModalA11y(dom.nextDayReportModal) },
+      { el: dom.dailyMaintenancePlanModal, close: () => closeModalA11y(dom.dailyMaintenancePlanModal) },
+      { el: dom.driverWeekScheduleModal,   close: () => closeModalA11y(dom.driverWeekScheduleModal) },
+      { el: dom.driverContactModal,        close: () => closeModalA11y(dom.driverContactModal) },
+    ];
+    for (const { el, close } of modalClosers) {
+      if (el && !el.hidden) { close(); break; }
+    }
+  });
+
   dom.conflictList?.addEventListener("click", (e) => {
     const el = e.target.closest("[data-tripkey]");
     if (!el) return;
@@ -651,9 +668,6 @@ function wireEvents() {
 
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (!dom.itineraryModal.hidden && e.key === "Escape") closeItineraryModal();
   });
   dom.itinerarySaveBtn.addEventListener("click", closeItineraryModal);
   dom.itineraryCopyBtn.addEventListener("click", async () => {
@@ -1152,10 +1166,6 @@ function wireEvents() {
     if (e.target.closest("[data-close-details]")) closeTripDetailsModal();
   });
 
-  document.addEventListener("keydown", (e) => {
-    if (!dom.tripDetailsModal?.hidden && e.key === "Escape") closeTripDetailsModal();
-  });
-
 
   // Toggle buttons — click toggles aria-pressed
   // Skip bus-seg buttons: they're a single-select segmented control with their
@@ -1282,13 +1292,6 @@ if (dom.closeDailyMaintenancePlanBtn) {
 if (dom.closeDailyMaintenancePlanBackdrop) {
   dom.closeDailyMaintenancePlanBackdrop.addEventListener("click", () => {
     closeModalA11y(dom.dailyMaintenancePlanModal);
-  });
-}
-if (dom.dailyMaintenancePlanModal) {
-  document.addEventListener("keydown", (e) => {
-    if (!dom.dailyMaintenancePlanModal.hidden && e.key === "Escape") {
-      closeModalA11y(dom.dailyMaintenancePlanModal);
-    }
   });
 }
 

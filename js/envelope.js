@@ -377,7 +377,6 @@ function openEnvelopeModal(tripKey) {
     };
   }
 
-  state.lastFocusedElement = document.activeElement;
   stateEnvelope.tripKey = tripKey;
   stateEnvelope.trip = trip;
   stateEnvelope.bg = "yellow";
@@ -505,7 +504,7 @@ function openEnvelopeModal(tripKey) {
   if (dom.envelopeWhiteBtn)
     dom.envelopeWhiteBtn.classList.toggle("active", stateEnvelope.bg === "white");
 
-  dom.envelopeModal.hidden = false;
+  openModalA11y(dom.envelopeModal);
 }
 
 function updateEnvelopeModalSelection(index) {
@@ -630,14 +629,10 @@ function printEnvelopePages() {
 }
 
 function closeEnvelopeModal() {
-  dom.envelopeModal.hidden = true;
+  closeModalA11y(dom.envelopeModal);
   stateEnvelope.tripKey = null;
   stateEnvelope.trip = null;
   stateEnvelope.assignments = [];
-  if (state.lastFocusedElement) {
-    state.lastFocusedElement.focus();
-    state.lastFocusedElement = null;
-  }
 }
 
 /** Removed editable envelope functions */
