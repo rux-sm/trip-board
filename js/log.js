@@ -173,22 +173,20 @@ function renderLogList(entries) {
 }
 
 async function loadDriversAndBuses(forceRefresh = false) {
-  // Try cache first (only for drivers, buses always fetch fresh)
   if (!forceRefresh) {
     const cDrivers = CACHE.get("cache_drivers");
-
-    if (cDrivers) {
-      state.driversList = cDrivers;
-      // Don't return early - still need to fetch buses
-    }
+    const cBuses   = CACHE.get("cache_buses");
+    if (cDrivers) state.driversList = cDrivers;
+    if (cBuses)   state.busesList   = cBuses;
   }
 
-  // Always fetch buses fresh (no caching) to ensure hasLift data is current
   const [driversResp, busesResp] = await Promise.all([
     forceRefresh || !state.driversList.length
       ? api.listDrivers(true, forceRefresh)
       : Promise.resolve({ ok: true, drivers: state.driversList }),
-    api.listBuses(true, forceRefresh),
+    forceRefresh || !state.busesList.length
+      ? api.listBuses(true, forceRefresh)
+      : Promise.resolve({ ok: true, buses: state.busesList }),
   ]);
 
   const freshDrivers = driversResp?.ok && driversResp.drivers?.length ? driversResp.drivers : null;
@@ -219,9 +217,10 @@ async function loadDriversAndBuses(forceRefresh = false) {
       .filter((b) => b.busId);
   }
 
-  // Save drivers to cache (but not buses)
   if (state.driversList.length)
     CACHE.set("cache_drivers", state.driversList, CONFIG.CACHE_TTL_DRIVERS);
+  if (state.busesList.length)
+    CACHE.set("cache_buses", state.busesList, CONFIG.CACHE_TTL_BUSES);
 
   refreshBusSelectOptions();
 

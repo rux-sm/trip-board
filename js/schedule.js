@@ -1128,15 +1128,19 @@ function _renderAgendaInner() {
         { key: "reqWifi",    icon: "wifi" },
       ];
       if (bar._reqIcons) {
-        bar._reqIcons.innerHTML = "";
-        reqSpec.forEach(({ key, icon }) => {
-          if (!truthyRequirement(t[key])) return;
-          const span = document.createElement("span");
-          span.className = "schedule-grid__trip-bar__req-icon icon-req material-symbols-outlined";
-          span.textContent = icon;
-          span.setAttribute("aria-hidden", "true");
-          bar._reqIcons.appendChild(span);
-        });
+        const reqSig = reqSpec.map(({ key }) => t[key] ? "1" : "0").join("");
+        if (bar._reqSig !== reqSig) {
+          bar._reqSig = reqSig;
+          bar._reqIcons.innerHTML = "";
+          reqSpec.forEach(({ key, icon }) => {
+            if (!truthyRequirement(t[key])) return;
+            const span = document.createElement("span");
+            span.className = "schedule-grid__trip-bar__req-icon icon-req material-symbols-outlined";
+            span.textContent = icon;
+            span.setAttribute("aria-hidden", "true");
+            bar._reqIcons.appendChild(span);
+          });
+        }
       }
 
       bar.classList.toggle("cont-left", continuesLeft);
