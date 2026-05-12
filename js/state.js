@@ -72,6 +72,7 @@ const state = {
   pendingRefreshDeferred: false,
   tripFormOpen: false,
   mutationId: 0,
+  recentlyDeleted: new Map(),
   checklistWriteTs: {},
   checklistAbortControllers: {},
 };

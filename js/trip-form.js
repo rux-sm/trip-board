@@ -1061,9 +1061,9 @@ async function verifyWriteResult() {
         toastProgress(100, "Deleted ✓");
         toastHide(300);
         writeVerified = true;
-        // Clear in-memory cache so next explicit load re-fetches,
-        // but skip a background refresh here to keep delete/edit flows smooth.
         state.weekCache.clear();
+        // Remember this key for 60s so any stale GAS cache response can't resurrect it
+        state.recentlyDeleted.set(String(tripKey), Date.now() + 60_000);
       } else {
         toast("Delete may have failed — data restored. Refresh to confirm.", "danger", 8000);
         rollbackState();
@@ -1149,20 +1149,29 @@ async function verifyWriteResult() {
       state.pendingRefreshDeferred = false;
       const snapKey = String(optimisticSnapshot?.tripKey || tripKey);
       const snapTrip = optimisticSnapshot ? { ...optimisticSnapshot } : null;
+      const snapAssignments = state.pendingWrite?.optimisticAssignments ?? null;
+      const origTrip = originalTripByKey?.[snapKey] ?? {};
+      // Fields owned by server — not set from form, can't signal staleness
+      const SKIP = new Set(["tripKey", "tripId", "createdAt", "updatedAt", "itineraryPdfUrl"]);
+      // Which trip fields did this write actually change?
+      const changedFields = snapTrip
+        ? Object.keys(snapTrip).filter(
+            (f) => !SKIP.has(f) && String(origTrip[f] ?? "") !== String(snapTrip[f] ?? "")
+          )
+        : [];
       delay(3000).then(() =>
         refreshWeekData({ silent: true }).then(() => {
-          if (snapTrip && state.tripByKey[snapKey]) {
-            const server = state.tripByKey[snapKey];
-            const fresh =
-              server.destination === snapTrip.destination &&
-              server.departureDate === snapTrip.departureDate &&
-              server.departureTime === snapTrip.departureTime;
-            if (!fresh) {
-              state.tripByKey[snapKey] = snapTrip;
-              const idx = state.trips.findIndex((t) => String(t.tripKey) === snapKey);
-              if (idx >= 0) state.trips[idx] = snapTrip;
-              scheduleAgendaReflow();
-            }
+          if (!snapTrip || !state.tripByKey[snapKey]) return;
+          const server = state.tripByKey[snapKey];
+          const fresh =
+            changedFields.length === 0 ||
+            changedFields.every((f) => String(server[f] ?? "") === String(snapTrip[f] ?? ""));
+          if (!fresh) {
+            state.tripByKey[snapKey] = snapTrip;
+            const idx = state.trips.findIndex((t) => String(t.tripKey) === snapKey);
+            if (idx >= 0) state.trips[idx] = snapTrip;
+            if (snapAssignments) state.assignmentsByTripKey[snapKey] = snapAssignments;
+            scheduleAgendaReflow();
           }
         }),
       );

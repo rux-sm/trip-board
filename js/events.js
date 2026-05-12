@@ -1073,6 +1073,7 @@ function wireEvents() {
       tripKey: key,
       mutationId: ++state.mutationId,
       optimisticSnapshot: { ...optimisticTrip },
+      optimisticAssignments: [...optimisticAssignments],
       originalTrips,
       originalTripByKey,
       originalAssignments,

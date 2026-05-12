@@ -247,6 +247,16 @@ function applyWeekRespToState(resp) {
     trips = trips.filter((t) => String(t.tripKey || "").trim() !== deletingKey);
   }
 
+  // Filter trips confirmed-deleted but possibly still in a stale GAS cache response.
+  // Entries expire after 60s (well past the 5-min GAS CacheService TTL).
+  if (state.recentlyDeleted.size) {
+    const now = Date.now();
+    for (const [k, exp] of state.recentlyDeleted) {
+      if (now > exp) state.recentlyDeleted.delete(k);
+    }
+    trips = trips.filter((t) => !state.recentlyDeleted.has(String(t.tripKey || "").trim()));
+  }
+
   state.trips = trips
   state.trips = state.trips
     .map((t) => ({
