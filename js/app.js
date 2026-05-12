@@ -6580,6 +6580,23 @@ async function verifyWriteResult() {
       for (let i = 0; i < delays.length; i++) {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
+        if (exists) {
+          const snap = state.pendingWrite?.optimisticSnapshot;
+          if (snap) {
+            const s = resp.trip;
+            const origTrip = originalTripByKey[tripKey] || {};
+            const baseMatch =
+              s.destination === snap.destination &&
+              s.departureDate === snap.departureDate &&
+              s.departureTime === snap.departureTime;
+            const STATUS_FIELDS = ["driverStatus", "paymentStatus", "contactStatus", "itineraryStatus"];
+            const statusMatch = STATUS_FIELDS.every((f) => {
+              if (origTrip[f] === snap[f]) return true;
+              return s[f] === snap[f];
+            });
+            if (!baseMatch || !statusMatch) exists = false;
+          }
+        }
         if (exists) break;
         await delay(delays[i]);
       }
@@ -6631,16 +6648,34 @@ async function verifyWriteResult() {
     // Refresh after pendingWrite is cleared so the silent-refresh guard doesn't block.
     // Clear the deferred flag before each call to prevent a double-refresh.
     if (writeVerified && action !== "delete") {
-      // Optimistic state is already correct — don't fetch from GAS immediately.
-      // GAS CacheService lags behind the write and would overwrite correct local
-      // state with stale pre-write data. Canonical sync happens on the next
-      // 5-minute interval or user navigation.
+      // Pull canonical server values (e.g. computed itineraryStatus) back into
+      // state. Delay 3s so GAS CacheService invalidation propagates before the
+      // weekData fetch; if the refresh still returns stale data, surgically
+      // restore the optimistic trip.
       state.pendingRefreshDeferred = false;
+      const snapKey = String(optimisticSnapshot?.tripKey || tripKey);
+      const snapTrip = optimisticSnapshot ? { ...optimisticSnapshot } : null;
+      delay(3000).then(() =>
+        refreshWeekData({ silent: true }).then(() => {
+          if (snapTrip && state.tripByKey[snapKey]) {
+            const server = state.tripByKey[snapKey];
+            const fresh =
+              server.destination === snapTrip.destination &&
+              server.departureDate === snapTrip.departureDate &&
+              server.departureTime === snapTrip.departureTime;
+            if (!fresh) {
+              state.tripByKey[snapKey] = snapTrip;
+              const idx = state.trips.findIndex((t) => String(t.tripKey) === snapKey);
+              if (idx >= 0) state.trips[idx] = snapTrip;
+              scheduleAgendaReflow();
+            }
+          }
+        }),
+      );
     } else if (needsFullRefresh) {
-      // Verification timed out — optimistic accuracy uncertain. Wait for GAS cache
-      // to propagate before fetching, then do a full visible refresh.
+      // Verification timed out — optimistic accuracy uncertain.
+      // Cache was already cleared at form-submit time, so do a full visible refresh.
       state.pendingRefreshDeferred = false;
-      await delay(1500);
       refreshWeekData({ silent: false });
     } else if (state.pendingRefreshDeferred) {
       // A refresh was queued while pendingWrite was set — fire it now.
@@ -10563,45 +10598,4 @@ function fitDateTitle() {
 }
 
 window.addEventListener("resize", fitDateTitle);
-// Also call on load just in case
-window.addEventListener("load", fitDateTitle);
-window.addEventListener("load", fitDateTitle);
-// ======================================================
-function fitDateTitle() {
-  const title = document.querySelector(".week-heading");
-  if (!title) return;
-
-  // Reset to max size first to check overflow
-  title.style.fontSize = "";
-
-  // Only run if overflow/scrollWidth > clientWidth
-  // But wait, ellipsis hides overflow. We compare scrollWidth > clientWidth
-  // Force a small delay to let bold/layout settle? usually safe immediately.
-
-  if (window.innerWidth >= 900) return; // Only for mobile layout
-
-  let size = 22; // Start max
-  const minSize = 12;
-
-  // Check if ScrollWidth > ClientWidth
-  // Note: scrollWidth typically equals clientWidth if overflow:hidden + whitespace:nowrap is set unless content is actually clipped.
-  // Wait, if text-overflow: ellipsis is active, scrollWidth might report the full width?
-  // Let's assume clamping makes it fit. If scrollWidth > clientWidth, text is overflowing.
-
-  // First, clear inline style to let CSS clamp work
-  title.style.fontSize = "";
-
-  if (title.scrollWidth > title.clientWidth) {
-    size = parseFloat(window.getComputedStyle(title).fontSize);
-
-    while (title.scrollWidth > title.clientWidth && size > minSize) {
-      size--;
-      title.style.fontSize = size + "px";
-    }
-  }
-}
-
-window.addEventListener("resize", fitDateTitle);
-// Also call on load just in case
-window.addEventListener("load", fitDateTitle);
 window.addEventListener("load", fitDateTitle);
