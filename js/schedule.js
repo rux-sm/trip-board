@@ -817,7 +817,7 @@ function _renderAgendaInner() {
           return el;
         }
 
-        // 7 fixed rows
+        // Rows r1–r9 (r10 = action row, revealed on expand)
         const r1 = makeRow("1");
         const r2 = makeRow("2");
         const r3 = makeRow("3");
@@ -828,7 +828,7 @@ function _renderAgendaInner() {
 
         // Action row — revealed at the bottom of the bar when expanded
         const rAction = document.createElement("div");
-        rAction.className = "schedule-grid__trip-bar__action-row";
+        rAction.className = "schedule-grid__trip-bar__row--10";
         let pdfBtn = null;
         [
           { action: "load", icon: "edit", title: "Load trip" },
@@ -882,10 +882,14 @@ function _renderAgendaInner() {
         timeRow.append(left, center, right);
         r4.appendChild(timeRow);
 
-        // Row 5: Status icons
-        const statusRow = document.createElement("div");
-        statusRow.className = "schedule-grid__trip-bar__status-row";
+        // Row 5: Req icons + notes / memo
+        const barReqIcons = document.createElement("div");
+        barReqIcons.className = "schedule-grid__trip-bar__req-icons";
+        const notesEl = document.createElement("div");
+        notesEl.className = "schedule-grid__trip-bar__notes";
+        r5.append(barReqIcons, notesEl);
 
+        // Badge helpers — used in r1 top-status group, r6 driver slots
         function makeMini(content, isIcon = false) {
           const b = document.createElement("span");
           b.className = "schedule-grid__trip-bar__mini-badge icon-status";
@@ -908,19 +912,6 @@ function _renderAgendaInner() {
         const bD2 = makeMini("person", true); // Driver 2 (co-driver)
         const bD3 = makeMini("emergency_home", true); // Relief 1
         const bD4 = makeMini("emergency_home", true); // Relief 2
-        const financialSummary = document.createElement("span");
-        financialSummary.className = "schedule-grid__trip-bar__financial";
-
-        const barReqIcons = document.createElement("div");
-        barReqIcons.className = "schedule-grid__trip-bar__req-icons";
-
-        // bI, bC, b$ move to row 1 top-right — row 5 keeps only financial + req icons
-        const statusBadgesWrap = document.createElement("div");
-        statusBadgesWrap.className = "schedule-grid__trip-bar__status-badges";
-        statusBadgesWrap.append(barReqIcons);
-        statusRow.append(financialSummary, statusBadgesWrap);
-
-        r5.appendChild(statusRow);
 
         // Complete row 1: [title already appended] → top-status group → paidBadge
         const r1TopBadges = document.createElement("div");
@@ -972,7 +963,6 @@ function _renderAgendaInner() {
         r6.appendChild(driversRow);
 
         // Row 7: Driver pay
-        const r7pay = makeRow("7");
         const driverPayRow = document.createElement("div");
         driverPayRow.className = "schedule-grid__trip-bar__driver-pay";
 
@@ -986,16 +976,25 @@ function _renderAgendaInner() {
         pay4Slot.className = "schedule-grid__trip-bar__pay-slot";
 
         driverPayRow.append(pay1Slot, pay2Slot, pay3Slot, pay4Slot);
-        r7pay.appendChild(driverPayRow);
+        r7.appendChild(driverPayRow);
 
-        // Row 8: Trip miles / invoice / notes
+        // Row 8: Estimate fields (est. mileage, quoted price)
         const r8 = makeRow("8");
-        const preDriversRow = document.createElement("div");
-        preDriversRow.className = "schedule-grid__trip-bar__pre-drivers";
-        r8.appendChild(preDriversRow);
+        const estimateRow = document.createElement("div");
+        estimateRow.className = "schedule-grid__trip-bar__estimate-row";
+        const estimateSummary = document.createElement("span");
+        estimateSummary.className = "schedule-grid__trip-bar__estimate-summary";
+        estimateRow.append(estimateSummary);
+        r8.appendChild(estimateRow);
+
+        // Row 9: Billing / invoice fields (trip miles, invoice number)
+        const r9 = makeRow("9");
+        const billingRow = document.createElement("div");
+        billingRow.className = "schedule-grid__trip-bar__billing-row";
+        r9.appendChild(billingRow);
 
         // Append all rows — rAction is last (bottom of bar when expanded)
-        bar.append(r1, r2, r3, r4, r5, r6, r7, r8, rAction);
+        bar.append(r1, r2, r3, r4, r5, r6, r7, r8, r9, rAction);
 
         // Keep your existing references working
         bar._multiBadge = multiBadge;
@@ -1016,9 +1015,9 @@ function _renderAgendaInner() {
         bar._bD2 = bD2;
         bar._bD3 = bD3;
         bar._bD4 = bD4;
-        bar._financialSummary = financialSummary;
-
-        bar._preDrivers = preDriversRow;
+        bar._notes = notesEl;
+        bar._estimateSummary = estimateSummary;
+        bar._billingRow = billingRow;
         bar._drivers = driversRow;
         bar._d1Slot = d1Slot;
         bar._d2Slot = d2Slot;
@@ -1207,10 +1206,10 @@ function _renderAgendaInner() {
         }
       }
 
-      if (bar._financialSummary) {
+      if (bar._estimateSummary) {
         const miPart = t.estimatedMileage ? `${t.estimatedMileage} mi` : "— mi";
         const pricePart = t.quotedPrice ? `$${t.quotedPrice}` : "$—";
-        bar._financialSummary.textContent = `${miPart} · ${pricePart}`;
+        bar._estimateSummary.textContent = `${miPart} · ${pricePart}`;
       }
 
       // Requirement icons (left of status badges) from trip req flags
@@ -1398,12 +1397,14 @@ function _renderAgendaInner() {
         }
       }
 
-      if (bar._preDrivers) {
+      if (bar._billingRow) {
         const miPart = t.tripMiles ? `${t.tripMiles} mi` : "— mi";
         const invPart = t.invoiceNumber ? `INV ${t.invoiceNumber}` : "INV —";
-        const parts = [miPart, invPart];
-        if (t.notes) parts.push(clipText(t.notes, 80));
-        bar._preDrivers.textContent = parts.join(" · ");
+        bar._billingRow.textContent = `${miPart} · ${invPart}`;
+      }
+
+      if (bar._notes) {
+        bar._notes.textContent = t.notes ? clipText(t.notes, 120) : "";
       }
 
       bar._d1Name.textContent = d1;
@@ -1411,7 +1412,7 @@ function _renderAgendaInner() {
       bar._d3Name.textContent = d3 && d3 !== "—" ? d3 : "";
       bar._d4Name.textContent = d4 && d4 !== "—" ? d4 : "";
 
-      // Row 8: driver pay — show value if set, "$—" placeholder if driver assigned but no pay, empty if no driver
+      // Row 7: driver pay — show value if set, "$—" placeholder if driver assigned but no pay, empty if no driver
       if (bar._pay1) bar._pay1.textContent = d1 && d1 !== "—" ? (a.driver1Pay || "$—") : "";
       if (bar._pay2) bar._pay2.textContent = d2 && d2 !== "—" ? (a.driver2Pay || "$—") : "";
       if (bar._pay3) bar._pay3.textContent = d3 && d3 !== "—" ? (a.driver3Pay || "$—") : "";
