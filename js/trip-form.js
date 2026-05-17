@@ -958,10 +958,14 @@ async function openTripForEdit(tripKey) {
 
     const startTime = Date.now();
 
-    const [tripResp, assignResp] = await Promise.all([
-      api.getTrip(tripKey),
-      api.getBusAssignments(tripKey),
-    ]);
+    // Use state assignments first — already loaded from weekData (reliable).
+    // Only hit the API if state has nothing for this trip (rare: trip outside current week cache).
+    const localAssigns = state.assignmentsByTripKey[String(tripKey)] || [];
+
+    const fetchPromises = [api.getTrip(tripKey)];
+    if (!localAssigns.length) fetchPromises.push(api.getBusAssignments(tripKey));
+
+    const [tripResp, assignResp] = await Promise.all(fetchPromises);
 
     // Minor loading flash prevention
     const elapsed = Date.now() - startTime;
@@ -973,11 +977,10 @@ async function openTripForEdit(tripKey) {
 
     if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
 
-    const serverTrip   = tripResp.trip || {};
-    const localAssigns = state.assignmentsByTripKey[String(tripKey)] || [];
-    const rawAssigns   = (assignResp?.ok && assignResp.assignments?.length)
-      ? assignResp.assignments
-      : localAssigns;
+    const serverTrip = tripResp.trip || {};
+    const rawAssigns = localAssigns.length
+      ? localAssigns
+      : (assignResp?.ok && assignResp.assignments?.length ? assignResp.assignments : []);
 
     // Fill empty driver/status fields from weekData local state — guards against
     // getBusAssignments returning a partial record (transient GAS error, partial write)

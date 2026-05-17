@@ -51,10 +51,11 @@ function shortTripId(tripId) {
 async function loadActivityLog(tripKey = null) {
   const tk = toastShow("Loading log…", "loading", { source: "log-load" });
   try {
-    const params = tripKey ? { tripKey } : {};
-    const data = await fetchAPI("listLog", params);
-    if (!data.ok) throw new Error(data.error);
-    renderLogList(data.log || []);
+    let q = _sb.from("log").select("*").order("timestamp", { ascending: false }).limit(500);
+    if (tripKey) q = q.eq("tripKey", tripKey);
+    const { data: rows, error } = await q;
+    if (error) throw error;
+    renderLogList(rows || []);
   } catch (err) {
     console.error("[log fetch]", err);
     toast("Could not load activity log — check your connection.", "danger", 2500);

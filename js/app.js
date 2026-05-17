@@ -67,6 +67,7 @@
   }
 
   (async function init() {
+    if (window._authGate) await window._authGate;
     setWeekSyncStatus("loading");
     try {
       await loadDriversAndBuses();

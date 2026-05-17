@@ -1,72 +1,41 @@
 // ======================================================
-// 11) FETCH + RETRY + API
+// 11) SUPABASE CLIENT + API
 // ======================================================
-async function fetchAPI(fn, params = {}, timeoutMs = CONFIG.JSONP_TIMEOUT) {
-  return withRetry(
-    async (attempt) => {
-      const url = new URL(CONFIG.ENDPOINT);
-      url.searchParams.set("fn", fn);
 
-      url.searchParams.set("_", Date.now().toString());
+const _sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          url.searchParams.set(key, String(value));
-        }
-      });
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-      try {
-        const response = await fetch(url.toString(), {
-          method: "GET",
-          mode: "cors",
-          cache: "no-cache",
-          credentials: "omit",
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          const err = new Error(`HTTP ${response.status}: ${response.statusText}`);
-          err.status = response.status;
-          err.url = url.toString();
-          throw err;
-        }
-
-        return await response.json();
-      } catch (err) {
-        clearTimeout(timeoutId);
-
-        if (err.name === "AbortError") {
-          const timeoutErr = new Error(`Request timeout after ${timeoutMs}ms`);
-          timeoutErr.url = url.toString();
-          throw timeoutErr;
-        }
-
-        if (err instanceof TypeError && err.message.includes("fetch")) {
-          const networkErr = new Error("Network error - check connection");
-          networkErr.url = url.toString();
-          networkErr.originalError = err;
-          throw networkErr;
-        }
-
-        throw err;
-      }
-    },
-    {
-      tries: 3,
-      baseDelayMs: 500,
-      totalTimeoutMs: 60000,
-      shouldRetry: (err) => {
-        if (err.status && err.status >= 400 && err.status < 500) return false;
-        return true;
-      },
-    },
-  );
+function sbErr(error, label) {
+  throw new Error(`[${label}] ${error?.message || String(error)}`);
 }
+
+function p2bool(v) {
+  if (typeof v === "boolean") return v;
+  return String(v || "").toLowerCase() === "true";
+}
+
+function p2str(v) {
+  return v == null ? "" : String(v).trim();
+}
+
+// For UPDATE: keep existing value if incoming is empty (guards against partial form load)
+function mergeStr(incoming, existing) {
+  const v = p2str(incoming);
+  return v !== "" ? v : (p2str(existing) || "");
+}
+
+function p2date(v) {
+  if (!v) return null;
+  const s = String(v).trim().slice(0, 10);
+  return s || null;
+}
+
+function generateTripKey() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// ── withRetry (unchanged) ────────────────────────────────────────────────────
 
 async function withRetry(
   fn,
@@ -76,22 +45,19 @@ async function withRetry(
     maxDelayMs = 2000,
     jitter = 0.25,
     totalTimeoutMs = 30000,
-    shouldRetry = (err) => true,
+    shouldRetry = () => true,
   } = {},
 ) {
   const deadline = Date.now() + totalTimeoutMs;
   let lastErr;
-
   for (let attempt = 1; attempt <= tries; attempt++) {
     try {
-      if (Date.now() > deadline) {
+      if (Date.now() > deadline)
         throw new Error(`Operation timed out after ${totalTimeoutMs}ms`);
-      }
       return await fn(attempt);
     } catch (err) {
       lastErr = err;
       if (attempt === tries || !shouldRetry(err) || Date.now() > deadline) break;
-
       const expo = Math.min(maxDelayMs, baseDelayMs * Math.pow(2, attempt - 1));
       const j = expo * jitter * (Math.random() * 2 - 1);
       const wait = Math.min(Math.max(0, expo + j), deadline - Date.now());
@@ -99,122 +65,306 @@ async function withRetry(
       await delay(wait);
     }
   }
-
   throw lastErr;
 }
 
-const api = {
-  listDrivers(activeOnly = true, bustCache = false) {
-    const params = { activeOnly: activeOnly ? "true" : "false" };
-    if (bustCache) params.bustCache = "true";
-    return fetchAPI("listDrivers", params);
-  },
+// ── Trip param parsing ───────────────────────────────────────────────────────
 
-  listBuses(activeOnly = true, bustCache = false) {
-    const params = { activeOnly: activeOnly ? "true" : "false" };
-    if (bustCache) params.bustCache = "true";
-    return fetchAPI("listBuses", params);
-  },
+// isCreate=true → p2str only (no existing to fall back to)
+// isCreate=false → mergeStr (preserve existing DB value if form field came back empty)
+function tripFromParams(p, base = {}, isCreate = true) {
+  const m = (v, k) => isCreate ? p2str(v) : mergeStr(v, base[k]);
+  return {
+    tripKey:              p2str(p.tripKey)       || base.tripKey,
+    tripId:               p2str(p.tripId)        || base.tripId  || "",
+    destination:          m(p.destination,         "destination"),
+    customer:             m(p.customer,             "customer"),
+    contactName:          m(p.contactName,          "contactName"),
+    phone:                m(p.phone,                "phone"),
+    departureDate:        p2date(p.tripDate || p.departureDate) || base.departureDate || null,
+    arrivalDate:          p2date(p.arrivalDate)  || base.arrivalDate || null,
+    departureTime:        m(p.departureTime,        "departureTime"),
+    spotTime:             m(p.spotTime,             "spotTime"),
+    arrivalTime:          m(p.arrivalTime,          "arrivalTime"),
+    itineraryStatus:      m(p.itineraryStatus,      "itineraryStatus"),
+    contactStatus:        m(p.contactStatus,        "contactStatus"),
+    paymentStatus:        m(p.paymentStatus,        "paymentStatus"),
+    driverStatus:         m(p.driverStatus,         "driverStatus"),
+    invoiceStatus:        m(p.invoiceStatus,        "invoiceStatus"),
+    invoiceNumber:        m(p.invoiceNumber,        "invoiceNumber"),
+    busesNeeded:          m(p.busesNeeded,          "busesNeeded"),
+    tripColor:            m(p.tripColor,            "tripColor"),
+    notes:                m(p.notes,               "notes"),
+    itinerary:            m(p.itinerary,           "itinerary"),
+    comments:             m(p.comments,            "comments"),
+    req56Pass:            p2bool(p.req56Pass),
+    reqSleeper:           p2bool(p.reqSleeper),
+    reqLift:              p2bool(p.reqLift),
+    reqRelief:            p2bool(p.reqRelief),
+    reqRelief2:           p2bool(p.reqRelief2),
+    reqCoDriver:          p2bool(p.reqCoDriver),
+    reqHotel:             p2bool(p.reqHotel),
+    reqFuelCard:          p2bool(p.reqFuelCard),
+    reqWifi:              p2bool(p.reqWifi),
+    envelopePickup:       m(p.envelopePickup,       "envelopePickup"),
+    envelopeTripContact:  m(p.envelopeTripContact,  "envelopeTripContact"),
+    envelopeTripPhone:    m(p.envelopeTripPhone,    "envelopeTripPhone"),
+    envelopeTripNotes:    m(p.envelopeTripNotes,    "envelopeTripNotes"),
+    itineraryPdfUrl:      p2str(p.itineraryPdfUrl) || p2str(base.itineraryPdfUrl),
+    paymentType:          m(p.paymentType,          "paymentType"),
+    estimatedMileage:     m(p.estimatedMileage,     "estimatedMileage"),
+    drivingHours:         m(p.drivingHours,         "drivingHours"),
+    onDutyHours:          m(p.onDutyHours,          "onDutyHours"),
+    quotedPrice:          m(p.quotedPrice,          "quotedPrice").replace(/^\$/, ""),
+    driverInfoSent:       p2bool(p.driverInfoSent),
+    tripReminderSent:     p2bool(p.tripReminderSent),
+    tripMiles:            m(p.tripMiles,            "tripMiles"),
+    datePaid:             p2date(p.datePaid)     || base.datePaid || null,
+    tripReviewed:         p2bool(p.tripReviewed),
+    ref1:                 m(p.ref1, "ref1"),
+    ref2:                 m(p.ref2, "ref2"),
+    ref3:                 m(p.ref3, "ref3"),
+    updatedAt:            new Date().toISOString(),
+  };
+}
 
-  weekData(start, end, notesKey) {
-    return withRetry(
-      async () => {
-        return await fetchAPI("weekData", { start, end, notesKey });
-      },
-      {
-        tries: 3,
-        shouldRetry: (err) => {
-          if (err.status >= 400 && err.status < 500) return false;
-          return true;
-        },
-      },
-    );
-  },
+// ── Bus assignment parsing ───────────────────────────────────────────────────
 
-  saveWeekNote(notes) {
-    return fetchAPI("saveWeekNote", { notes });
-  },
-
-  getTrip(tripKey) {
-    return withRetry(
-      async () => {
-        const resp = await fetchAPI("getTrip", { tripKey });
-        if (resp && resp.ok === false) {
-          throw new Error(resp.error || "Trip not found");
-        }
-        return resp;
-      },
-      { tries: 2, totalTimeoutMs: 65000 },
-    );
-  },
-
-  getBusAssignments(tripKey) {
-    return withRetry(
-      async () => {
-        const resp = await fetchAPI("getBusAssignments", { tripKey });
-        if (resp && resp.ok === false) {
-          throw new Error(resp.error || "Assignments not found");
-        }
-        return resp;
-      },
-      { tries: 2, totalTimeoutMs: 65000 },
-    );
-  },
-
-  toggleUnavailability(driverName, dateYmd) {
-    return fetchAPI("toggleUnavailability", { driverName, dateYmd });
-  },
-
-  batchUnavailability(driverName, dates, mode) {
-    return fetchAPI("batchUnavailability", {
-      driverName,
-      dates: dates.join(","),
-      mode,
+function assignmentsFromParams(p, tripKey) {
+  const n = Math.min(10, parseInt(p.busesNeeded) || 0);
+  const result = [];
+  for (let i = 1; i <= n; i++) {
+    const busId = p2str(p[`bus${i}`]);
+    if (!busId || busId === "None") continue;
+    const bus = (state.busesList || []).find((b) => String(b.busId) === busId) || {};
+    result.push({
+      tripKey,
+      busId,
+      busName:       bus.busName || "",
+      busNumber:     Number(bus.busId) || 0,
+      driver1:       p2str(p[`bus${i}_driver1`]),
+      driver2:       p2str(p[`bus${i}_driver2`]),
+      driver3:       p2str(p[`bus${i}_driver3`]),
+      driver4:       p2str(p[`bus${i}_driver4`]),
+      driver1Status: p2str(p[`bus${i}_driver1Status`]),
+      driver2Status: p2str(p[`bus${i}_driver2Status`]),
+      driver3Status: p2str(p[`bus${i}_driver3Status`]),
+      driver4Status: p2str(p[`bus${i}_driver4Status`]),
+      driver1Pay:    p2str(p[`bus${i}_driver1Pay`]),
+      driver2Pay:    p2str(p[`bus${i}_driver2Pay`]),
+      driver3Pay:    p2str(p[`bus${i}_driver3Pay`]),
+      driver4Pay:    p2str(p[`bus${i}_driver4Pay`]),
     });
+  }
+  return result;
+}
+
+// ── Trip ID generation ───────────────────────────────────────────────────────
+
+async function generateTripId(depDate) {
+  const d = depDate ? depDate.replace(/-/g, "") : ymd(new Date()).replace(/-/g, "");
+  const prefix = `TRIP-${d}-`;
+  const { data } = await _sb.from("trips").select("tripId").like("tripId", `${prefix}%`);
+  const maxNum = (data || []).reduce((max, t) => {
+    const n = parseInt((t.tripId || "").split("-").pop()) || 0;
+    return Math.max(max, n);
+  }, 0);
+  return `${prefix}${String(maxNum + 1).padStart(4, "0")}`;
+}
+
+// ── Activity logging ─────────────────────────────────────────────────────────
+
+const TRACKED_FIELDS = [
+  "destination", "customer", "contactName", "phone",
+  "departureDate", "arrivalDate", "departureTime", "spotTime", "arrivalTime",
+  "itineraryStatus", "contactStatus", "paymentStatus", "driverStatus",
+  "invoiceStatus", "invoiceNumber", "busesNeeded", "tripColor",
+  "notes", "itinerary", "comments",
+  "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2",
+  "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi",
+  "envelopePickup", "envelopeTripContact", "envelopeTripPhone", "envelopeTripNotes",
+  "itineraryPdfUrl", "paymentType", "estimatedMileage", "drivingHours",
+  "onDutyHours", "quotedPrice", "driverInfoSent", "tripReminderSent",
+  "tripMiles", "datePaid", "tripReviewed", "ref1", "ref2", "ref3",
+];
+
+async function logTripChanges(action, newTrip, oldTrip) {
+  const entries = [];
+  const ts = new Date().toISOString();
+  if (action === "create" || action === "delete") {
+    entries.push({
+      timestamp: ts,
+      tripKey:  newTrip.tripKey,
+      tripId:   newTrip.tripId,
+      action,
+      field: "", oldValue: "", newValue: "",
+    });
+  } else {
+    for (const field of TRACKED_FIELDS) {
+      const ov = String(oldTrip?.[field] ?? "");
+      const nv = String(newTrip?.[field] ?? "");
+      if (ov !== nv) {
+        entries.push({
+          timestamp: ts,
+          tripKey:  newTrip.tripKey,
+          tripId:   newTrip.tripId,
+          action:   "update",
+          field,
+          oldValue: ov,
+          newValue: nv,
+        });
+      }
+    }
+  }
+  if (entries.length) await _sb.from("log").insert(entries);
+}
+
+// ── api object ───────────────────────────────────────────────────────────────
+
+const api = {
+  async listDrivers(activeOnly = true) {
+    let q = _sb.from("drivers").select("*").order("priority").order("driverName");
+    if (activeOnly) q = q.eq("active", true);
+    const { data, error } = await q;
+    if (error) sbErr(error, "listDrivers");
+    return { ok: true, drivers: data };
   },
 
-  getChecklist(date) {
-    return fetchAPI("getChecklist", { date });
+  async listBuses(activeOnly = true) {
+    let q = _sb.from("buses").select("*").order("orderNum").order("busName");
+    if (activeOnly) q = q.eq("active", true);
+    const { data, error } = await q;
+    if (error) sbErr(error, "listBuses");
+    return { ok: true, buses: data };
+  },
+
+  async weekData(start, end) {
+    const { data, error } = await _sb.rpc("week_data", { p_start: start, p_end: end });
+    if (error) sbErr(error, "weekData");
+    return data;
+  },
+
+  async saveWeekNote(notes) {
+    const { error } = await _sb
+      .from("week_notes")
+      .upsert({ weekStart: "global", notes, lastUpdated: new Date().toISOString() }, { onConflict: "weekStart" });
+    if (error) sbErr(error, "saveWeekNote");
+    return { ok: true };
+  },
+
+  async getTrip(tripKey) {
+    const { data, error } = await _sb.from("trips").select("*").eq("tripKey", tripKey).single();
+    if (error) sbErr(error, "getTrip");
+    return { ok: true, trip: data };
+  },
+
+  async getBusAssignments(tripKey) {
+    const { data, error } = await _sb.from("bus_assignments").select("*").eq("tripKey", tripKey);
+    if (error) sbErr(error, "getBusAssignments");
+    return { ok: true, assignments: data };
+  },
+
+  async toggleUnavailability(driverName, dateYmd) {
+    const { data: existing } = await _sb
+      .from("unavailability")
+      .select("id")
+      .eq("driverName", driverName)
+      .eq("dateYmd", dateYmd)
+      .maybeSingle();
+    if (existing) {
+      await _sb.from("unavailability").delete().eq("id", existing.id);
+    } else {
+      await _sb.from("unavailability").insert({ driverName, dateYmd });
+    }
+    return { ok: true };
+  },
+
+  async batchUnavailability(driverName, dates, mode) {
+    if (mode === "remove") {
+      await _sb.from("unavailability").delete().eq("driverName", driverName).in("dateYmd", dates);
+    } else {
+      const rows = dates.map((d) => ({ driverName, dateYmd: d }));
+      await _sb.from("unavailability").upsert(rows, { onConflict: "driverName,dateYmd", ignoreDuplicates: true });
+    }
+    return { ok: true };
+  },
+
+  async getChecklist(date) {
+    const { data, error } = await _sb.from("checklist").select("*").eq("date", date);
+    if (error) sbErr(error, "getChecklist");
+    return { ok: true, checklist: data || [] };
   },
 
   async saveTrip(body) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), CONFIG.JSONP_TIMEOUT);
-    try {
-      const resp = await fetch(CONFIG.ENDPOINT, {
-        method: "POST",
-        body,
-        mode: "cors",
-        credentials: "omit",
-        signal: controller.signal,
-      }).then((r) => r.json());
-      if (!resp?.ok) throw new Error(resp?.error || "Save failed");
-      return resp;
-    } finally {
-      clearTimeout(timeoutId);
+    const p = Object.fromEntries(body instanceof URLSearchParams ? body : new URLSearchParams(body));
+    const action  = p2str(p.action);
+    const tripKey = p2str(p.tripKey);
+
+    // ── Delete ──────────────────────────────────────────────────────────────
+    if (action === "delete") {
+      const oldTrip = state.tripByKey?.[tripKey] || { tripKey, tripId: p2str(p.tripId) };
+      const { error } = await _sb.from("trips").delete().eq("tripKey", tripKey);
+      if (error) sbErr(error, "saveTrip.delete");
+      await logTripChanges("delete", oldTrip, null);
+      return { ok: true, tripKey };
     }
+
+    // ── Create / Update ──────────────────────────────────────────────────────
+    const isCreate = action === "create" || !tripKey;
+    const key      = isCreate ? generateTripKey() : tripKey;
+    const oldTrip  = isCreate ? null : (state.tripByKey?.[tripKey] || null);
+    const base     = isCreate ? { tripKey: key } : (oldTrip || { tripKey: key });
+
+    const trip = tripFromParams(p, base, isCreate);
+    trip.tripKey = key;
+
+    if (isCreate) {
+      trip.tripId    = await generateTripId(trip.departureDate);
+      trip.createdAt = new Date().toISOString();
+    } else {
+      trip.tripId = p2str(p.tripId) || oldTrip?.tripId || "";
+    }
+
+    const { data: savedTrip, error: tripErr } = await _sb
+      .from("trips")
+      .upsert(trip, { onConflict: "tripKey" })
+      .select()
+      .single();
+    if (tripErr) sbErr(tripErr, "saveTrip.upsert");
+
+    // ── Replace bus assignments ──────────────────────────────────────────────
+    const existingAssignments = state.assignmentsByTripKey?.[key] || [];
+    const incomingBusCount = parseInt(p.busesNeeded) || 0;
+    // Guard: if form says 0 buses but state has assignments, something didn't load — keep existing
+    if (!isCreate && incomingBusCount === 0 && existingAssignments.length > 0) {
+      await logTripChanges("update", savedTrip, oldTrip);
+      return { ok: true, trip: savedTrip, assignments: existingAssignments };
+    }
+    await _sb.from("bus_assignments").delete().eq("tripKey", key);
+    const newAssignments = assignmentsFromParams(p, key);
+    if (newAssignments.length) {
+      const { error: aErr } = await _sb.from("bus_assignments").insert(newAssignments);
+      if (aErr) sbErr(aErr, "saveTrip.assignments");
+    }
+
+    await logTripChanges(isCreate ? "create" : "update", savedTrip, oldTrip);
+    return { ok: true, trip: savedTrip, assignments: newAssignments };
   },
 
   async setChecklist(tripKey, date, saved, signal) {
-    const body = new URLSearchParams({
-      action: "setChecklist",
-      tripKey,
-      date,
-      envelope:   String(!!saved.envelope),
-      reminder:   String(!!saved.reminder),
-      driverInfo: String(!!saved.driverInfo),
-      fuelCard:   String(!!saved.fuelCard),
-      hos:        String(!!saved.hos),
-    });
-    const resp = await fetch(CONFIG.ENDPOINT, {
-      method: "POST",
-      body,
-      mode: "cors",
-      credentials: "omit",
-      signal,
-    }).then((r) => r.json());
-    if (!resp?.ok) console.warn("[checklist setChecklist] GAS error:", resp?.error, resp);
-    return resp;
+    const { error } = await _sb.from("checklist").upsert(
+      {
+        tripKey, date,
+        envelope:   !!saved.envelope,
+        reminder:   !!saved.reminder,
+        driverInfo: !!saved.driverInfo,
+        fuelCard:   !!saved.fuelCard,
+        hos:        !!saved.hos,
+      },
+      { onConflict: "tripKey,date" },
+    );
+    if (error) console.warn("[checklist] upsert error:", error.message);
+    return { ok: !error };
   },
 };
 
@@ -229,7 +379,9 @@ function checkPotentialConflicts(trip, assignments) {
     const busId = String(a.busId || "").trim();
     if (!busId || busId === "None" || busId === "WAITING_LIST") continue;
 
-    const existingTrips = state.trips.filter((t) => String(t.tripKey) !== String(trip.tripKey));
+    const existingTrips = state.trips.filter(
+      (t) => String(t.tripKey) !== String(trip.tripKey),
+    );
 
     for (const t of existingTrips) {
       const tDepY = ymd(parseYMD(t.departureDate));
@@ -282,7 +434,6 @@ function checkDriverDoubleBookings() {
             const d2 = String(ta.driver2 || "").trim();
             if (d1 && d1 !== "None") conflicts.add(d1);
             if (d2 && d2 !== "None") conflicts.add(d2);
-
             const d3 = String(ta.driver3 || "").trim();
             const d4 = String(ta.driver4 || "").trim();
             if (d3 && d3 !== "None") reliefConflicts.add(d3);
@@ -302,7 +453,7 @@ function checkDriverDoubleBookings() {
     [r.d1Sel, r.d2Sel].forEach((sel) => {
       const v = String(sel.value || "").trim();
       const isPrimary = v && v !== "None" && conflicts.has(v);
-      const isRelief = v && v !== "None" && reliefConflicts.has(v);
+      const isRelief  = v && v !== "None" && reliefConflicts.has(v);
       const isConflict = isPrimary || isRelief;
       const wrapper = sel.closest(".select-dropdown");
       const trigger = wrapper?.querySelector(".select-trigger");
@@ -319,23 +470,68 @@ function checkDriverDoubleBookings() {
 }
 
 // ======================================================
+// REAL-TIME SUBSCRIPTIONS
+// ======================================================
+
+function onTripChange(payload) {
+  if (state.pendingWrite) return;
+  const trip = payload.eventType === "DELETE" ? payload.old : payload.new;
+  if (!trip?.tripKey) return;
+
+  if (payload.eventType === "DELETE") {
+    state.trips = state.trips.filter((t) => t.tripKey !== trip.tripKey);
+    delete state.tripByKey[trip.tripKey];
+    delete state.assignmentsByTripKey[trip.tripKey];
+    scheduleAgendaReflow();
+    return;
+  }
+
+  const { start, end } = getWeekRange();
+  const dep = trip.departureDate;
+  const arr = trip.arrivalDate || dep;
+  if (!dep || dep > end || arr < start) {
+    if (dep) clearCacheForTrip(dep);
+    return;
+  }
+
+  const sanitized = sanitizeWeekResp({ ok: true, trips: [trip], assignments: [] }).trips[0];
+  if (!sanitized) return;
+  state.tripByKey[sanitized.tripKey] = sanitized;
+  const idx = state.trips.findIndex((t) => t.tripKey === sanitized.tripKey);
+  if (idx >= 0) state.trips[idx] = sanitized;
+  else state.trips.push(sanitized);
+  scheduleAgendaReflow();
+}
+
+function onAssignmentChange(payload) {
+  const row = payload.new || payload.old;
+  const tripKey = row?.tripKey;
+  if (!tripKey || state.pendingWrite?.tripKey === tripKey) return;
+  api.getBusAssignments(tripKey).then((resp) => {
+    if (resp.assignments) {
+      state.assignmentsByTripKey[tripKey] = resp.assignments
+        .map(normalizeAssignment)
+        .filter(Boolean);
+      scheduleAgendaReflow();
+    }
+  });
+}
+
+function initRealtime() {
+  _sb.channel("trip-board-changes")
+    .on("postgres_changes", { event: "*", schema: "public", table: "trips" }, onTripChange)
+    .on("postgres_changes", { event: "*", schema: "public", table: "bus_assignments" }, onAssignmentChange)
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED") console.info("[realtime] connected");
+    });
+}
+
+// ======================================================
 // ERROR LOGGING
 // ======================================================
 const errorLogger = {
   async log(error, context = {}) {
-    try {
-      const errorData = {
-        message: error?.message || String(error),
-        stack: error?.stack || "",
-        url: context.url || window.location.href,
-        userAgent: navigator.userAgent,
-        context: JSON.stringify(context),
-      };
-
-      await fetchAPI("logError", errorData);
-    } catch (e) {
-      // Silently fail
-    }
+    console.error("[errorLogger]", error?.message || error, context);
   },
 };
 
@@ -351,6 +547,5 @@ window.addEventListener("error", (e) => {
 window.addEventListener("unhandledrejection", (e) => {
   errorLogger.log(e.reason, {
     type: "unhandled_rejection",
-    promise: String(e.promise),
   });
 });

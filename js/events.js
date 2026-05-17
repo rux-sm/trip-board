@@ -371,11 +371,19 @@ function wireDelegatedBarEvents() {
               (parseFloat(cs.getPropertyValue("--tripbar-r9-gap-above"))   || 0) +
               (parseFloat(cs.getPropertyValue("--tripbar-r10-gap-above"))  || 0)
             : 0;
-          clickedBar.style.height =
-            (activeH > collapsedPx
-              ? activeH
-              : collapsedPx + hiddenRowsH + actionRowH + rowGapH) + "px";
-          clickedBar.style.top = insetTop + "px";
+          const expandedH = activeH > collapsedPx
+            ? activeH
+            : collapsedPx + hiddenRowsH + actionRowH + rowGapH;
+          clickedBar.style.height = expandedH + "px";
+          const collapsedTop = parseFloat(clickedBar.dataset.collapsedTop) || insetTop;
+          const tr = clickedBar.closest("tr");
+          const isLastRow = tr && tr.parentElement?.lastElementChild === tr;
+          const isWaiting = !!clickedBar.closest(".waiting-list-row");
+          if (isLastRow || isWaiting) {
+            clickedBar.style.top = (collapsedTop + collapsedPx - expandedH) + "px";
+          } else {
+            clickedBar.style.top = insetTop + "px";
+          }
         }
         return;
       }
@@ -474,13 +482,13 @@ function wireEvents() {
     el.addEventListener("change", () => updateStatusSelect(el));
   });
 
-  // Auto-Refresh
+  // Safety-net refresh — real-time handles live updates; this catches any missed events
   setInterval(() => {
     if (navigator.onLine && !document.hidden) {
       refreshWeekData({ silent: true });
       if (state.cardPanelAssignments?.todo) syncChecklistFromServer(ymd(new Date()));
     }
-  }, CONFIG.AUTO_REFRESH_INTERVAL);
+  }, 30 * 60 * 1000);
 
   dom.todayBtn?.addEventListener("click", () => {
     if (!confirmDiscardIfDirty()) return;
@@ -1508,6 +1516,10 @@ function wireSettingsMenu() {
     CACHE.clearAll();
     state.weekCache.clear();
     loadDriversAndBuses(true).then(() => refreshWeekData());
+  });
+
+  document.getElementById("signOutBtn")?.addEventListener("click", () => {
+    authSignOut();
   });
 
   // 6. Auto-close whenever ANY dropdown item is clicked inside this menu
