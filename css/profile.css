@@ -6,6 +6,21 @@
   --profile-avatar-radius:     50%;
   --profile-popover-width:     300px;
   --profile-color-swatch-size: 22px;
+
+  /* ── Avatar color palette ── */
+
+  --avatar-color-1: oklch(75% 0.3 25);
+  --avatar-color-2: oklch(75% 0.3 65);
+  --avatar-color-3: oklch(75% 0.3 100);
+  --avatar-color-4: oklch(75% 0.3 155);
+  --avatar-color-5: oklch(75% 0.3 210);
+  --avatar-color-6: oklch(75% 0.3 260);
+  --avatar-color-7: oklch(75% 0.3 290);
+  --avatar-color-8: oklch(75% 0.3 350);
+  --avatar-color-9: oklch(75% 0 350);
+
+
+
 }
 
 /* ==========================================================================
@@ -46,6 +61,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* dark gap + user color ring — on the button itself so overflow:hidden doesn't clip it */
+  box-shadow: 0 0 0 2px var(--rux-bg-1), 0 0 0 4px var(--avatar-ring-color, var(--rux-border-2));
+  outline: none;
 }
 
 #avatarBtn .profile-avatar {

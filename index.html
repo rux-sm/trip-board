@@ -1549,6 +1549,16 @@
                         />
                       </div>
                       <button
+                        id="viewToggleBtn"
+                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        type="button"
+                        aria-label="Toggle 14-day view"
+                        title="Toggle 14-day view"
+                        aria-pressed="false"
+                      >
+                        <span class="material-symbols-outlined">view_column_2</span>
+                      </button>
+                      <button
                         id="compactBarsBtn"
                         class="rux-btn rux-btn--secondary rux-btn--icon"
                         type="button"
@@ -1582,88 +1592,13 @@
                   >
                     <colgroup>
                       <col class="schedule-grid__col-bus" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
-                      <col class="schedule-grid__col-day" />
+                      <!-- Day columns built dynamically by buildScheduleHeader() -->
                     </colgroup>
 
                     <thead>
                       <tr>
                         <th class="schedule-grid__header-cell"></th>
-
-                        <th
-                          id="sun"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Sunday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="mon"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Monday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="tue"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Tuesday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="wed"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Wednesday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="thu"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Thursday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="fri"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Friday</span>
-                          </span>
-                        </th>
-
-                        <th
-                          id="sat"
-                          class="schedule-grid__header-cell"
-                        >
-                          <span class="schedule-grid__day-label">
-                            <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Saturday</span>
-                          </span>
-                        </th>
+                        <!-- Day header cells built dynamically by buildScheduleHeader() -->
                       </tr>
                     </thead>
 

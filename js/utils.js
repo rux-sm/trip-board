@@ -156,14 +156,19 @@ function startOfWeek(d) {
 }
 
 function getDayIds() {
-  return state.weekStartsOnMonday
+  const base = state.weekStartsOnMonday
     ? ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
     : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  if (state.viewDays <= 7) return base;
+  // For 14 days: week 1 uses base IDs, week 2 appends "2" suffix
+  const result = [...base];
+  for (let i = 0; i < state.viewDays - 7; i++) result.push(base[i % 7] + "2");
+  return result;
 }
 
 function getWeekDates(base = state.currentDate) {
   const out = [];
-  for (let i = 0; i < 7; i++) out.push(ymd(addDays(base, i)));
+  for (let i = 0; i < state.viewDays; i++) out.push(ymd(addDays(base, i)));
   return out;
 }
 
@@ -171,7 +176,7 @@ function getWeekRange(base = state.currentDate) {
   const dates = getWeekDates(base);
   return {
     start: dates[0],
-    end: dates[6],
+    end: dates[dates.length - 1],
     notesKey: dates[state.weekStartsOnMonday ? 0 : 1],
   };
 }

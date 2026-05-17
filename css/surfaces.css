@@ -27,7 +27,7 @@
   height: auto;
   padding-top: var(--rux-space-3);
   padding-bottom: var(--rux-space-2);
-  padding-inline: var(--rux-space-3);
+  padding-inline: var(--rux-space-4);
   background-color: var(--rux-bg-1);
   box-shadow: none;
 }

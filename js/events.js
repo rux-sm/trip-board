@@ -557,6 +557,35 @@ function wireEvents() {
     });
   })();
 
+  // 14-day view toggle
+  (function initViewToggle() {
+    const btn = document.getElementById("viewToggleBtn");
+    if (!btn) return;
+
+    function syncViewToggleBtn(days) {
+      btn.setAttribute("aria-pressed", String(days === 14));
+      const icon = btn.querySelector(".material-symbols-outlined");
+      if (icon) icon.textContent = days === 14 ? "crop_9_16" : "view_column_2";
+      btn.title = days === 14 ? "Switch to 7-day view" : "Switch to 14-day view";
+    }
+
+    function applyViewDays(days) {
+      state.viewDays = days;
+      syncViewToggleBtn(days);
+      try { localStorage.setItem("viewDays", String(days)); } catch (_) {}
+      buildScheduleHeader();
+      buildAgendaRows();
+      refreshWeekData();
+    }
+
+    // Restore persisted state
+    syncViewToggleBtn(state.viewDays);
+
+    btn.addEventListener("click", () => {
+      applyViewDays(state.viewDays === 7 ? 14 : 7);
+    });
+  })();
+
   dom.agendaLeftBtn?.addEventListener("click", () => {
     if (dom.weekPicker) {
       dom.weekPicker.focus();
@@ -972,7 +1001,7 @@ function wireEvents() {
 
     const _pwDep2 = tripDate ? parseYMD(tripDate) : null;
     const _pwWs2 = _pwDep2 ? startOfWeek(_pwDep2) : null;
-    const writeWeekKey = _pwWs2 ? weekKey(ymd(_pwWs2), ymd(addDays(_pwWs2, 6))) : null;
+    const writeWeekKey = _pwWs2 ? weekKey(ymd(_pwWs2), ymd(addDays(_pwWs2, state.viewDays - 1))) : null;
 
     state.pendingWrite = {
       action: "delete",
@@ -1304,7 +1333,7 @@ function wireEvents() {
 
     const _pwDep = parseYMD(optimisticTrip.departureDate);
     const _pwWs = _pwDep ? startOfWeek(_pwDep) : null;
-    const writeWeekKey = _pwWs ? weekKey(ymd(_pwWs), ymd(addDays(_pwWs, 6))) : null;
+    const writeWeekKey = _pwWs ? weekKey(ymd(_pwWs), ymd(addDays(_pwWs, state.viewDays - 1))) : null;
 
     state.pendingWrite = {
       action,
@@ -1378,6 +1407,7 @@ function wireEvents() {
   });
 
   function resetTripFormUI() {
+    setSidePanelMode("off");
     dom.tripForm.reset();
     resetRequirementToggles();
     refreshEmptyStateUI();

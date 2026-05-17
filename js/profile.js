@@ -5,15 +5,15 @@
 // ======================================================
 
 const AVATAR_COLORS = [
-  'oklch(60% 0.18 250)',
-  'oklch(55% 0.22 25)',
-  'oklch(65% 0.18 65)',
-  'oklch(60% 0.20 155)',
-  'oklch(55% 0.18 300)',
-  'oklch(60% 0.22 350)',
-  'oklch(65% 0.15 210)',
-  'oklch(60% 0.20 80)',
-  'oklch(50% 0.06 250)',
+  'var(--avatar-color-1)',
+  'var(--avatar-color-2)',
+  'var(--avatar-color-3)',
+  'var(--avatar-color-4)',
+  'var(--avatar-color-5)',
+  'var(--avatar-color-6)',
+  'var(--avatar-color-7)',
+  'var(--avatar-color-8)',
+  'var(--avatar-color-9)',
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -110,6 +110,7 @@ function renderAvatarBtn() {
   if (!btn) return;
   btn.innerHTML = '';
   btn.appendChild(buildAvatarEl(state.profile, 'lg'));
+  btn.style.setProperty('--avatar-ring-color', state.profile.avatarColor || '');
 }
 
 // ── Presence strip ────────────────────────────────────────────────────────────

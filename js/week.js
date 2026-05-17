@@ -61,7 +61,7 @@ function setHeaderOrder() {
 
 function updateWeekTitle() {
   const start = new Date(state.currentDate);
-  const end = addDays(start, 6);
+  const end = addDays(start, state.viewDays - 1);
 
   const monthOpt = { month: "long" };
   const startMonth = start.toLocaleDateString("en-US", monthOpt);
@@ -176,7 +176,7 @@ function clearCacheForTrip(tripDate) {
     if (d) {
       const ws = startOfWeek(d);
       start = ymd(ws);
-      end = ymd(addDays(ws, 6));
+      end = ymd(addDays(ws, state.viewDays - 1));
     }
   }
   if (!start) {
@@ -309,7 +309,7 @@ function prefetchAdjacentWeeks() {
     if (w === 0) continue;
     const targetDate = addDays(base, w * 7);
     const start = ymd(targetDate);
-    const end = ymd(addDays(targetDate, 6));
+    const end = ymd(addDays(targetDate, state.viewDays - 1));
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
@@ -535,8 +535,10 @@ async function refreshWeekData({ silent = false } = {}) {
 function loadPrefs() {
   try {
     state.weekStartsOnMonday = localStorage.getItem("weekStartMonday") === "1";
+    state.viewDays = localStorage.getItem("viewDays") === "14" ? 14 : 7;
   } catch {
     state.weekStartsOnMonday = false;
+    state.viewDays = 7;
   }
 }
 

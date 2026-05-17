@@ -72,6 +72,8 @@ const state = {
   pendingRefreshDeferred: false,
   pendingQuickEditSave: [],
   tripFormOpen: false,
+  viewDays: 7,  // 7 (default) or 14
+
   mutationId: 0,
   checklistWriteTs: {},
   checklistAbortControllers: {},

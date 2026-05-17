@@ -80,8 +80,53 @@ function getBarMetricsCached() {
 // ======================================================
 // 18) AGENDA GRID BUILD + COLUMN METRICS CACHE
 // ======================================================
+function buildScheduleHeader() {
+  // Dynamically rebuild <colgroup> and <thead> day cells to match state.viewDays.
+  const table = dom.agendaBody?.closest("table");
+  if (!table) return;
+
+  const colgroup = table.querySelector("colgroup");
+  if (colgroup) {
+    const busCol = colgroup.querySelector(".schedule-grid__col-bus")?.cloneNode() ||
+      Object.assign(document.createElement("col"), { className: "schedule-grid__col-bus" });
+    colgroup.innerHTML = "";
+    colgroup.appendChild(busCol);
+    for (let i = 0; i < state.viewDays; i++) {
+      const col = document.createElement("col");
+      col.className = "schedule-grid__col-day";
+      colgroup.appendChild(col);
+    }
+  }
+
+  const headRow = table.querySelector("thead tr");
+  if (headRow) {
+    const corner = headRow.querySelector(".schedule-grid__header-cell:first-child") ||
+                   headRow.children[0];
+    headRow.querySelectorAll(".schedule-grid__header-cell:not(:first-child)").forEach(el => el.remove());
+    const dayNameById = {
+      sun: "Sunday", mon: "Monday", tue: "Tuesday", wed: "Wednesday",
+      thu: "Thursday", fri: "Friday", sat: "Saturday",
+    };
+    getDayIds().forEach((id) => {
+      const th = document.createElement("th");
+      th.id = id;
+      th.className = "schedule-grid__header-cell";
+      const baseName = dayNameById[id.replace(/2$/, "")] || "";
+      th.innerHTML = `<span class="schedule-grid__day-label">
+        <span class="schedule-grid__day-date"></span>
+        <span class="schedule-grid__day-name">${baseName}</span>
+      </span>`;
+      headRow.appendChild(th);
+    });
+  }
+
+  state.lastColMetrics = null; // invalidate column metrics cache
+}
+
 function buildAgendaRows() {
   if (!dom.agendaBody) return;
+
+  buildScheduleHeader();
 
   const liftSet = computeLiftSet();
   const sleeperSet = computeSleeperSet();
@@ -163,7 +208,7 @@ function buildAgendaRows() {
     tdBus.appendChild(wrap);
     tr.appendChild(tdBus);
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < state.viewDays; i++) {
       const td = document.createElement("td");
       td.className = "schedule-grid__day-cell schedule-grid__cell";
       td.dataset.dayId = dayIds[i];
@@ -199,7 +244,7 @@ function buildAgendaRows() {
     tdBus.innerHTML = `<div class="schedule-grid__bus-indicator"><span class="material-symbols-outlined">low_priority</span></div>`;
     tr.appendChild(tdBus);
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < state.viewDays; i++) {
       const td = document.createElement("td");
       td.className = "schedule-grid__day-cell schedule-grid__cell";
       td.dataset.dayId = dayIds[i];
@@ -219,7 +264,7 @@ function buildAgendaRows() {
     const spacer = document.createElement("tr");
     spacer.className = "schedule-grid__wl-spacer";
     const spacerCell = document.createElement("td");
-    spacerCell.colSpan = 8; // 1 bus col + 7 day cols
+    spacerCell.colSpan = state.viewDays + 1;
     spacer.appendChild(spacerCell);
     waitingBody.appendChild(spacer);
     waitingBody.appendChild(tr);
@@ -270,7 +315,7 @@ function getColMetricsCached() {
   const widths = [];
   let total = 0;
 
-  for (let i = 1; i <= 7; i++) {
+  for (let i = 1; i <= state.viewDays; i++) {
     const cell = firstBodyRow.cells[i];
     if (!cell) continue;
 
@@ -378,7 +423,7 @@ function clearConflictStyles() {
   for (let r = 0; r < dom.agendaBody.rows.length; r++) {
     const row = dom.agendaBody.rows[r];
     row.cells[0]?.classList?.remove("bus-conflict");
-    for (let c = 1; c <= 7; c++) row.cells[c]?.classList?.remove("conflict");
+    for (let c = 1; c <= state.viewDays; c++) row.cells[c]?.classList?.remove("conflict");
   }
 }
 
@@ -411,8 +456,8 @@ function showConflictsPanel(conflicts) {
           const t = it.trip || {};
           const title = escHtml(t.destination || "Trip");
           const cust = escHtml(t.customer || "");
-          const d1 = escHtml(it.driver1 || "—");
-          const d2 = escHtml(it.driver2 || "—");
+          const d1 = escHtml(it.driver1 || "--:-- --");
+          const d2 = escHtml(it.driver2 || "--:-- --");
           const tripKey = escHtml(String(it.tripKey || ""));
 
           return `
@@ -463,7 +508,7 @@ function renderAgenda() {
     // Show error state with retry option
     if (dom.agendaBody) {
       dom.agendaBody.innerHTML = `
-        <tr><td colspan="8" class="schedule-error__cell">
+        <tr><td colspan="${state.viewDays + 1}" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
           <button onclick="location.reload()" class="rux-btn rux-btn--primary">Reload Page</button>
         </td></tr>
@@ -489,7 +534,7 @@ function _renderAgendaInner() {
 
   const week = getWeekDates();
   const weekStart = week[0];
-  const weekEnd = week[6];
+  const weekEnd = week[week.length - 1];
 
   const weekIndex = new Map(week.map((d, i) => [d, i]));
 
@@ -739,7 +784,7 @@ function _renderAgendaInner() {
       }
     }
 
-    const newOcc = Array(7).fill(false);
+    const newOcc = Array(state.viewDays).fill(false);
     for (let d = startIdx; d <= endIdx; d++) {
       if (d !== exceptDay) newOcc[d] = true;
     }
@@ -1428,9 +1473,9 @@ function _renderAgendaInner() {
         const tArr = formatTime12(arrTime);
         const tSpot = formatTime12(spotTime);
 
-        bar._left.textContent = tDep || "—";
-        bar._center.textContent = tSpot || "—";
-        bar._right.textContent = tArr || "—";
+        bar._left.textContent = tDep || "--:-- --";
+        bar._center.textContent = tSpot || "--:-- --";
+        bar._right.textContent = tArr || "--:-- --";
 
         bar._left.dataset.severity = getTimeSeverity(depTime, "depart");
         bar._center.dataset.severity = "normal";
@@ -1440,8 +1485,8 @@ function _renderAgendaInner() {
         // Left side shows Dep Time (only if this bar is the trip start)
         // Right side shows Arr Time (only if this bar is the trip end)
         if (isStartDay) {
-          bar._left.textContent = formatTime12(depTime) || "—";
-          bar._center.textContent = formatTime12(spotTime) || "—";
+          bar._left.textContent = formatTime12(depTime) || "--:-- --";
+          bar._center.textContent = formatTime12(spotTime) || "--:-- --";
           bar._left.dataset.severity = getTimeSeverity(depTime, "depart");
           bar._center.dataset.severity = "normal";
         } else {
@@ -1452,7 +1497,7 @@ function _renderAgendaInner() {
         }
 
         if (isEndDay) {
-          bar._right.textContent = formatTime12(arrTime) || "—";
+          bar._right.textContent = formatTime12(arrTime) || "--:-- --";
           bar._right.dataset.severity = getTimeSeverity(arrTime, "arrive");
         } else {
           bar._right.textContent = "";
@@ -1550,7 +1595,7 @@ function _renderAgendaInner() {
       /* Tooltip removed by user request (modal is used instead) */
       // const itin = clipText(t.itinerary, 1200);
       // const namePhone = [name, phone].filter(Boolean).join(" • ");
-      // bar.title = `${namePhone || "—"}\n\nITINERARY\n${itin || "—"}`;
+      // bar.title = `${namePhone || "--:-- --"}\n\nITINERARY\n${itin || "--:-- --"}`;
 
       let frag = fragByRow.get(rowIdx);
       if (!frag) {

@@ -1,6 +1,8 @@
-/* Register row 11 (action buttons) height as a typed <length> so the browser
+/* Register the action-buttons row height as a typed <length> so the browser
    can interpolate it inside grid-template-rows. Without @property the custom
-   property is an opaque string and grid-template-rows transitions snap. */
+   property is an opaque string and grid-template-rows transitions snap.
+   r11 (action buttons) is the FIRST visual row — it sits at the top of the
+   expanded bar above the 1fr spacer and content rows r1–r10. */
 @property --tripbar-r11-row-height {
   syntax: "<length>";
   inherits: false;
@@ -20,16 +22,16 @@
      ════════════════════════════════════════════════════════════════════════ */
 
   /* ── Bar heights ────────────────────────────────────────────────────── */
-  --tripbar-height-collapsed: 89px;  /* rows 1-6 (was 90px) */
-  --tripbar-height-expanded:  153px; /* rows 1-10 (was 162px) */
-  --tripbar-height-active:    185px; /* rows 1-11, inc  bar (was 198px) */
+  --tripbar-height-collapsed: 89px;  /* r11 hidden (0px) + spacer + r1-r6 */
+  --tripbar-height-expanded:  153px; /* r11 hidden (0px) + spacer + r1-r10 */
+  --tripbar-height-active:    185px; /* r11 (top) + spacer + r1-r10 */
 
   /* ── Outer insets (space between bar edge and row cell) ─────────────── */
-  --tripbar-inset-top:    4px;
+  --tripbar-inset-top:    2px;
   --tripbar-inset-bottom: 6px;
 
   /* ── Internal vertical spacing ──────────────────────────────────────── */
-  --tripbar-padding-y: 4px;
+  --tripbar-padding-y: 0px;
   --tripbar-row-gap:   0px;
 
   /* ── Row heights (CSS grid track sizes; r11 via @property above) ─────── */
@@ -56,6 +58,7 @@
   --tripbar-r9-gap-above:   1px;
   --tripbar-r10-gap-above:  1px;
   --tripbar-r11-gap-above:  0px;
+  --tripbar-r11-gap-below:  4px;
 
     /* ── Line Height ─────────────────────────────────────────────────────── */
 
@@ -158,10 +161,13 @@
   /* ════════════════════════════════════════════════════════════════════════
      PER-ROW TOKENS — organized by property type, then by row
 
-     Rows:  r1 Destination title  r2 Customer     r3 Contact / phone
-            r4 Notes + req icons  r5 Times        r6 Drivers
-            r7 Driver pay         r8 Estimate     r9 Billing (INV)
-            r10 Payment refs      r11 Action btns (height via @property)
+     Visual order (top → bottom when active):
+       r11 Action btns  ← top, height via @property (0px collapsed)
+       spacer           ← 1fr, min = --tripbar-r11-gap-below
+       r1  Destination  r2  Customer      r3  Contact / phone
+       r4  Notes+icons  r5  Times         r6  Drivers
+       r7  Driver pay   r8  Estimate      r9  Billing (INV)
+       r10 Payment refs
 
      Token anatomy:
        --tripbar-rN-row-height      → moved to HEIGHT BUDGET section above
@@ -199,26 +205,26 @@
 
   /* ── Margin Inline (outer horizontal clearance) ──────────────────────── */
 
-  --tripbar-r1-margin-inline:   0px;
-  --tripbar-r2-margin-inline:   0px;
-  --tripbar-r3-margin-inline:   0px;
-  --tripbar-r4-margin-inline:   4px;
-  --tripbar-r5-margin-inline:   4px;
-  --tripbar-r6-margin-inline:   4px;
-  --tripbar-r7-margin-inline:   4px;
-  --tripbar-r8-margin-inline:   4px;
-  --tripbar-r9-margin-inline:   4px;
-  --tripbar-r10-margin-inline:  4px;
-  --tripbar-r11-margin-inline:  0px;
+  --tripbar-r1-margin-inline:   2px;
+  --tripbar-r2-margin-inline:   2px;
+  --tripbar-r3-margin-inline:   2px;
+  --tripbar-r4-margin-inline:   2px;
+  --tripbar-r5-margin-inline:   2px;
+  --tripbar-r6-margin-inline:   2px;
+  --tripbar-r7-margin-inline:   2px;
+  --tripbar-r8-margin-inline:   2px;
+  --tripbar-r9-margin-inline:   2px;
+  --tripbar-r10-margin-inline:  2px;
+  --tripbar-r11-margin-inline:  2px;
 
   /* ── Padding Inline (inner horizontal text inset) ────────────────────── */
 
-  --tripbar-r1-padding-inline:   2px;
+  --tripbar-r1-padding-inline:   0px;
   --tripbar-r2-padding-inline:   0px;
   --tripbar-r3-padding-inline:   0px;
-  --tripbar-r4-padding-inline:   4px;
-  --tripbar-r5-padding-inline:   6px;
-  --tripbar-r6-padding-inline:   4px;
+  --tripbar-r4-padding-inline:   0px;
+  --tripbar-r5-padding-inline:   4px;
+  --tripbar-r6-padding-inline:   0px;
   --tripbar-r7-padding-inline:   0px;
   --tripbar-r8-padding-inline:   0px;
   --tripbar-r9-padding-inline:   0px;
@@ -433,7 +439,7 @@
   display: grid;
   grid-template-rows:
     [r11]     var(--tripbar-r11-row-height, 0px)
-    [spacer]  1fr
+    [spacer]  minmax(var(--tripbar-r11-gap-below), 1fr)
     [r1]      var(--tripbar-r1-row-height)
     [r2]  var(--tripbar-r2-row-height)
     [r3]  var(--tripbar-r3-row-height)
