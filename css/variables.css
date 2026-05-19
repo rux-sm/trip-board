@@ -133,7 +133,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-bg-1: oklch(from var(--rux-color-gray) 0% c h); /* App canvas — pure black */
-  --rux-bg-field: oklch(from var(--rux-color-gray) 20% c h);
+  --rux-bg-field: oklch(from var(--rux-color-gray) 26% c h);
   --rux-bg-2: oklch(from var(--rux-color-gray) 20% c h); /* Panels, sidebar, inputs */
   --rux-bg-3: oklch(from var(--rux-color-gray) 20% c h); /* Headers, footers, menus */
   --rux-bg-4: oklch(from var(--rux-color-gray) 26% c h); /* Cards, grouped sections */

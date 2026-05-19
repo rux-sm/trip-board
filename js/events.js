@@ -520,6 +520,61 @@ function wireEvents() {
   dom.prevWeekBtn.addEventListener("click", () => changeWeek(-1));
   dom.nextWeekBtn.addEventListener("click", () => changeWeek(1));
 
+  // Swipe gestures on schedule grid — left/right = prev/next week, down = today
+  (() => {
+    const grid = dom.agendaBody;
+    const card = document.querySelector('[data-js="schedule-main-card"]');
+    if (!grid || !card) return;
+
+    const wash = document.createElement("div");
+    wash.className = "swipe-wash";
+    card.appendChild(wash);
+
+    let startX = 0, startY = 0, tracking = false;
+    const THRESHOLD = 80;
+
+    grid.addEventListener("pointerdown", (e) => {
+      startX = e.clientX; startY = e.clientY; tracking = true;
+    }, { passive: true });
+
+    grid.addEventListener("pointermove", (e) => {
+      if (!tracking) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const absDx = Math.abs(dx), absDy = Math.abs(dy);
+      if (absDx > absDy * 1.5 && absDx > 10) {
+        wash.className = `swipe-wash ${dx > 0 ? "swipe-wash--left" : "swipe-wash--right"}`;
+        wash.style.opacity = Math.min(absDx / THRESHOLD, 1);
+      } else if (dy > absDx * 1.5 && dy > 10) {
+        wash.className = "swipe-wash swipe-wash--down";
+        wash.style.opacity = Math.min(dy / THRESHOLD, 1);
+      } else {
+        wash.style.opacity = 0;
+      }
+    }, { passive: true });
+
+    const clearWash = () => {
+      tracking = false;
+      wash.style.opacity = 0;
+      setTimeout(() => { wash.className = "swipe-wash"; }, 120);
+    };
+
+    grid.addEventListener("pointerup", (e) => {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      clearWash();
+      if (Math.abs(dx) > THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        changeWeek(dx < 0 ? 1 : -1);
+      } else if (dy > THRESHOLD && dy > Math.abs(dx) * 1.5) {
+        if (!confirmDiscardIfDirty()) return;
+        state.currentDate = startOfWeek(new Date());
+        updateWeekDates();
+      }
+    }, { passive: true });
+
+    grid.addEventListener("pointercancel", clearWash, { passive: true });
+  })();
+
   // Compact bars toggle — collapsed bars show rows 1-6; active bars restore rows 1-11.
   (function initCompactBars() {
     const btn = dom.compactBarsBtn;
@@ -743,7 +798,6 @@ function wireEvents() {
   }
 
   dom.notesBtn.addEventListener("click", () => toggleCard("notes"));
-
   dom.todoBtn?.addEventListener("click", () => toggleCard("todo"));
 
   dom.logBtn?.addEventListener("click", () => {
@@ -919,8 +973,8 @@ function wireEvents() {
   });
 
   dom.busesNeeded.addEventListener("change", () => {
-    updateBusRowVisibility();
-    syncBusPanelState();
+    const n = parseInt(dom.busesNeeded.value) || 0;
+    rebuildBusRows(n);
     maybeApplyPendingDefaults();
     syncBusSegButtons();
   });

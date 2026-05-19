@@ -51,7 +51,7 @@
     />
   </head>
 
-  <body class="debug-surfaces">
+  <body>
     <!-- Login overlay — shown by auth.js when no session -->
     <div id="loginOverlay" class="login" style="display:none;">
       <div class="login__card">
@@ -934,7 +934,7 @@
                     />
 
                     <!-- ── Section 1: Trip Details ─────────────────────── -->
-                    <div class="form-section-card">
+                    <div class="form-section-card form-section-flat">
                       <div class="form-section-card__label">Trip Details</div>
 
                     <div class="form-group col-6">
@@ -1097,7 +1097,7 @@
                     </div>
 
                     <!-- ── Section 2: Estimate ─────────────────────────── -->
-                    <div class="form-section-card">
+                    <div class="form-section-card form-section-flat">
                       <div class="form-section-card__label">Estimate</div>
 
                     <div class="form-group col-4">
@@ -1134,7 +1134,7 @@
                     </div>
 
                     <!-- ── Section 3: Billing ──────────────────────────── -->
-                    <div class="form-section-card">
+                    <div class="form-section-card form-section-flat">
                       <div class="form-section-card__label">Billing</div>
 
                     <input type="hidden" id="itineraryStatus" name="itineraryStatus" value="" />
@@ -1241,7 +1241,7 @@
                     </div>
 
                     <!-- ── Section 3: Envelope ─────────────────────────── -->
-                    <div class="form-section-card">
+                    <div class="form-section-card form-section-flat">
                       <div class="form-section-card__label">Envelope</div>
 
                     <div class="form-group col-12">
@@ -1297,7 +1297,7 @@
                     <!-- ── Section 4: Requirements ─────────────────────── -->
                     <div
                       id="requirementsSection"
-                      class="form-section-card"
+                      class="form-section-card form-section-flat"
                       data-js="trip-requirements-section"
                     >
                       <div class="form-section-card__label">Requirements</div>
@@ -1351,7 +1351,7 @@
                     <!-- ── Section 5: Dispatch ─────────────────────────── -->
                     <div
                       id="assignmentsOverridesSection"
-                      class="form-section-card"
+                      class="form-section-card form-section-flat"
                       data-js="trip-assignments-section"
                     >
                       <div class="form-section-card__label">Dispatch</div>
@@ -1363,10 +1363,12 @@
                           <span class="field-label">Pay</span>
                           <span></span>
                         </div>
-                        <div
-                          id="busGrid"
-                          data-js="trip-bus-grid"
-                        ></div>
+                        <div id="dispatch-container">
+                          <div
+                            id="busGrid"
+                            data-js="trip-bus-grid"
+                          ></div>
+                        </div>
                       </div>
 
                     </div>
@@ -1380,7 +1382,7 @@
                   </form>
                 </div>
 
-                <div class="rux-panel__footer">
+                <div class="rux-panel__footer rux-panel__footer--sticky">
                   <button
                     type="button"
                     class="rux-btn rux-btn--danger"

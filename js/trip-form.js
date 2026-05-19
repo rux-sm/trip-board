@@ -588,82 +588,101 @@ function syncBusSegButtons() {
   });
 }
 
+// ── Dispatch row helpers (module-level so rebuildBusRows can use them) ────────
+
+function _makePayInput(name) {
+  const input = document.createElement("input");
+  input.type = "text";
+  input.name = name;
+  input.className = "bus-assign__pay-input text-right";
+  return input;
+}
+
+function _makeDriverRow(dSel, dStatusSel, payInput) {
+  const row = document.createElement("div");
+  row.className = "bus-assign__driver-row";
+  const payWrapper = document.createElement("div");
+  payWrapper.className = "fld-affix fld-affix--prefix";
+  const payPrefix = document.createElement("span");
+  payPrefix.className = "fld-affix__prefix";
+  payPrefix.textContent = "$";
+  payWrapper.append(payPrefix, payInput);
+  row.appendChild(dStatusSel);
+  row.appendChild(dSel);
+  row.appendChild(payWrapper);
+  return row;
+}
+
+function _buildOneBusRow(i) {
+  const busSel      = makeSelect(`bus${i}`);
+  const d1Sel       = makeSelect(`bus${i}_driver1`);
+  const d1StatusSel = makeDriverStatusSelect(`bus${i}_driver1Status`);
+  const d1Pay       = _makePayInput(`bus${i}_driver1Pay`);
+  const d2Sel       = makeSelect(`bus${i}_driver2`);
+  const d2StatusSel = makeDriverStatusSelect(`bus${i}_driver2Status`);
+  const d2Pay       = _makePayInput(`bus${i}_driver2Pay`);
+  const d3Sel       = makeSelect(`bus${i}_driver3`);
+  const d3StatusSel = makeDriverStatusSelect(`bus${i}_driver3Status`);
+  const d3Pay       = _makePayInput(`bus${i}_driver3Pay`);
+  const d4Sel       = makeSelect(`bus${i}_driver4`);
+  const d4StatusSel = makeDriverStatusSelect(`bus${i}_driver4Status`);
+  const d4Pay       = _makePayInput(`bus${i}_driver4Pay`);
+
+  const busCell = document.createElement("div");
+  busCell.className = "bus-assign__bus-cell";
+  busCell.appendChild(busSel);
+
+  const d1Row = _makeDriverRow(d1Sel, d1StatusSel, d1Pay);
+  const d2Row = _makeDriverRow(d2Sel, d2StatusSel, d2Pay);
+  const d3Row = _makeDriverRow(d3Sel, d3StatusSel, d3Pay);
+  const d4Row = _makeDriverRow(d4Sel, d4StatusSel, d4Pay);
+
+  const driverStack = document.createElement("div");
+  driverStack.className = "bus-assign__driver-stack";
+  driverStack.append(d1Row, d2Row, d3Row, d4Row);
+
+  const rowGroup = document.createElement("div");
+  rowGroup.className = "bus-assign__row-group";
+  rowGroup.append(busCell, driverStack);
+
+  return {
+    rowGroup, busCell,
+    busSel, d1Sel, d1StatusSel, d1Pay, d1Row,
+    d2Sel, d2StatusSel, d2Pay, d2Row,
+    d3Sel, d3StatusSel, d3Pay, d3Row,
+    d4Sel, d4StatusSel, d4Pay, d4Row,
+  };
+}
+
 function buildBusRowsOnce() {
   dom.busGrid.innerHTML = "";
   state.busRows.length = 0;
   dom.busGrid.classList.add("bus-assign");
+  syncBusSelectEmptyState();
+  refreshEmptyStateUI();
+}
 
-  const makePayInput = (name) => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = name;
-    input.className = "bus-assign__pay-input text-right";
-    return input;
-  };
+function rebuildBusRows(targetN) {
+  const n = Math.min(10, Math.max(0, targetN));
+  const currentN = state.busRows.length;
 
-  const makeDriverRow = (dSel, dStatusSel, payInput) => {
-    const row = document.createElement("div");
-    row.className = "bus-assign__driver-row";
-
-    const payWrapper = document.createElement("div");
-    payWrapper.className = "fld-affix fld-affix--prefix";
-    const payPrefix = document.createElement("span");
-    payPrefix.className = "fld-affix__prefix";
-    payPrefix.textContent = "$";
-    payWrapper.append(payPrefix, payInput);
-
-    row.appendChild(dStatusSel);
-    row.appendChild(dSel);
-    row.appendChild(payWrapper);
-    return row;
-  };
-
-  for (let i = 1; i <= 10; i++) {
-    const busSel      = makeSelect(`bus${i}`);
-    const d1Sel       = makeSelect(`bus${i}_driver1`);
-    const d1StatusSel = makeDriverStatusSelect(`bus${i}_driver1Status`);
-    const d1Pay       = makePayInput(`bus${i}_driver1Pay`);
-    const d2Sel       = makeSelect(`bus${i}_driver2`);
-    const d2StatusSel = makeDriverStatusSelect(`bus${i}_driver2Status`);
-    const d2Pay       = makePayInput(`bus${i}_driver2Pay`);
-    const d3Sel       = makeSelect(`bus${i}_driver3`);
-    const d3StatusSel = makeDriverStatusSelect(`bus${i}_driver3Status`);
-    const d3Pay       = makePayInput(`bus${i}_driver3Pay`);
-    const d4Sel       = makeSelect(`bus${i}_driver4`);
-    const d4StatusSel = makeDriverStatusSelect(`bus${i}_driver4Status`);
-    const d4Pay       = makePayInput(`bus${i}_driver4Pay`);
-
-    const busCell = document.createElement("div");
-    busCell.className = "bus-assign__bus-cell";
-    busCell.appendChild(busSel);
-
-    const d1Row = makeDriverRow(d1Sel, d1StatusSel, d1Pay);
-    const d2Row = makeDriverRow(d2Sel, d2StatusSel, d2Pay);
-    const d3Row = makeDriverRow(d3Sel, d3StatusSel, d3Pay);
-    const d4Row = makeDriverRow(d4Sel, d4StatusSel, d4Pay);
-
-    const driverStack = document.createElement("div");
-    driverStack.className = "bus-assign__driver-stack";
-    driverStack.append(d1Row, d2Row, d3Row, d4Row);
-
-    const rowGroup = document.createElement("div");
-    rowGroup.className = "bus-assign__row-group";
-    rowGroup.append(busCell, driverStack);
-
-    dom.busGrid.appendChild(rowGroup);
-
-    state.busRows.push({
-      rowGroup, busCell,
-      busSel, d1Sel, d1StatusSel, d1Pay, d1Row,
-      d2Sel, d2StatusSel, d2Pay, d2Row,
-      d3Sel, d3StatusSel, d3Pay, d3Row,
-      d4Sel, d4StatusSel, d4Pay, d4Row,
-    });
+  if (n > currentN) {
+    for (let i = currentN + 1; i <= n; i++) {
+      const row = _buildOneBusRow(i);
+      dom.busGrid.appendChild(row.rowGroup);
+      state.busRows.push(row);
+    }
+    refreshBusSelectOptions();
+  } else if (n < currentN) {
+    for (let i = currentN - 1; i >= n; i--) {
+      state.busRows[i].rowGroup.remove();
+    }
+    state.busRows.length = n;
   }
 
-  refreshBusSelectOptions();
   updateBusRowVisibility();
   syncBusSelectEmptyState();
+  syncBusPanelState();
   refreshEmptyStateUI();
 }
 
