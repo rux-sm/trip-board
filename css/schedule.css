@@ -424,9 +424,9 @@ body.debug-surfaces .o-app-layout__sidebar--right > .rux-card:not(.is-hidden) .r
 
 .notes-textarea,
 .notes__textarea {
-  font-family: 'Caveat', cursive;
-  font-size: 1.15rem;
-  font-weight: 400;
+  font-family: "Indie Flower", cursive;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.7;
   padding: 1.5rem;
   background: #FDF3C8;
