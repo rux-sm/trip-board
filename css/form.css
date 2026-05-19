@@ -651,31 +651,103 @@ hr.form-divider {
   min-width: 0;
 }
 
-/* ── Buses needed stepper ────────────────────────────────────────────────── */
+/* ── Buses needed picker ─────────────────────────────────────────────────── */
 
-.buses-needed-stepper {
+.buses-needed-picker {
+  position: relative;
+  display: block;
   width: 100%;
 }
 
-.buses-needed-stepper .buses-needed-display {
-  flex: 1;
-}
-
-.buses-needed-display {
+.buses-needed-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  height: var(--rux-btn-height);
-  padding: 0 var(--rux-space-3);
+  gap: 4px;
+  height: var(--rux-fld-height);
+  width: 100%;
+  padding: 0 8px;
   background: var(--rux-bg-field);
-  border-top: 1px solid var(--rux-border-2);
-  border-bottom: 1px solid var(--rux-border-2);
-  font-size: var(--rux-size-4);
-  font-weight: var(--rux-weight-bold);
+  border: none;
+  border-radius: var(--rux-fld-radius);
+  cursor: pointer;
+  font-size: var(--rux-fld-font-size);
   color: var(--rux-text-1);
-  user-select: none;
+  transition: background var(--transition-fast);
 }
+.buses-needed-trigger:hover { background: var(--rux-bg-3); }
+
+.buses-needed-chevron {
+  font-size: 16px;
+  color: var(--rux-text-3);
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+.buses-needed-trigger[aria-expanded="true"] .buses-needed-chevron {
+  transform: rotate(180deg);
+}
+
+.buses-needed-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top center;
+  margin-top: 8px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  max-height: auto;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--rux-bg-4);
+  border: 1px solid var(--rux-border-2);
+  border-radius: var(--rux-radius-3);
+  box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
+  scrollbar-width: thin;
+  scrollbar-color: var(--rux-border-3) transparent;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.buses-needed-dropdown.is-open {
+  opacity: 1;
+  transform: translateX(-50%) scaleY(1);
+  pointer-events: auto;
+}
+
+.buses-needed-dropdown::-webkit-scrollbar       { width: 4px; }
+.buses-needed-dropdown::-webkit-scrollbar-track  { background: transparent; }
+.buses-needed-dropdown::-webkit-scrollbar-thumb  { background: var(--rux-border-3); border-radius: 4px; }
+.buses-needed-dropdown::-webkit-scrollbar-thumb:hover { background: var(--rux-border-2); }
+
+.buses-needed-option {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  padding: 0;
+  background: var(--rux-bg-5);
+  border: none;
+  border-radius: var(--rux-radius-2);
+  cursor: pointer;
+  font-size: var(--rux-fld-font-size);
+  color: var(--rux-text-1);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+  transition: opacity 0.1s ease, transform 0.1s ease, background var(--transition-fast);
+}
+.buses-needed-option.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.buses-needed-option.is-visible:hover { background: var(--rux-bg-3); transform: scale(1.1); }
+.buses-needed-option.is-selected { outline: 2px solid var(--rux-text-1); outline-offset: 2px; }
 
 /* ── Status toggle button group ─────────────────────────────────────────── */
 
@@ -691,16 +763,79 @@ hr.form-divider {
   --btn-background: var(--rux-btn-bg-primary);
 }
 
-/* ── Trip color swatches ─────────────────────────────────────────────────── */
+/* ── Trip color popover ──────────────────────────────────────────────────── */
 
 .trip-color-swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  padding: 2px 0;
+  position: relative;
+  display: block;
+  width: 100%;
 }
 
+/* Trigger button — matches buses-needed-trigger */
+.trip-color-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: var(--rux-fld-height);
+  width: 100%;
+  padding: 0 8px;
+  background: var(--rux-bg-field);
+  border: none;
+  border-radius: var(--rux-fld-radius);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.trip-color-trigger:hover { background: var(--rux-bg-3); }
+
+.trip-color-trigger__preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.trip-color-trigger__chevron {
+  font-size: 16px;
+  color: var(--rux-text-3);
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+.trip-color-trigger[aria-expanded="true"] .trip-color-trigger__chevron {
+  transform: rotate(180deg);
+}
+
+/* Floating dropdown — anchored to .trip-color-swatches */
+.trip-color-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top center;
+  margin-top: 8px;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--rux-bg-4);
+  border: 1px solid var(--rux-border-2);
+  border-radius: var(--rux-radius-3);
+  box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
+  width: fit-content;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.trip-color-dropdown.is-open {
+  opacity: 1;
+  transform: translateX(-50%) scaleY(1);
+  pointer-events: auto;
+}
+
+/* Swatches (used inside dropdown) */
 .trip-color-swatch {
   width: 22px;
   height: 22px;
@@ -711,10 +846,13 @@ hr.form-divider {
   flex-shrink: 0;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  transition: outline-color var(--transition-fast), transform var(--transition-fast);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+  transition: opacity 0.1s ease, transform 0.1s ease, outline-color var(--transition-fast), box-shadow var(--transition-fast);
 }
-.trip-color-swatch:hover      { transform: scale(1.15); }
-.trip-color-swatch.is-selected { outline-color: var(--rux-text-1); }
+.trip-color-swatch.is-visible         { opacity: 1; transform: translateY(0) scale(1); }
+.trip-color-swatch.is-visible:hover   { transform: scale(1.2); box-shadow: 0 2px 8px oklch(0% 0 0 / 0.4); }
+.trip-color-swatch.is-selected        { outline-color: var(--rux-text-1); }
 
 .trip-color-swatch--none {
   background: transparent;

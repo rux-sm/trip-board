@@ -243,7 +243,7 @@ function truthyRequirement(v) {
 }
 
 function setRequirementTogglesFromTrip(t = {}) {
-  const ids = ["oneWay", "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi", "driverInfoSent", "tripReminderSent"];
+  const ids = ["oneWay", "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "driverInfoSent", "tripReminderSent"];
   ids.forEach((id) => {
     const btn = document.getElementById(id);
     if (!btn) return;

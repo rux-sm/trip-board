@@ -400,27 +400,27 @@
 
 .notes-textarea,
 .notes__textarea {
-  width: auto;
-  height: 100%;
-  flex: 1;
-  min-height: 200px;
-  max-height: 100%;
-  background: var(--rux-bg-2);
-  color: var(--rux-text-1);
-  border-radius: 2px;
-  padding: 6px 6px;
-  font-size: 0.875rem;
-  /* 14px */
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.7;
+  padding: 1.5rem;
+  background: #FDF3C8;
+  color: #333333;
+  border-radius: var(--rux-fld-radius);
   resize: none;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 200px;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   outline: none;
-  margin: 0 0 12px 0;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.12s ease;
+  margin: 0;
+  transition: box-shadow 0.12s ease;
 }
+.notes__textarea::-webkit-scrollbar { display: none; }
 
 .notes-textarea:focus-visible,
 .notes__textarea:focus-visible {
@@ -436,6 +436,15 @@
 }
 
 .notes-wrap,
+.notes__footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.notes__footer > .rux-btn {
+  flex: 1;
+}
+
 .notes__wrap {
   display: flex;
   flex-direction: column;

@@ -134,7 +134,7 @@
   border-inline-start: none;
   position: relative;
   isolation: isolate;
-  overflow: clip;
+  overflow: visible;
   box-shadow: none;
 }
 

@@ -290,7 +290,6 @@ function initGlassSelects() {
     "invoiceStatus",
   ]);
   const ids = [
-    "busesNeeded",
     "itineraryStatus",
     "contactStatus",
     "paymentStatus",

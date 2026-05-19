@@ -254,9 +254,9 @@ const api = {
   },
 
   async getTrip(tripKey) {
-    const { data, error } = await _sb.from("trips").select("*").eq("tripKey", tripKey).single();
+    const { data, error } = await _sb.from("trips").select("*").eq("tripKey", tripKey).maybeSingle();
     if (error) sbErr(error, "getTrip");
-    return { ok: true, trip: data };
+    return { ok: !!data, trip: data };
   },
 
   async moveTripBus(tripKey, busNumber, newBusId, newBusName) {

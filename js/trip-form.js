@@ -108,9 +108,26 @@ function updateStatusSelect(el) {
 function syncTripColorSwatches(value) {
   const sel = $("tripColor");
   if (sel) sel.value = value;
-  document.querySelectorAll("#tripColorSwatches .trip-color-swatch").forEach((s) => {
+
+  document.querySelectorAll("#tripColorDropdown .trip-color-swatch").forEach((s) => {
     s.classList.toggle("is-selected", s.dataset.value === value);
   });
+
+  // Sync trigger preview to the selected swatch's appearance
+  const preview = document.querySelector(".trip-color-trigger__preview");
+  if (preview) {
+    preview.className = "trip-color-trigger__preview";
+    if (value === "Out of Service") {
+      preview.classList.add("trip-color-swatch--oos");
+      preview.style.background = "";
+    } else if (!value) {
+      preview.classList.add("trip-color-swatch--none");
+      preview.style.background = "";
+    } else {
+      const src = document.querySelector(`#tripColorDropdown [data-value="${value}"]`);
+      preview.style.background = src ? src.style.background : "";
+    }
+  }
 }
 
 function setSelectToPlaceholder(id) {
@@ -566,10 +583,9 @@ function syncBusSegButtons() {
   const n = parseInt(dom.busesNeeded.value) || 0;
   const display = document.getElementById("busesNeededDisplay");
   if (display) display.textContent = n > 0 ? String(n) : "–";
-  const dec = document.getElementById("busesNeededDecBtn");
-  const inc = document.getElementById("busesNeededIncBtn");
-  if (dec) dec.disabled = n <= 1;
-  if (inc) inc.disabled = n >= 10;
+  document.querySelectorAll("#busesNeededDropdown .buses-needed-option").forEach((btn) => {
+    btn.classList.toggle("is-selected", Number(btn.dataset.value) === n);
+  });
 }
 
 function buildBusRowsOnce() {
@@ -978,7 +994,7 @@ async function openTripForEdit(tripKey) {
     dom.tripForm.querySelectorAll("input, select, textarea").forEach((el) => {
       el.disabled = disabled;
     });
-    ["oneWay", "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi"].forEach((id) => {
+    ["oneWay", "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard"].forEach((id) => {
       const btn = document.getElementById(id);
       if (btn) btn.disabled = disabled;
     });
@@ -1036,9 +1052,9 @@ async function openTripForEdit(tripKey) {
 
     stopProgressCreep();
 
-    if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
-
-    const serverTrip = tripResp.trip || {};
+    // Fall back to optimistic local state if Supabase hasn't committed the new trip yet
+    const serverTrip = tripResp?.trip || state.tripByKey?.[String(tripKey)] || null;
+    if (!serverTrip) throw new Error("Trip not found");
     const rawAssigns = localAssigns.length
       ? localAssigns
       : (assignResp?.ok && assignResp.assignments?.length ? assignResp.assignments : []);

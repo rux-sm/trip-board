@@ -229,7 +229,10 @@ button {
 
 .rux-btn-group {
   display: inline-flex;
+  gap: 1px;
   border-radius: var(--rux-btn-radius);
+  overflow: hidden;
+  background: var(--rux-border-2);
   box-shadow: 0 1px 2px oklch(0% 0 0 / 40%), 0 2px 8px oklch(0% 0 0 / 20%);
 }
 
@@ -254,7 +257,7 @@ button {
   border-bottom-right-radius: var(--rux-btn-radius);
 }
 
-/* Dividers: left border on every button except the first */
+/* Dividers: parent gap creates the visible seam; shadow adds inset depth. */
 .rux-btn-group > * + .rux-btn,
 .rux-btn-group > .rux-btn + * > .rux-btn {
   --btn-shadow: var(--rux-btn-shadow-inset),

@@ -37,7 +37,7 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
@@ -130,7 +130,7 @@
           >
             <span class="rux-app__title--prefix"
               >
-              <span class="rux-app__title--name">Trip Schedule</span>
+              <span class="rux-app__title--name">TripBoard</span>
             <span
               class="rux-app__version"
               id="appVersionBadge"
@@ -741,7 +741,7 @@
                 data-js="panel-card-notes"
               >
                 <div class="rux-panel__header">
-                  <h2 class="rux-header__title">Notes</h2>
+                  <h2 class="rux-header__title">Notepad</h2>
                   <div class="rux-header__actions"></div>
                 </div>
                 <div class="rux-card__body">
@@ -753,12 +753,11 @@
                     ></textarea>
                   </div>
                 </div>
-                <div class="rux-panel__footer">
-                  <button
-                    type="button"
-                    class="rux-btn rux-btn--secondary"
-                    id="saveNotesBtn"
-                  >
+                <div class="rux-panel__footer notes__footer">
+                  <button type="button" class="rux-btn rux-btn--danger" id="clearNotesBtn">
+                    Clear
+                  </button>
+                  <button type="button" class="rux-btn rux-btn--primary" id="saveNotesBtn">
                     Save Notes
                   </button>
                 </div>
@@ -920,12 +919,7 @@
                       id="reqFuelCardValue"
                       value="false"
                     />
-                    <input
-                      type="hidden"
-                      name="reqWifi"
-                      id="reqWifiValue"
-                      value="false"
-                    />
+                    <input type="hidden" name="oneWay" id="oneWayValue" value="false" />
                     <input
                       type="hidden"
                       name="driverInfoSent"
@@ -1034,40 +1028,46 @@
                       />
                     </div>
 
-                    <div class="form-group col-6">
-                      <label>One-Way Trip</label>
-                      <button type="button" id="oneWay" class="rux-btn rux-btn--toggle" aria-pressed="false">
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                        <span>One-Way</span>
-                      </button>
-                      <input type="hidden" id="oneWayValue" name="oneWay" value="false" />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label>Buses Needed</label>
-                      <div class="rux-btn-group buses-needed-stepper" id="busesNeededSeg" role="group" aria-label="Number of buses">
-                        <button type="button" id="busesNeededDecBtn" class="rux-btn rux-btn--secondary rux-btn--icon" aria-label="Fewer buses" disabled>
-                          <span class="material-symbols-outlined">remove</span>
+                    <div class="form-group col-2">
+                      <label>Buses</label>
+                      <div id="busesNeededSeg" class="buses-needed-picker">
+                        <button type="button" id="busesNeededTrigger" class="buses-needed-trigger"
+                          aria-haspopup="true" aria-expanded="false" aria-label="Number of buses">
+                          <span id="busesNeededDisplay">–</span>
                         </button>
-                        <span id="busesNeededDisplay" class="buses-needed-display">–</span>
-                        <button type="button" id="busesNeededIncBtn" class="rux-btn rux-btn--secondary rux-btn--icon" aria-label="More buses">
-                          <span class="material-symbols-outlined">add</span>
-                        </button>
+                        <div id="busesNeededDropdown" class="buses-needed-dropdown">
+                          <button type="button" class="buses-needed-option" data-value="1">1</button>
+                          <button type="button" class="buses-needed-option" data-value="2">2</button>
+                          <button type="button" class="buses-needed-option" data-value="3">3</button>
+                          <button type="button" class="buses-needed-option" data-value="4">4</button>
+                          <button type="button" class="buses-needed-option" data-value="5">5</button>
+                          <button type="button" class="buses-needed-option" data-value="6">6</button>
+                          <button type="button" class="buses-needed-option" data-value="7">7</button>
+                          <button type="button" class="buses-needed-option" data-value="8">8</button>
+                          <button type="button" class="buses-needed-option" data-value="9">9</button>
+                          <button type="button" class="buses-needed-option" data-value="10">10</button>
+                        </div>
                       </div>
                       <input type="hidden" id="busesNeeded" name="busesNeeded" value="">
                     </div>
 
-                    <div class="form-group col-6">
+                    <div class="form-group col-2">
                       <label>Color</label>
                       <div id="tripColorSwatches" class="trip-color-swatches" role="group" aria-label="Trip color">
-                        <button type="button" class="trip-color-swatch trip-color-swatch--none is-selected" data-value="" title="None" aria-label="No color"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Cyan"           style="background:var(--rux-color-cyan)"   title="Round-Trip 2"        aria-label="Cyan"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Green"          style="background:var(--rux-color-green)"  title="Round-Trip 3"        aria-label="Green"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Purple"         style="background:var(--rux-color-purple)" title="MVM"                 aria-label="Purple"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Yellow"         style="background:var(--rux-color-yellow)" title="Hold – Pending Info" aria-label="Yellow"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Orange"         style="background:var(--rux-color-orange)" title="Bid Submitted"       aria-label="Orange"></button>
-                        <button type="button" class="trip-color-swatch" data-value="Pink"           style="background:var(--rux-color-pink)"   title="Date TBD"            aria-label="Pink"></button>
-                        <button type="button" class="trip-color-swatch trip-color-swatch--oos" data-value="Out of Service" title="Out of Service" aria-label="Out of Service"></button>
+                        <button type="button" id="tripColorTrigger" class="trip-color-trigger"
+                          aria-haspopup="true" aria-expanded="false" aria-label="Choose trip color" title="Choose color">
+                          <span class="trip-color-trigger__preview trip-color-swatch--none"></span>
+                        </button>
+                        <div id="tripColorDropdown" class="trip-color-dropdown">
+                          <button type="button" class="trip-color-swatch trip-color-swatch--none is-selected" data-value="" title="None" aria-label="No color"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Cyan"           style="background:var(--rux-color-cyan)"   title="Round-Trip 2"        aria-label="Cyan"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Green"          style="background:var(--rux-color-green)"  title="Round-Trip 3"        aria-label="Green"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Purple"         style="background:var(--rux-color-purple)" title="MVM"                 aria-label="Purple"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Yellow"         style="background:var(--rux-color-yellow)" title="Hold – Pending Info" aria-label="Yellow"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Orange"         style="background:var(--rux-color-orange)" title="Bid Submitted"       aria-label="Orange"></button>
+                          <button type="button" class="trip-color-swatch" data-value="Pink"           style="background:var(--rux-color-pink)"   title="Date TBD"            aria-label="Pink"></button>
+                          <button type="button" class="trip-color-swatch trip-color-swatch--oos" data-value="Out of Service" title="Out of Service" aria-label="Out of Service"></button>
+                        </div>
                       </div>
                       <select id="tripColor" name="tripColor" style="display:none">
                         <option value="" disabled selected>–</option>
@@ -1082,7 +1082,7 @@
                       </select>
                     </div>
 
-                    <div class="form-group col-12">
+                    <div class="form-group col-8">
                       <label for="notes">Notes</label>
                       <input
                         type="text"
@@ -1101,7 +1101,7 @@
                     <div class="form-group col-4">
                       <label for="estimatedMileage">Mileage</label>
                       <div class="fld-affix fld-affix--suffix">
-                        <input type="text" id="estimatedMileage" name="estimatedMileage" placeholder="" />
+                        <input type="text" id="estimatedMileage" name="estimatedMileage" placeholder="" autocomplete="off" />
                         <span class="fld-affix__suffix">mi</span>
                       </div>
                     </div>
@@ -1109,7 +1109,7 @@
                     <div class="form-group col-4">
                       <label for="drivingHours">Driving Hrs</label>
                       <div class="fld-affix fld-affix--suffix">
-                        <input type="text" id="drivingHours" name="drivingHours" />
+                        <input type="text" id="drivingHours" name="drivingHours" autocomplete="off" />
                         <span class="fld-affix__suffix">hr</span>
                       </div>
                     </div>
@@ -1117,7 +1117,7 @@
                     <div class="form-group col-4">
                       <label for="onDutyHours">On-Duty Hrs</label>
                       <div class="fld-affix fld-affix--suffix">
-                        <input type="text" id="onDutyHours" name="onDutyHours" />
+                        <input type="text" id="onDutyHours" name="onDutyHours" autocomplete="off" />
                         <span class="fld-affix__suffix">hr</span>
                       </div>
                     </div>
@@ -1126,7 +1126,7 @@
                       <label for="quotedPrice">Quoted Price</label>
                       <div class="fld-affix fld-affix--prefix">
                         <span class="fld-affix__prefix">$</span>
-                        <input type="text" id="quotedPrice" name="quotedPrice" class="text-right" placeholder="" />
+                        <input type="text" id="quotedPrice" name="quotedPrice" class="text-right" placeholder="" autocomplete="off" />
                       </div>
                     </div>
                     </div>
@@ -1299,121 +1299,43 @@
                         role="group"
                         aria-label="Requirements"
                       >
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqSleeper"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >airline_seat_flat</span
-                          >
+                        <!-- Row 1: Sleeper, 56-Seats, One-Way -->
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqSleeper" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">airline_seat_flat</span>
                           Sleeper
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="req56Pass"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >tatami_seat</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="req56Pass" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
                           56-Seats
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqFuelCard"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >credit_card</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="oneWay" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                          One-Way
+                        </button>
+                        <!-- Row 2: Fuel Card, Hotel, ADA Lift -->
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqFuelCard" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
                           Fuel Card
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqHotel"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >apartment</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqHotel" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">apartment</span>
                           Hotel
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqLift"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >accessible</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqLift" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">accessible</span>
                           ADA Lift
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqWifi"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >wifi</span
-                          >
-                          Wi-Fi
-                        </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqCoDriver"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >person</span
-                          >
+                        <!-- Row 3: Co-Driver, Relief 1, Relief 2 -->
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqCoDriver" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">person</span>
                           Co-Driver
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqRelief"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >emergency_home</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqRelief" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">emergency_home</span>
                           Relief 1
                         </button>
-                        <button
-                          type="button"
-                          class="rux-btn rux-btn--toggle"
-                          id="reqRelief2"
-                          aria-pressed="false"
-                        >
-                          <span
-                            class="toggle-pill__icon material-symbols-outlined"
-                            aria-hidden="true"
-                            >emergency_home</span
-                          >
+                        <button type="button" class="rux-btn rux-btn--toggle" id="reqRelief2" aria-pressed="false">
+                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">emergency_home</span>
                           Relief 2
                         </button>
                       </div>

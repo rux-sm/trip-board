@@ -785,6 +785,14 @@ function wireEvents() {
     }
   });
 
+  document.getElementById("clearNotesBtn")?.addEventListener("click", () => {
+    if (!dom.scheduleNotes) return;
+    if (dom.scheduleNotes.value && !confirm("Clear all notes?")) return;
+    dom.scheduleNotes.value = "";
+    dom.scheduleNotes.dispatchEvent(new Event("input", { bubbles: true }));
+    dom.scheduleNotes.focus();
+  });
+
   // Waiting List Toggle
   const wlVisible = false; // Always start hidden (User Request)
 
@@ -917,17 +925,45 @@ function wireEvents() {
     syncBusSegButtons();
   });
 
-  document.getElementById("busesNeededDecBtn")?.addEventListener("click", () => {
-    const n = parseInt(dom.busesNeeded.value) || 1;
-    if (n > 1) setBusesNeededAndSync(String(n - 1));
-    syncBusSegButtons();
-  });
+  (() => {
+    const bnTrigger  = document.getElementById("busesNeededTrigger");
+    const bnDropdown = document.getElementById("busesNeededDropdown");
 
-  document.getElementById("busesNeededIncBtn")?.addEventListener("click", () => {
-    const n = parseInt(dom.busesNeeded.value) || 0;
-    if (n < 10) setBusesNeededAndSync(String(n + 1));
-    syncBusSegButtons();
-  });
+    function closeBusesDropdown() {
+      if (!bnDropdown) return;
+      bnDropdown.querySelectorAll(".buses-needed-option").forEach((o) => o.classList.remove("is-visible"));
+      bnDropdown.classList.remove("is-open");
+      bnTrigger?.setAttribute("aria-expanded", "false");
+    }
+
+    function openBusesDropdown() {
+      bnDropdown.classList.add("is-open");
+      bnTrigger.setAttribute("aria-expanded", "true");
+      bnDropdown.querySelectorAll(".buses-needed-option").forEach((opt, i) => {
+        setTimeout(() => opt.classList.add("is-visible"), i * 30);
+      });
+    }
+
+    bnTrigger?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      bnDropdown.classList.contains("is-open") ? closeBusesDropdown() : openBusesDropdown();
+    });
+
+    bnDropdown?.addEventListener("click", (e) => {
+      const opt = e.target.closest(".buses-needed-option");
+      if (!opt) return;
+      setBusesNeededAndSync(opt.dataset.value);
+      dom.busesNeeded.dispatchEvent(new Event("change", { bubbles: true }));
+      syncBusSegButtons();
+      closeBusesDropdown();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (bnDropdown?.classList.contains("is-open") && !bnDropdown.contains(e.target) && e.target !== bnTrigger) {
+        closeBusesDropdown();
+      }
+    });
+  })();
 
   $("tripDate").addEventListener("change", () => {
     const dep = $("tripDate").value;
@@ -1257,7 +1293,6 @@ function wireEvents() {
       reqCoDriver: $("reqCoDriver")?.getAttribute("aria-pressed") === "true",
       reqHotel: $("reqHotel")?.getAttribute("aria-pressed") === "true",
       reqFuelCard: $("reqFuelCard")?.getAttribute("aria-pressed") === "true",
-      reqWifi: $("reqWifi")?.getAttribute("aria-pressed") === "true",
       driverInfoSent: $("driverInfoSent")?.getAttribute("aria-pressed") === "true",
       tripReminderSent: $("tripReminderSent")?.getAttribute("aria-pressed") === "true",
     };
@@ -1310,7 +1345,6 @@ function wireEvents() {
       "reqCoDriver",
       "reqHotel",
       "reqFuelCard",
-      "reqWifi",
       "driverInfoSent",
       "tripReminderSent",
     ].forEach((id) => {
@@ -1551,13 +1585,45 @@ function wireProfilePopover() {
 
   // ── Avatar color ───────────────────────────────────────────────────────────
 
-  document.getElementById("tripColorSwatches")?.addEventListener("click", (e) => {
-    const swatch = e.target.closest(".trip-color-swatch");
-    if (!swatch) return;
-    syncTripColorSwatches(swatch.dataset.value);
-    $("tripColor")?.dispatchEvent(new Event("change", { bubbles: true }));
-    state.tripFormDirty = true;
-  });
+  (() => {
+    const trigger  = document.getElementById("tripColorTrigger");
+    const dropdown = document.getElementById("tripColorDropdown");
+
+    function closeTripColorDropdown() {
+      if (!dropdown) return;
+      dropdown.querySelectorAll(".trip-color-swatch").forEach((s) => s.classList.remove("is-visible"));
+      dropdown.classList.remove("is-open");
+      trigger?.setAttribute("aria-expanded", "false");
+    }
+
+    function openTripColorDropdown() {
+      dropdown.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      dropdown.querySelectorAll(".trip-color-swatch").forEach((s, i) => {
+        setTimeout(() => s.classList.add("is-visible"), i * 30);
+      });
+    }
+
+    trigger?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.contains("is-open") ? closeTripColorDropdown() : openTripColorDropdown();
+    });
+
+    document.getElementById("tripColorSwatches")?.addEventListener("click", (e) => {
+      const swatch = e.target.closest(".trip-color-swatch");
+      if (!swatch) return;
+      syncTripColorSwatches(swatch.dataset.value);
+      $("tripColor")?.dispatchEvent(new Event("change", { bubbles: true }));
+      state.tripFormDirty = true;
+      closeTripColorDropdown();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (dropdown?.classList.contains("is-open") && !dropdown.contains(e.target) && e.target !== trigger) {
+        closeTripColorDropdown();
+      }
+    });
+  })();
 
   document.getElementById("profileColorSwatches")?.addEventListener("click", (e) => {
     const swatch = e.target.closest("[data-color]");
