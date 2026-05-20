@@ -115,7 +115,7 @@ function renderDriverWeekGrid() {
   dom.driverWeekBody.innerHTML = driverNames
     .map((name) => {
       const set = onDaysByDriver.get(name) || new Set();
-      const displayName = getDriverFullName(name) || name;
+      const displayName = name;
 
       const cells = weekDates
         .map((dStr, idx) => {
