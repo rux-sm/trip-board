@@ -162,7 +162,7 @@ button {
 /* ── 5. Toggle — chip-style requirement toggles ─────────────────────────── */
 
 .rux-btn--toggle {
-  --btn-background:        var(--rux-bg-3);
+  --btn-background:        var(--rux-bg-4);
   --btn-active-background: var(--rux-bg-4);
   --btn-shadow:            var(--rux-btn-shadow-inset);
   --btn-text:              var(--rux-text-2);

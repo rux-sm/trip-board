@@ -26,7 +26,7 @@ const CARD_CONFIG = {
   log: { card: dom.logCard, btn: dom.logBtn },
 };
 
-const MAX_CARDS_PER_PANEL = 2;
+const MAX_CARDS_PER_PANEL = 1;
 
 function getCardPanel(cardType) {
   return state.cardPanelAssignments[cardType] || null;
@@ -35,6 +35,14 @@ function getCardPanel(cardType) {
 function getPanelContent(panel) {
   const panelEl = panel === "left" ? dom.panelStart : dom.panelEnd;
   return panelEl?.querySelector(".sidebar__content") || null;
+}
+
+function getPanelElement(panel) {
+  return panel === "left" ? dom.panelStart : dom.panelEnd;
+}
+
+function getPanelForButton(btn) {
+  return btn.closest("#panelStart") ? "left" : "right";
 }
 
 function getCardTypeForElement(cardEl) {
@@ -60,6 +68,22 @@ function updatePanelCollapsedStates() {
 
   dom.panelStart?.classList.toggle("is-collapsed", !leftHasCards);
   dom.panelEnd?.classList.toggle("is-collapsed", !rightHasCards);
+}
+
+function syncCardButtonStates() {
+  document.querySelectorAll(".sidebar__icon-btn[data-card]").forEach((btn) => {
+    const cardType = btn.dataset.card;
+    const panel = getPanelForButton(btn);
+    const active = !!cardType && state.cardPanelAssignments[cardType] === panel;
+    btn.classList.toggle("is-active", active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  Object.entries(CARD_CONFIG).forEach(([cardType, config]) => {
+    if (config.btn) {
+      config.btn.setAttribute("aria-pressed", getCardPanel(cardType) ? "true" : "false");
+    }
+  });
 }
 
 function ensurePanelCapacity(panel, incomingCardType) {
@@ -121,10 +145,6 @@ function showCardInPanel(cardType, panel) {
     panelEndEl.classList.remove("is-collapsed");
   }
 
-  // Mark all icon buttons for this card active
-  document.querySelectorAll(`.sidebar__icon-btn[data-card="${cardType}"]`)
-    .forEach(b => b.classList.add("is-active"));
-
   // Show the card
   config.card.classList.remove("is-hidden");
 
@@ -138,12 +158,15 @@ function showCardInPanel(cardType, panel) {
   // Update state
   state.cardPanelAssignments[cardType] = panel;
 
-  // Update button state
-  if (config.btn) {
-    config.btn.setAttribute("aria-pressed", "true");
-  }
+  updatePanelCollapsedStates();
+  syncCardButtonStates();
 
   // Special handling for specific cards
+  if (cardType === "trip") {
+    state.tripFormOpen = true;
+    state.tripFormWeekKey = getWeekRange().start;
+    if (typeof resetTripEditorTabs === "function") resetTripEditorTabs();
+  }
   if (cardType === "notes") {
     updateNotesWeekTitle();
   }
@@ -167,14 +190,12 @@ function hideCard(cardType, options = {}) {
 
   state.cardPanelAssignments[cardType] = null;
 
-  // Update button state
-  if (config.btn) {
-    config.btn.setAttribute("aria-pressed", "false");
+  if (cardType === "trip") {
+    state.tripFormOpen = false;
+    state.tripFormWeekKey = null;
   }
 
-  // Deactivate all icon buttons for this card
-  document.querySelectorAll(`.sidebar__icon-btn[data-card="${cardType}"]`)
-    .forEach(b => b.classList.remove("is-active"));
+  syncCardButtonStates();
 
   if (config.card._hideTimeout) {
     clearTimeout(config.card._hideTimeout);
@@ -204,6 +225,20 @@ function hideCard(cardType, options = {}) {
   }, 300);
 
   scheduleAgendaReflow();
+}
+
+function activateRailCard(cardType, panel) {
+  const config = CARD_CONFIG[cardType];
+  const panelEl = getPanelElement(panel);
+  if (!config || !panelEl) return;
+
+  const isCurrentCardOpen = state.cardPanelAssignments[cardType] === panel;
+  if (isCurrentCardOpen && !panelEl.classList.contains("is-collapsed")) {
+    hideCard(cardType);
+    return;
+  }
+
+  showCardInPanel(cardType, panel);
 }
 
 function toggleCard(cardType) {
@@ -264,14 +299,12 @@ function wireIconRail() {
   document.querySelectorAll(".sidebar__icon-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const cardType = btn.dataset.card;
-      const panel = btn.closest("#panelStart") ? "left" : "right";
-      if (getCardPanel(cardType)) {
-        hideCard(cardType);
-      } else {
-        showCardInPanel(cardType, panel);
-      }
+      const panel = getPanelForButton(btn);
+      activateRailCard(cardType, panel);
     });
   });
+
+  syncCardButtonStates();
 }
 
 function enforceDesktopEditing() {

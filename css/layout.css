@@ -201,6 +201,12 @@
   padding: 12px 0;
   background: transparent; /* unified surface — container owns the bg */
 }
+.o-app-layout__sidebar.is-collapsed .sidebar__rail {
+  width: 64px;
+  flex: 0 0 64px;
+  visibility: visible;
+  pointer-events: auto;
+}
 .o-app-layout__sidebar--left  .sidebar__rail { order: 0; }
 .o-app-layout__sidebar--right .sidebar__rail { order: 1; }
 
@@ -235,8 +241,10 @@
 .o-app-layout__sidebar--right .sidebar__content { order: 0; }
 
 /* When collapsed, hide content area completely */
-.is-collapsed .sidebar__content {
+.o-app-layout__sidebar.is-collapsed .sidebar__content {
   flex: 0 0 0;
+  width: 0;
+  min-width: 0;
   overflow: hidden;
   pointer-events: none;
 }

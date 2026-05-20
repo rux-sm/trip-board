@@ -425,10 +425,16 @@ function getDriverOptions() {
 }
 
 const DRIVER_STATUS_STATES = [
-  { value: "Pending",   icon: "radio_button_unchecked", cls: "status-pending"  },
-  { value: "Assigned",  icon: "radio_button_partial",   cls: "status-assigned" },
-  { value: "Confirmed", icon: "radio_button_checked",   cls: "status-ok"       },
+  { value: "Pending",   cls: "status-pending"  },
+  { value: "Assigned",  cls: "status-assigned" },
+  { value: "Confirmed", cls: "status-ok"       },
 ];
+
+function getDriverStatusRoleIcon(name) {
+  if (/_driver3Status$/.test(name) || /_driver4Status$/.test(name)) return "emergency_home";
+  if (/_driver2Status$/.test(name)) return "group";
+  return "person";
+}
 
 function makeDriverStatusSelect(name) {
   const hidden = document.createElement("input");
@@ -440,17 +446,15 @@ function makeDriverStatusSelect(name) {
   btn.type = "button";
   btn.className = "driver-status-cycle";
   btn.setAttribute("aria-label", "Driver status");
-  btn.innerHTML = `<span class="material-symbols-outlined">radio_button_unchecked</span>`;
+  btn.innerHTML = `<span class="material-symbols-outlined">${getDriverStatusRoleIcon(name)}</span>`;
 
   const syncBtn = () => {
     const state = DRIVER_STATUS_STATES.find(s => s.value === hidden.value);
-    if (state) {
-      btn.querySelector("span").textContent = state.icon;
-      btn.className = `driver-status-cycle ${state.cls}`;
-    } else {
-      btn.querySelector("span").textContent = "radio_button_unchecked";
-      btn.className = "driver-status-cycle";
-    }
+    const visualState = state || DRIVER_STATUS_STATES[0];
+    btn.querySelector("span").textContent = getDriverStatusRoleIcon(name);
+    btn.className = `driver-status-cycle ${visualState.cls}`;
+    btn.title = `Driver status: ${state?.value || "Pending"}`;
+    btn.setAttribute("aria-label", btn.title);
   };
 
   btn.addEventListener("click", () => {
@@ -601,14 +605,16 @@ function _makePayInput(name) {
 function _makeDriverRow(dSel, dStatusSel, payInput) {
   const row = document.createElement("div");
   row.className = "bus-assign__driver-row";
+  const driverField = document.createElement("div");
+  driverField.className = "bus-assign__driver-field";
   const payWrapper = document.createElement("div");
   payWrapper.className = "fld-affix fld-affix--prefix";
   const payPrefix = document.createElement("span");
   payPrefix.className = "fld-affix__prefix";
   payPrefix.textContent = "$";
   payWrapper.append(payPrefix, payInput);
-  row.appendChild(dStatusSel);
-  row.appendChild(dSel);
+  driverField.append(dSel, dStatusSel);
+  row.appendChild(driverField);
   row.appendChild(payWrapper);
   return row;
 }
@@ -1146,5 +1152,3 @@ async function openTripForEdit(tripKey) {
     state.tripFormDirty = false;
   }
 }
-
-

@@ -37,6 +37,8 @@ function clearBarsNow() {
     b.style.zIndex = "";
     const td = b.parentElement;
     if (td?.tagName === "TD") td.style.zIndex = "";
+    const tr = td?.parentElement;
+    if (tr?.tagName === "TR") tr.style.zIndex = "";
   });
   state.barElByKey?.clear?.();
 }
@@ -54,6 +56,8 @@ function pruneOldBars(pass) {
         el.parentElement.style.zIndex = "";
         const td = el.parentElement.parentElement;
         if (td?.tagName === "TD") td.style.zIndex = "";
+        const tr = td?.parentElement;
+        if (tr?.tagName === "TR") tr.style.zIndex = "";
       }
       el.remove();
       state.barElByKey.delete(k);

@@ -309,12 +309,15 @@ function wireDelegatedBarEvents() {
           delete b.dataset.collapsedTop;
           const overlay = b.parentElement;
           const td = overlay?.parentElement;
+          const tr = td?.parentElement;
           overlay.style.zIndex = "45";
           if (td?.tagName === "TD") td.style.zIndex = "45";
+          if (tr?.tagName === "TR") tr.style.zIndex = "55";
           b.addEventListener("transitionend", () => {
             if (overlay.querySelector(".schedule-grid__trip-bar.expanded")) return;
             overlay.style.zIndex = "";
             if (td?.tagName === "TD") td.style.zIndex = "";
+            if (tr?.tagName === "TR") tr.style.zIndex = "";
           }, { once: true });
         });
       }
@@ -337,12 +340,15 @@ function wireDelegatedBarEvents() {
           // Clear entirely once the animation finishes.
           const overlay = b.parentElement;
           const td = overlay?.parentElement;
+          const tr = td?.parentElement;
           overlay.style.zIndex = "45";
           if (td?.tagName === "TD") td.style.zIndex = "45";
+          if (tr?.tagName === "TR") tr.style.zIndex = "55";
           b.addEventListener("transitionend", () => {
             if (overlay.querySelector(".schedule-grid__trip-bar.expanded")) return;
             overlay.style.zIndex = "";
             if (td?.tagName === "TD") td.style.zIndex = "";
+            if (tr?.tagName === "TR") tr.style.zIndex = "";
           }, { once: true });
         });
 
@@ -364,12 +370,15 @@ function wireDelegatedBarEvents() {
           //    --tripbar-action-row-height: 30px for the grid track.
           clickedBar.classList.add("expanded");
 
-          // Elevate both the .schedule-grid__row-bars overlay AND its parent <td>
-          // (.schedule-grid__cell has position:relative, so adding z-index creates
-          // a stacking context that clears the cell above all other row cells).
+          // Elevate overlay, parent <td>, and parent <tr>.
+          // The <tr> elevation is critical for waiting-list bars whose single
+          // overlay spans multiple day cells — without it, adjacent td backgrounds
+          // (painted in DOM order) cover the expanded bar's overflow.
           clickedBar.parentElement.style.zIndex = "50";
           const expandedTd = clickedBar.parentElement.parentElement;
           if (expandedTd?.tagName === "TD") expandedTd.style.zIndex = "50";
+          const expandedTr = expandedTd?.parentElement;
+          if (expandedTr?.tagName === "TR") expandedTr.style.zIndex = "60";
 
           // 4. Read the state height tokens now that .expanded is applied.
           //    CSS owns the tuneable heights:
@@ -424,6 +433,50 @@ function wireDelegatedBarEvents() {
 // ======================================================
 // 35B) QUOTE CALCULATOR LOGIC — moved to quoteCalculator.js
 // ======================================================
+
+function setTripEditorTab(targetId = "tab-details", options = {}) {
+  const card = dom.tripInfoCard;
+  const form = dom.tripForm;
+  if (!card || !form) return;
+
+  const tabs = Array.from(card.querySelectorAll(".trip-editor__tab"));
+  const panels = Array.from(form.querySelectorAll(".form-section-card"));
+  if (!tabs.length || !panels.length) return;
+
+  const fallbackId = tabs[0]?.dataset.tabTarget || panels[0]?.id;
+  const nextId = document.getElementById(targetId) ? targetId : fallbackId;
+
+  tabs.forEach((tab) => {
+    const active = tab.dataset.tabTarget === nextId;
+    tab.classList.toggle("is-active", active);
+    tab.setAttribute("aria-selected", active ? "true" : "false");
+  });
+
+  panels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.id === nextId);
+  });
+
+  if (options.scrollToTop) {
+    card.querySelector(".rux-card__body")?.scrollTo({ top: 0, behavior: "auto" });
+  }
+}
+
+function resetTripEditorTabs() {
+  setTripEditorTab("tab-details", { scrollToTop: true });
+}
+
+function wireTripEditorTabs() {
+  const tabs = dom.tripInfoCard?.querySelectorAll(".trip-editor__tab");
+  if (!tabs?.length) return;
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      setTripEditorTab(tab.dataset.tabTarget, { scrollToTop: true });
+    });
+  });
+
+  setTripEditorTab("tab-details");
+}
 
 // ======================================================
 // 36) EVENTS
@@ -480,6 +533,7 @@ function wireEvents() {
   });
 
   initGlassSelects();
+  wireTripEditorTabs();
 
   // Re-apply bus row visibility after wrapping (initGlassSelects wraps selects;
   // updateBusRowVisibility ran in buildBusRowsOnce before wrapping, so wrappers never got is-hidden)
@@ -962,7 +1016,7 @@ function wireEvents() {
 
     // Sync paired status when a driver slot changes
     if (sel.name && /^bus\d+_driver\d+$/.test(sel.name)) {
-      const statusSel = dom.busGrid.querySelector(`select[name="${sel.name}Status"]`);
+      const statusSel = dom.busGrid.querySelector(`[name="${sel.name}Status"]`);
       if (statusSel) {
         if (!sel.value || sel.value === "None") {
           statusSel.value = "";

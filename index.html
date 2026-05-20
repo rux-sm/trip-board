@@ -140,40 +140,14 @@
         </div>
 
         <div class="rux-app__actions">
-          <button
-            id="tripInputBtn"
-            class="rux-btn rux-btn--square"
-            type="button"
-            title="Trip editor"
-          >
-            <span class="material-symbols-outlined">add</span>
-          </button>
-          <button
-            id="driversBtn"
-            class="rux-btn rux-btn--square"
-            type="button"
-            title="Driver assignments"
-          >
-            <span class="material-symbols-outlined">groups</span>
-          </button>
           <!-- quoteBtn hidden (WIP) — keep for future use -->
-          <button
-            id="notesBtn"
-            class="rux-btn rux-btn--square"
-            type="button"
-            title="Notes"
-          >
-            <span class="material-symbols-outlined">sticky_note_2</span>
-          </button>
-          <button
-            id="todoBtn"
-            class="rux-btn rux-btn--square"
-            type="button"
-            title="Daily checklist"
-          >
-            <span class="material-symbols-outlined">checklist</span>
-          </button>
+          <!-- Panel buttons live in sidebar icon rails -->
           <!-- Presence strip -->
+          <!-- Hidden button stubs keep existing JS listeners from throwing -->
+          <button id="tripInputBtn" type="button" style="display:none"></button>
+          <button id="driversBtn"   type="button" style="display:none"></button>
+          <button id="notesBtn"     type="button" style="display:none"></button>
+          <button id="todoBtn"      type="button" style="display:none"></button>
           <div id="presenceStrip" class="presence-strip" hidden aria-label="Online users" role="status"></div>
 
           <!-- Profile avatar + popover -->
@@ -824,14 +798,66 @@
                 data-js="panel-card-trip-info"
               >
                 <div class="rux-panel__header">
-                  <div class="log-header__title-wrap">
-                    <h2 class="rux-header__title">Trip Editor</h2>
-                    <span
-                      id="tripIdBadge"
-                      class="log-filter-badge is-hidden"
-                    ></span>
+                  <div class="trip-editor__header-row">
+                    <div class="log-header__title-wrap">
+                      <h2 class="rux-header__title">Trip Editor</h2>
+                      <span
+                        id="tripIdBadge"
+                        class="log-filter-badge is-hidden"
+                      ></span>
+                    </div>
+                    <div class="rux-header__actions"></div>
                   </div>
-                  <div class="rux-header__actions"></div>
+                  <nav
+                    class="trip-editor__tabs"
+                    role="tablist"
+                    aria-label="Trip editor sections"
+                  >
+                    <button
+                      id="tripEditorTabDetails"
+                      type="button"
+                      class="trip-editor__tab is-active"
+                      role="tab"
+                      data-tab-target="tab-details"
+                      aria-controls="tab-details"
+                      aria-selected="true"
+                    >
+                      Details
+                    </button>
+                    <button
+                      id="tripEditorTabEstimate"
+                      type="button"
+                      class="trip-editor__tab"
+                      role="tab"
+                      data-tab-target="tab-estimate"
+                      aria-controls="tab-estimate"
+                      aria-selected="false"
+                    >
+                      Estimate
+                    </button>
+                    <button
+                      id="tripEditorTabBilling"
+                      type="button"
+                      class="trip-editor__tab"
+                      role="tab"
+                      data-tab-target="tab-billing"
+                      aria-controls="tab-billing"
+                      aria-selected="false"
+                    >
+                      Billing
+                    </button>
+                    <button
+                      id="tripEditorTabDispatch"
+                      type="button"
+                      class="trip-editor__tab"
+                      role="tab"
+                      data-tab-target="tab-dispatch"
+                      aria-controls="tab-dispatch"
+                      aria-selected="false"
+                    >
+                      Dispatch
+                    </button>
+                  </nav>
                 </div>
                 <div class="rux-card__body">
                   <div
@@ -935,9 +961,14 @@
                       id="tripReminderSentValue"
                       value="false"
                     />
-
                     <!-- ── Section 1: Trip Details ─────────────────────── -->
-                    <div class="form-section-card form-section-flat">
+                    <div
+                      id="tab-details"
+                      class="form-section-card form-section-flat is-active"
+                      data-tab-panel="details"
+                      role="tabpanel"
+                      aria-labelledby="tripEditorTabDetails"
+                    >
                       <div class="form-section-card__label">Trip Details</div>
 
                     <div class="form-group col-6">
@@ -1032,30 +1063,50 @@
                       />
                     </div>
 
-                    <div class="form-group col-2">
-                      <label>Buses</label>
-                      <div id="busesNeededSeg" class="buses-needed-picker">
-                        <button type="button" id="busesNeededTrigger" class="buses-needed-trigger"
-                          aria-haspopup="true" aria-expanded="false" aria-label="Number of buses">
-                          <span id="busesNeededDisplay">–</span>
-                        </button>
-                        <div id="busesNeededDropdown" class="buses-needed-dropdown">
-                          <button type="button" class="buses-needed-option" data-value="1">1</button>
-                          <button type="button" class="buses-needed-option" data-value="2">2</button>
-                          <button type="button" class="buses-needed-option" data-value="3">3</button>
-                          <button type="button" class="buses-needed-option" data-value="4">4</button>
-                          <button type="button" class="buses-needed-option" data-value="5">5</button>
-                          <button type="button" class="buses-needed-option" data-value="6">6</button>
-                          <button type="button" class="buses-needed-option" data-value="7">7</button>
-                          <button type="button" class="buses-needed-option" data-value="8">8</button>
-                          <button type="button" class="buses-needed-option" data-value="9">9</button>
-                          <button type="button" class="buses-needed-option" data-value="10">10</button>
-                        </div>
-                      </div>
-                      <input type="hidden" id="busesNeeded" name="busesNeeded" value="">
+                    <div class="form-group col-6">
+                      <label for="envelopeTripContact">Trip Contact</label>
+                      <input
+                        type="text"
+                        id="envelopeTripContact"
+                        name="envelopeTripContact"
+                        autocomplete="off"
+                      />
                     </div>
 
-                    <div class="form-group col-2">
+                    <div class="form-group col-6">
+                      <label for="envelopeTripPhone">Trip Contact Phone</label>
+                      <input
+                        type="tel"
+                        id="envelopeTripPhone"
+                        name="envelopeTripPhone"
+                        autocomplete="off"
+                        inputmode="tel"
+                      />
+                    </div>
+
+                    <div class="form-group col-12">
+                      <label for="envelopePickup">Pick Up Address</label>
+                      <input
+                        type="text"
+                        id="envelopePickup"
+                        name="envelopePickup"
+                        autocomplete="off"
+                      />
+                    </div>
+
+                    <div class="form-group col-12">
+                      <label for="comments">Driver Instructions</label>
+                      <input
+                        type="text"
+                        id="comments"
+                        name="comments"
+                        placeholder=""
+                        autocomplete="off"
+                      />
+                    </div>
+
+                    <div class="trip-details-color-notes-row">
+                    <div class="form-group trip-details-color-field">
                       <label>Color</label>
                       <div id="tripColorSwatches" class="trip-color-swatches" role="group" aria-label="Trip color">
                         <button type="button" id="tripColorTrigger" class="trip-color-trigger"
@@ -1086,7 +1137,7 @@
                       </select>
                     </div>
 
-                    <div class="form-group col-8">
+                    <div class="form-group trip-details-notes-field">
                       <label for="notes">Notes</label>
                       <input
                         type="text"
@@ -1096,14 +1147,21 @@
                         autocomplete="off"
                       />
                     </div>
+                    </div>
 
                     </div>
 
                     <!-- ── Section 2: Estimate ─────────────────────────── -->
-                    <div class="form-section-card form-section-flat">
+                    <div
+                      id="tab-estimate"
+                      class="form-section-card form-section-flat"
+                      data-tab-panel="estimate"
+                      role="tabpanel"
+                      aria-labelledby="tripEditorTabEstimate"
+                    >
                       <div class="form-section-card__label">Estimate</div>
 
-                    <div class="form-group col-4">
+                    <div class="form-group col-6">
                       <label for="estimatedMileage">Mileage</label>
                       <div class="fld-affix fld-affix--suffix">
                         <input type="text" id="estimatedMileage" name="estimatedMileage" placeholder="" autocomplete="off" />
@@ -1111,7 +1169,15 @@
                       </div>
                     </div>
 
-                    <div class="form-group col-4">
+                    <div class="form-group col-6">
+                      <label for="quotedPrice">Quoted Price</label>
+                      <div class="fld-affix fld-affix--prefix">
+                        <span class="fld-affix__prefix">$</span>
+                        <input type="text" id="quotedPrice" name="quotedPrice" class="text-right" placeholder="" autocomplete="off" />
+                      </div>
+                    </div>
+
+                    <div class="form-group col-6">
                       <label for="drivingHours">Driving Hrs</label>
                       <div class="fld-affix fld-affix--suffix">
                         <input type="text" id="drivingHours" name="drivingHours" autocomplete="off" />
@@ -1119,7 +1185,7 @@
                       </div>
                     </div>
 
-                    <div class="form-group col-4">
+                    <div class="form-group col-6">
                       <label for="onDutyHours">On-Duty Hrs</label>
                       <div class="fld-affix fld-affix--suffix">
                         <input type="text" id="onDutyHours" name="onDutyHours" autocomplete="off" />
@@ -1128,16 +1194,60 @@
                     </div>
 
                     <div class="form-group col-12">
-                      <label for="quotedPrice">Quoted Price</label>
-                      <div class="fld-affix fld-affix--prefix">
-                        <span class="fld-affix__prefix">$</span>
-                        <input type="text" id="quotedPrice" name="quotedPrice" class="text-right" placeholder="" autocomplete="off" />
+                      <label id="tripRequirementsLabel">Requirements</label>
+                      <div
+                        class="rux-btn--toggle-grid"
+                        data-js="trip-requirements-section"
+                        role="group"
+                        aria-labelledby="tripRequirementsLabel"
+                      >
+                      <!-- Row 1: Sleeper, 56-Seats, One-Way -->
+                      <button type="button" class="rux-btn rux-btn--toggle" id="reqSleeper" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">airline_seat_flat</span>
+                        Sleeper
+                      </button>
+                      <button type="button" class="rux-btn rux-btn--toggle" id="req56Pass" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
+                        56-Seats
+                      </button>
+                      <button type="button" class="rux-btn rux-btn--toggle" id="oneWay" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                        One-Way
+                      </button>
+                      <!-- Row 2: Fuel Card, Hotel, ADA Lift -->
+                      <button type="button" class="rux-btn rux-btn--toggle" id="reqFuelCard" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
+                        Fuel Card
+                      </button>
+                      <button type="button" class="rux-btn rux-btn--toggle" id="reqHotel" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">apartment</span>
+                        Hotel
+                      </button>
+                      <button type="button" class="rux-btn rux-btn--toggle" id="reqLift" aria-pressed="false">
+                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">accessible</span>
+                        ADA Lift
+                      </button>
                       </div>
+                    </div>
+
+                    <div class="form-group col-12 estimate-itinerary-field">
+                      <label for="itinerary">Itinerary</label>
+                      <textarea
+                        id="itinerary"
+                        name="itinerary"
+                        autocomplete="off"
+                      ></textarea>
                     </div>
                     </div>
 
                     <!-- ── Section 3: Billing ──────────────────────────── -->
-                    <div class="form-section-card form-section-flat">
+                    <div
+                      id="tab-billing"
+                      class="form-section-card form-section-flat"
+                      data-tab-panel="billing"
+                      role="tabpanel"
+                      aria-labelledby="tripEditorTabBilling"
+                    >
                       <div class="form-section-card__label">Billing</div>
 
                     <input type="hidden" id="itineraryStatus" name="itineraryStatus" value="" />
@@ -1243,128 +1353,60 @@
                     </div>
                     </div>
 
-                    <!-- ── Section 3: Envelope ─────────────────────────── -->
-                    <div class="form-section-card form-section-flat">
-                      <div class="form-section-card__label">Envelope</div>
-
-                    <div class="form-group col-12">
-                      <label for="envelopePickup">Pick Up Address</label>
-                      <input
-                        type="text"
-                        id="envelopePickup"
-                        name="envelopePickup"
-                        autocomplete="off"
-                      />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="envelopeTripContact">Trip Contact</label>
-                      <input
-                        type="text"
-                        id="envelopeTripContact"
-                        name="envelopeTripContact"
-                        autocomplete="off"
-                      />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="envelopeTripPhone">Trip Contact Phone</label>
-                      <input
-                        type="tel"
-                        id="envelopeTripPhone"
-                        name="envelopeTripPhone"
-                        autocomplete="off"
-                        inputmode="tel"
-                      />
-                    </div>
-
-                    <div class="form-group col-12">
-                      <label for="comments">Driver Instructions</label>
-                      <input
-                        type="text"
-                        id="comments"
-                        name="comments"
-                        placeholder=""
-                        autocomplete="off"
-                      />
-                    </div>
-
-                    <textarea
-                      id="itinerary"
-                      name="itinerary"
-                      class="is-hidden"
-                      aria-label="Itinerary Content"
-                    ></textarea>
-                    </div>
-
-                    <!-- ── Section 4: Requirements ─────────────────────── -->
+                    <!-- ── Section 5: Dispatch ─────────────────────────── -->
                     <div
-                      id="requirementsSection"
+                      id="tab-dispatch"
                       class="form-section-card form-section-flat"
-                      data-js="trip-requirements-section"
+                      data-js="trip-assignments-section"
+                      data-tab-panel="dispatch"
+                      role="tabpanel"
+                      aria-labelledby="tripEditorTabDispatch"
                     >
-                      <div class="form-section-card__label">Requirements</div>
-                      <div
-                        class="rux-btn--toggle-grid col-12"
-                        role="group"
-                        aria-label="Requirements"
-                      >
-                        <!-- Row 1: Sleeper, 56-Seats, One-Way -->
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqSleeper" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">airline_seat_flat</span>
-                          Sleeper
-                        </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="req56Pass" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
-                          56-Seats
-                        </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="oneWay" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-                          One-Way
-                        </button>
-                        <!-- Row 2: Fuel Card, Hotel, ADA Lift -->
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqFuelCard" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
-                          Fuel Card
-                        </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqHotel" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">apartment</span>
-                          Hotel
-                        </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqLift" aria-pressed="false">
-                          <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">accessible</span>
-                          ADA Lift
-                        </button>
-                        <!-- Row 3: Co-Driver, Relief 1, Relief 2 -->
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqCoDriver" aria-pressed="false">
+                      <div class="form-section-card__label">Dispatch</div>
+
+                      <div class="dispatch-control-row">
+                        <div class="form-group dispatch-buses-field">
+                          <label>Buses</label>
+                          <div id="busesNeededSeg" class="buses-needed-picker">
+                            <button type="button" id="busesNeededTrigger" class="buses-needed-trigger"
+                              aria-haspopup="true" aria-expanded="false" aria-label="Number of buses">
+                              <span id="busesNeededDisplay">–</span>
+                            </button>
+                            <div id="busesNeededDropdown" class="buses-needed-dropdown">
+                              <button type="button" class="buses-needed-option" data-value="1">1</button>
+                              <button type="button" class="buses-needed-option" data-value="2">2</button>
+                              <button type="button" class="buses-needed-option" data-value="3">3</button>
+                              <button type="button" class="buses-needed-option" data-value="4">4</button>
+                              <button type="button" class="buses-needed-option" data-value="5">5</button>
+                              <button type="button" class="buses-needed-option" data-value="6">6</button>
+                              <button type="button" class="buses-needed-option" data-value="7">7</button>
+                              <button type="button" class="buses-needed-option" data-value="8">8</button>
+                              <button type="button" class="buses-needed-option" data-value="9">9</button>
+                              <button type="button" class="buses-needed-option" data-value="10">10</button>
+                            </div>
+                          </div>
+                          <input type="hidden" id="busesNeeded" name="busesNeeded" value="">
+                        </div>
+
+                        <button type="button" class="rux-btn rux-btn--toggle dispatch-requirement-toggle" id="reqCoDriver" aria-pressed="false">
                           <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">person</span>
                           Co-Driver
                         </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqRelief" aria-pressed="false">
+                        <button type="button" class="rux-btn rux-btn--toggle dispatch-requirement-toggle" id="reqRelief" aria-pressed="false">
                           <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">emergency_home</span>
                           Relief 1
                         </button>
-                        <button type="button" class="rux-btn rux-btn--toggle" id="reqRelief2" aria-pressed="false">
+                        <button type="button" class="rux-btn rux-btn--toggle dispatch-requirement-toggle" id="reqRelief2" aria-pressed="false">
                           <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">emergency_home</span>
                           Relief 2
                         </button>
                       </div>
-                    </div>
 
-                    <!-- ── Section 5: Dispatch ─────────────────────────── -->
-                    <div
-                      id="assignmentsOverridesSection"
-                      class="form-section-card form-section-flat"
-                      data-js="trip-assignments-section"
-                    >
-                      <div class="form-section-card__label">Dispatch</div>
                       <div class="form-group col-12">
                         <div class="bus-assign-header">
                           <span class="field-label">Bus</span>
-                          <span></span>
                           <span class="field-label">Driver</span>
                           <span class="field-label">Pay</span>
-                          <span></span>
                         </div>
                         <div id="dispatch-container">
                           <div

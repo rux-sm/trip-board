@@ -1307,7 +1307,7 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 .bus-assign__bus-cell {
-  width: 52px;
+  width: 48px;
   flex-shrink: 0;
 }
 
@@ -1320,9 +1320,23 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 
 .bus-assign__driver-row {
   display: grid;
-  grid-template-columns: 32px 1fr 96px;
+  grid-template-columns: minmax(0, 1fr) 72px;
   gap: var(--rux-fld-col-gap);
   align-items: center;
+}
+
+.bus-assign__driver-field {
+  position: relative;
+  min-width: 0;
+}
+
+.bus-assign__driver-field > .select-dropdown {
+  width: 100%;
+}
+
+.bus-assign__driver-field .select-trigger,
+.bus-assign__driver-field > select {
+  padding-right: 34px;
 }
 
 .bus-assign__pay-input {
@@ -1345,16 +1359,21 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 
 .bus-assign-header {
   display: grid;
-  grid-template-columns: 52px 32px 1fr 96px;
+  grid-template-columns: 48px minmax(0, 1fr) 72px;
   column-gap: var(--rux-fld-col-gap);
   margin-bottom: var(--rux-fld-label-margin);
 }
 
 /* Driver status cycle button */
 .driver-status-cycle-wrap {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translateY(-50%);
 }
 
 .driver-status-cycle {
@@ -1363,9 +1382,9 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--rux-radius-control);
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
   cursor: pointer;
   color: var(--rux-text-3);
   transition:
@@ -1388,12 +1407,12 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 .driver-status-cycle .material-symbols-outlined {
-  font-size: 20px;
+  font-size: 18px;
   font-variation-settings:
     "FILL" 1,
-    "wght" 400,
+    "wght" 500,
     "GRAD" 0,
-    "opsz" 20;
+    "opsz" 18;
 }
 
 .bus-assign-header .field-label {
