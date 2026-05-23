@@ -189,14 +189,14 @@
   /* 2C. Debug Surface Colors
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-debug-red: var(--rux-color-red);
-  --rux-debug-yellow: var(--rux-color-yellow);
-  --rux-debug-blue: var(--rux-color-blue);
-  --rux-debug-green: var(--rux-color-green);
-  --rux-debug-pink: var(--rux-color-pink);
-  --rux-debug-border-container: oklch(100% 0.4 24 / 75%);
-  --rux-debug-border-card: oklch(100% 0.4 150 / 75%);
-  --rux-debug-border-content: oklch(100% 0.4 100 / 75%);
+   --rux-debug-red:     oklch(100% 0.4 380 / 100%);
+   --rux-debug-green:   oklch(100% 0.4 150 / 100%);
+   --rux-debug-blue:    oklch(100% 0.4 250 / 100%);
+   --rux-debug-yellow:  oklch(100% 0.4 100 / 100%);
+   --rux-debug-pink: var(--rux-color-pink);
+   --rux-debug-border-container: oklch(100% 0.4 24 / 75%);
+   --rux-debug-border-card: oklch(100% 0.4 150 / 75%);
+   --rux-debug-border-content: oklch(100% 0.4 100 / 75%);
 
   /* 2D. Text Roles
   ──────────────────────────────────────────────────────────────── */
@@ -224,7 +224,7 @@
   --rux-radius-surface: var(--rux-radius-3); /* cards, panels — 8px */
   --rux-radius-overlay: var(--rux-radius-4); /* modals, popovers — 10px */
   --rux-radius-badge: var(--rux-radius-0); /* chips, mini-badges — 0px */
-  --rux-radius-container: var(--rux-radius-7); /* app/sidebar shells — 16px */
+  --rux-radius-container: var(--rux-radius-3); /* app/sidebar shells — 16px */
   --rux-radius-card: var(--rux-radius-1); /* compact internal cards — 4px */
   --rux-radius-button: var(--rux-radius-3); /* standard buttons — 8px */
   --rux-radius-button-avatar: var(--rux-radius-1); /* profile/avatar buttons — 4px */

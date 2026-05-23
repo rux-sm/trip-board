@@ -71,7 +71,7 @@
 .schedule-grid__conflict-panel .rux-card__body,
 .detail-text.detail-itinerary-scroll,
 .trip-details__itinerary-scroll,
-#busGrid .select-dropdown .dropdown__menu,
+.bus-grid .select-dropdown .dropdown__menu,
 .modal--itinerary .modal__body textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -81,7 +81,7 @@
 .schedule-grid__conflict-panel .rux-card__body::-webkit-scrollbar,
 .detail-text.detail-itinerary-scroll::-webkit-scrollbar,
 .trip-details__itinerary-scroll::-webkit-scrollbar,
-#busGrid .select-dropdown .dropdown__menu::-webkit-scrollbar,
+.bus-grid .select-dropdown .dropdown__menu::-webkit-scrollbar,
 .modal--itinerary .modal__body textarea::-webkit-scrollbar {
   display: none;
 }

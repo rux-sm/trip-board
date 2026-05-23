@@ -3,15 +3,15 @@
 :root {
   /* App shell sizing */
   --layout-container-max: 100%;
-  --layout-panel-gap:     var(--rux-space-3);
-  --card-padding:         var(--rux-space-3);
-  --size-header-row:      40px;
-  --size-header-action:   40px;
-  --size-toolbar-action:  32px;
+  --layout-panel-gap: var(--rux-space-3);
+  --card-padding: var(--rux-space-3);
+  --size-header-row: 40px;
+  --size-header-action: 40px;
+  --size-toolbar-action: 32px;
 
   /* Z-index stack */
   --z-dropdown: 10099;
-  --z-modal:    10100;
+  --z-modal: 10100;
 }
 
 /* ==========================================================================
@@ -49,8 +49,7 @@
   /* Allow overlays/dropdowns to escape container bounds. */
 }
 
-
-/* --- LAYOUT PANELS (Sidebars & Main Schedule Area) --- */
+/* --- APP LAYOUT ROW --- */
 .o-app-layout {
   display: flex;
   flex-direction: row;
@@ -59,62 +58,4 @@
   overflow: visible;
   min-height: 0;
   gap: var(--layout-panel-gap);
-
-}
-
-.o-app-layout__main {
-  min-width: 0;
-}
-
-.o-app-layout__main>.rux-card {
-  height: auto;
-  max-height: 100%;
-  padding: var(--rux-space-3);
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--rux-radius-container);
-  background: var(--rux-bg-2);
-  overflow: visible;
-}
-
-.o-app-layout__main .schedule-viewport {
-  overflow-x: auto;
-  min-height: 0;
-}
-
-.o-app-layout.is-resizing .o-app-layout__main .schedule-viewport {
-  overflow-x: hidden;
-}
-
-.schedule-viewport--fluid {
-  flex: 1;
-  min-height: 0;
-}
-
-
-.o-app-layout__main {
-  flex: 1;
-  order: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: visible;
-  align-items: stretch;
-  position: relative;
-  z-index: 1;
-}
-
-.o-app-layout__main>.rux-card {
-  height: auto;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: visible;
-}
-
-.o-app-layout__main .schedule-viewport {
-  flex: 1;
-  min-height: 0;
-  overflow-x: auto;
-  overflow-y: auto;
 }

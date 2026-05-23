@@ -1,0 +1,327 @@
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  /* Main schedule shell */
+  --rux-schedule-card-padding: var(--rux-space-3);
+  --rux-schedule-outer-radius: var(--rux-radius-9);
+  --rux-schedule-surface-radius: var(--rux-radius-card);
+  --rux-schedule-card-border-color: var(--rux-debug-green);
+  --rux-schedule-surface-border-color: transparent;
+}
+
+/* ==========================================================================
+   MAIN SCHEDULE SHELL
+   Owns the main schedule column, card shell, toolbar/header, scroll viewport,
+   and schedule surface. Grid rows/cells stay in css/schedule.css.
+   ========================================================================== */
+
+/* ── Layout Column ──────────────────────────────────────────────────────── */
+
+.o-app-layout__main {
+  min-width: 0;
+  flex: 1;
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+}
+
+.o-app-layout__main > .rux-card {
+  position: relative;
+  height: auto;
+  max-height: 100%;
+  margin: 0;
+  padding: var(--rux-schedule-card-padding);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  border-radius: var(--rux-schedule-outer-radius);
+  border: 2px solid var(--rux-schedule-card-border-color);
+  background: var(--rux-bg-2);
+}
+
+.o-app-layout__main > .rux-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--rux-btn-shadow-inset);
+  pointer-events: none;
+  z-index: 99999;
+}
+
+/* ── Agenda Header ──────────────────────────────────────────────────────── */
+
+.agenda-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  column-gap: var(--rux-space-3);
+  height: auto;
+  flex-shrink: 0;
+  padding-bottom: var(--rux-space-3);
+  overflow: visible;
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  background: transparent;
+  border-bottom: none;
+  border-radius: var(--rux-schedule-outer-radius) var(--rux-schedule-outer-radius) 0 0;
+  box-shadow: none;
+}
+
+.agenda-header .rux-header__title {
+  font-size: var(--rux-size-6);
+  font-weight: var(--rux-weight-semibold);
+  color: var(--rux-text-1);
+  -webkit-font-smoothing: antialiased;
+}
+
+.agenda-header__logo {
+  display: none;
+  flex: 0 0 auto;
+  width: auto;
+  height: 20px;
+  object-fit: contain;
+}
+
+.agenda-header__date-left::before {
+  content: "";
+  display: block;
+  flex: 0 0 auto;
+  width: 104px;
+  height: 20px;
+  background: var(--rux-text-2);
+  -webkit-mask: url("../assets/logo.png") center / contain no-repeat;
+  mask: url("../assets/logo.png") center / contain no-repeat;
+}
+
+#printRoot .agenda-header__date-left::before {
+  content: none;
+}
+
+.agenda-header__separator {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 20px;
+  margin-inline: var(--rux-space-3);
+  background: var(--rux-border-2);
+}
+
+.agenda-header__date-left {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--rux-space-3);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.agenda-header .rux-header__actions {
+  grid-column: 2;
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--rux-space-2);
+  height: auto;
+  min-width: 0;
+}
+
+.agenda-header .rux-icon-toolbar {
+  flex: 0 0 auto;
+}
+
+.schedule-sync-status {
+  --sync-progress: 0%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  overflow: visible;
+  font-size: 0;
+  pointer-events: none;
+}
+
+.schedule-sync-status::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: var(--sync-progress);
+  background: var(--rux-color-accent);
+  opacity: 0;
+  transition:
+    width 220ms ease,
+    opacity 180ms ease,
+    background-color 180ms ease;
+}
+
+.schedule-sync-status.has-progress::before {
+  opacity: 1;
+}
+
+.schedule-sync-status.is-indeterminate::before {
+  width: 42%;
+  opacity: 1;
+  animation: schedule-sync-indeterminate 1.1s linear infinite;
+}
+
+.schedule-sync-status.is-sync::before,
+.schedule-sync-status.is-loading::before {
+  opacity: 1;
+}
+
+.schedule-sync-status.is-stale::before {
+  background: var(--rux-status-yellow);
+  opacity: 1;
+  width: 100%;
+}
+
+.schedule-sync-status.is-error::before {
+  background: var(--rux-status-red);
+  opacity: 1;
+  width: 100%;
+}
+
+.schedule-status-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  color: oklch(from var(--rux-color-accent) l c h / 0.8);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+}
+
+.schedule-status-label.is-visible {
+  opacity: 1;
+}
+
+.schedule-status-label.is-stale {
+  color: oklch(from var(--rux-status-yellow) l c h / 0.9);
+}
+
+.schedule-status-label.is-error {
+  color: oklch(from var(--rux-status-red) l c h / 0.9);
+}
+
+@keyframes schedule-sync-indeterminate {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+.agenda-header__icon-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rux-space-3);
+}
+
+.date-picker-wrapper {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 0;
+}
+
+.weekpicker-trigger-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.weekpicker-trigger-wrap .weekpicker-trigger-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.agenda-header__week-date {
+  font-size: var(--rux-size-6);
+  line-height: normal;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.agenda-header__week-date .wk-month,
+.agenda-header__week-date .wk-month-end {
+  text-transform: uppercase;
+  color: var(--rux-color-accent);
+  font-weight: var(--rux-weight-bold);
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+}
+
+.agenda-header__week-date .wk-dates,
+.agenda-header__week-date .wk-sep,
+.agenda-header__week-date .wk-year {
+  margin-right: 4px;
+  color: var(--rux-text-1);
+  font-weight: var(--rux-weight-semibold);
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Surface + Viewport ─────────────────────────────────────────────────── */
+
+.schedule-surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--rux-schedule-surface-radius);
+}
+
+.schedule-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--rux-schedule-surface-radius);
+  border: 1px solid var(--rux-schedule-surface-border-color);
+  box-shadow: var(--rux-btn-shadow-inset);
+  pointer-events: none;
+  z-index: 99999;
+}
+
+.schedule-viewport {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-bottom: 0;
+  scrollbar-gutter: stable;
+}
+
+.schedule-viewport--fluid {
+  flex: 1;
+  min-height: 0;
+}
+
+.o-app-layout.is-resizing .o-app-layout__main .schedule-viewport {
+  overflow-x: hidden;
+}

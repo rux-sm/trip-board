@@ -38,6 +38,7 @@
   --bus-grid-row-gap: 8px;
   --bus-driver-block-gap: 4px;
   --bus-header-margin: 4px;
+  --rux-schedule-grid-header-radius: var(--rux-radius-5);
 
   --card-border-01: var(--rux-color-red);
   --card-border-02: var(--rux-color-orange);
@@ -49,329 +50,6 @@
 /* Print styles moved to css/print.css */
 
 /* See u-hidden in base.css for display:none utility */
-
-/* ==========================================================================
-   5-COMPONENTS / AGENDA HEADER
-   The top control bar of the schedule grid containing date and pagination
-   ========================================================================== */
-
-/* --- The Toolbar Container --- */
-.agenda-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-  column-gap: var(--rux-space-3);
-  height: auto;
-  flex-shrink: 0;
-  padding-bottom: var(--rux-space-3);
-  overflow: visible;
-
-  position: sticky;
-  top: 0;
-  z-index: 10000;
-
-  background: transparent;
-
-  border-bottom: none;
-  border-radius: var(--rux-radius-container) var(--rux-radius-container) 0 0;
-  box-shadow: none;
-}
-
-.agenda-header .rux-header__title {
-  font-size: var(--rux-size-6);
-  font-weight: var(--rux-weight-semibold);
-  color: var(--rux-text-1);
-  -webkit-font-smoothing: antialiased;
-}
-
-.agenda-header__logo {
-  display: none;
-  flex: 0 0 auto;
-  width: auto;
-  height: 20px;
-  object-fit: contain;
-}
-
-.agenda-header__date-left::before {
-  content: "";
-  display: block;
-  flex: 0 0 auto;
-  width: 104px;
-  height: 20px;
-  background: var(--rux-text-2);
-  -webkit-mask: url("../assets/logo.png") center / contain no-repeat;
-  mask: url("../assets/logo.png") center / contain no-repeat;
-}
-
-#printRoot .agenda-header__date-left::before {
-  content: none;
-}
-
-.agenda-header__separator {
-  flex: 0 0 auto;
-  width: 1px;
-  height: 20px;
-  margin-inline: var(--rux-space-3);
-  background: var(--rux-border-2);
-}
-
-/* --- Left / Right containers --- */
-.agenda-header__date-left {
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--rux-space-3);
-  /* Perfect tight gap for the arrow buttons */
-  min-width: 0;
-  overflow: hidden;
-}
-
-.agenda-header .rux-header__actions {
-  grid-column: 2;
-  justify-self: stretch;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--rux-space-2);
-  height: auto;
-  min-width: 0;
-}
-
-.agenda-header .rux-icon-toolbar {
-  flex: 0 0 auto;
-}
-
-.schedule-sync-status {
-  --sync-progress: 0%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  overflow: visible;
-  font-size: 0;
-  pointer-events: none;
-}
-
-.schedule-sync-status::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: var(--sync-progress);
-  background: var(--rux-color-accent);
-  opacity: 0;
-  transition:
-    width 220ms ease,
-    opacity 180ms ease,
-    background-color 180ms ease;
-}
-
-/* Status label — real DOM element (#scheduleStatusLabel), appended to body by dom.js */
-.schedule-status-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 500;
-  font-size: 11px;
-  line-height: 1;
-  white-space: nowrap;
-  color: oklch(from var(--rux-color-accent) l c h / 0.8);
-  letter-spacing: 0.02em;
-  opacity: 0;
-  transition: opacity 250ms ease;
-  pointer-events: none;
-}
-
-.schedule-status-label.is-visible {
-  opacity: 1;
-}
-.schedule-status-label.is-stale {
-  color: oklch(from var(--rux-status-yellow) l c h / 0.9);
-}
-.schedule-status-label.is-error {
-  color: oklch(from var(--rux-status-red) l c h / 0.9);
-}
-
-.schedule-sync-status.has-progress::before {
-  opacity: 1;
-}
-
-.schedule-sync-status.is-indeterminate::before {
-  width: 42%;
-  opacity: 1;
-  animation: schedule-sync-indeterminate 1.1s linear infinite;
-}
-
-.schedule-sync-status.is-sync::before,
-.schedule-sync-status.is-loading::before {
-  opacity: 1;
-}
-
-.schedule-sync-status.is-stale::before {
-  background: var(--rux-status-yellow);
-  opacity: 1;
-  width: 100%;
-}
-
-.schedule-sync-status.is-error::before {
-  background: var(--rux-status-red);
-  opacity: 1;
-  width: 100%;
-}
-
-@keyframes schedule-sync-indeterminate {
-  0% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(260%);
-  }
-}
-
-.agenda-header__icon-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--rux-space-3);
-}
-
-/* Date picker wrappers */
-.date-picker-wrapper {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  justify-content: flex-start;
-  margin-left: 0;
-}
-
-.weekpicker-trigger-wrap {
-  position: relative;
-  display: inline-flex;
-}
-
-.weekpicker-trigger-wrap .weekpicker-trigger-input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  pointer-events: none;
-}
-
-/* Treat the entire date as one unified line of natural text */
-.agenda-header__week-date {
-  font-size: var(--rux-size-6);
-  line-height: normal;
-  white-space: nowrap;
-  display: inline-block;
-}
-
-/* Specific text colors and weights - Let spans just be text! */
-.agenda-header__week-date .wk-month,
-.agenda-header__week-date .wk-month-end {
-  text-transform: uppercase;
-  color: var(--rux-color-accent);
-  font-weight: var(--rux-weight-bold);
-  letter-spacing: 0;
-  text-rendering: optimizeLegibility;
-}
-
-.agenda-header__week-date .wk-dates {
-  margin-right: 4px;
-  color: var(--rux-text-1);
-  font-weight: var(--rux-weight-semibold);
-  letter-spacing: 0;
-  text-rendering: optimizeLegibility;
-}
-
-.agenda-header__week-date .wk-sep {
-  margin-right: 4px;
-
-  color: var(--rux-text-1);
-  font-weight: var(--rux-weight-semibold);
-  letter-spacing: 0;
-
-  text-rendering: optimizeLegibility;
-}
-
-.agenda-header__week-date .wk-year {
-  margin-right: 4px;
-
-  color: var(--rux-text-1);
-  font-weight: var(--rux-weight-semibold);
-  letter-spacing: 0;
-
-  text-rendering: optimizeLegibility;
-}
-
-/* ==========================================================================
-   5-COMPONENTS / SCHEDULE GRID
-   The core grid containing bus rows and day columns
-   ========================================================================== */
-
-.schedule-surface,
-.driver-week__surface {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  border-radius: var(--rux-radius-card);
-}
-
-.schedule-surface::after,
-.driver-week__surface::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: var(--rux-radius-card);
-  border: 1px solid var(--card-border-02);
-  box-shadow: var(--rux-btn-shadow-inset);
-  pointer-events: none;
-  z-index: 99999;
-}
-
-.schedule-viewport {
-  width: 100%;
-  height: 100%;
-  overflow-x: auto;
-  overflow-y: auto;
-
-  scrollbar-gutter: stable;
-}
-
-.o-app-layout__main .schedule-viewport {
-  margin-bottom: 0;
-}
-
-/* ==========================================================================
-   1. APP LAYOUT SHELL & BACKGROUNDS
-   ========================================================================== */
-
-/* Main schedule area layer */
-.o-app-layout__main > .rux-card {
-  position: relative;
-  border-radius: var(--rux-radius-container);
-  border: 1px solid var(--card-border-01);
-  background: var(--rux-bg-2);
-}
-
-/* Inset shadow overlay for the main schedule card. */
-.o-app-layout__main > .rux-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: var(--rux-btn-shadow-inset);
-  pointer-events: none;
-  z-index: 99999;
-}
 
 /* ==========================================================================
    SCHEDULE GRID BORDERS
@@ -488,7 +166,8 @@
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
-  border-top-left-radius: var(--rux-radius-section);
+  border-top-left-radius: var(--rux-schedule-grid-header-radius);
+  border: 2px solid var(--rux-debug-yellow);
 }
 
 .schedule-grid__header-cell:last-child {
@@ -807,6 +486,27 @@
   flex-direction: column;
 }
 
+.driver-week__surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--rux-radius-card);
+}
+
+.driver-week__surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--rux-radius-card);
+  border: 1px solid var(--card-border-02);
+  box-shadow: var(--rux-btn-shadow-inset);
+  pointer-events: none;
+  z-index: 99999;
+}
+
 .driver-week__foot {
   display: flex;
   justify-content: flex-end;
@@ -1047,7 +747,7 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 /* Bus assignment — per-bus vertical group layout */
-#busGrid.bus-assign {
+.bus-grid.bus-assign {
   display: flex;
   flex-direction: column;
   gap: var(--rux-fld-section-gap);

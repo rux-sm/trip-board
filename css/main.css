@@ -13,7 +13,8 @@
 /* Side rails and side panels */
 @import "sidebar.css";
 
-/* Schedule view (grid, nav, panels, agenda) */
+/* Main schedule shell and grid */
+@import "schedule-shell.css";
 @import "schedule.css";
 @import "trip-bar.css";
 

@@ -1,63 +1,64 @@
 /* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
 
 :root {
+
+  --rux-radius-lg: 20px;
+  --rux-radius-md: 12px;
+  --rux-radius-sm: 4px;
   /* Sidebar geometry */
   --rux-sidebar-panel-width: 360px;
   --rux-sidebar-rail-width: 48px;
   --rux-sidebar-rail-gap: 8px;
   --rux-sidebar-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Sidebar spacing/insets.
-     These feed optical radius calculations below. */
+  /* Sidebar spacing.
+     Padding/inset tokens feed the optical radius calculations below. */
   --rux-sidebar-rail-padding: var(--rux-space-3);
-  --rux-sidebar-card-padding-x: var(--rux-space-3);
-  --rux-sidebar-panel-content-inset: var(--rux-space-3);
-  --rux-sidebar-trip-header-padding-x: var(--rux-space-3);
-  --rux-sidebar-trip-header-padding-y: var(--rux-space-3);
-  --rux-sidebar-notes-inset-x: var(--rux-space-3);
+  --rux-sidebar-card-padding-inline: var(--rux-space-3);
+  --rux-sidebar-content-inset: var(--rux-space-3);
+  --rux-sidebar-control-padding-inline: var(--rux-space-2);
+
+  /* Sidebar-hosted Trip Editor */
+  --rux-sidebar-trip-header-height: 92px;
+  --rux-sidebar-trip-header-padding-block: var(--rux-space-3);
+  --rux-sidebar-trip-header-padding-inline: var(--rux-space-3);
+  --rux-sidebar-trip-body-padding-block: var(--rux-space-3);
+  --rux-sidebar-trip-body-padding-inline: calc(
+    var(--rux-sidebar-card-padding-inline) + var(--rux-space-3)
+  );
+
+  /* Sidebar-hosted Notes */
+  --rux-sidebar-notes-inset-inline: var(--rux-space-3);
   --rux-sidebar-notes-padding: 1rem;
-  --rux-sidebar-control-padding-x: var(--rux-space-2);
 
-  /* Debug border colors for classes that own a visible frame or divider.
-     Swap transparent for the debug tokens below when tracing sidebar layers. */
-  --rux-sidebar-border-shell: transparent;
-  --rux-sidebar-border-rail: transparent;
-  --rux-sidebar-border-card: transparent;
-  --rux-sidebar-border-divider: transparent;
-  --rux-sidebar-border-control: transparent;
-  /* --rux-sidebar-border-shell: var(--rux-debug-border-container); */
-  /* --rux-sidebar-border-rail: var(--rux-debug-border-container); */
-  /* --rux-sidebar-border-card: var(--rux-debug-border-card); */
-  /* --rux-sidebar-border-divider: var(--rux-debug-border-content); */
-  /* --rux-sidebar-border-control: var(--rux-debug-border-content); */
+  /* Sidebar border colors.
+     Keep these transparent for production; swap in debug tokens when tracing layers. */
+  --rux-sidebar-shell-border-color: var(--rux-debug-border-container);
+  --rux-sidebar-rail-border-color: var(--rux-debug-border-container);
+  --rux-sidebar-card-border-color: var(--rux-debug-border-card);
+  --rux-sidebar-divider-border-color: var(--rux-debug-border-content);
+  --rux-sidebar-control-border-color: var(--rux-debug-border-content);
 
-  /* Optical radius tokens for classes that own visible corners.
-     Inner radii are derived from their parent radius minus the inset/padding
-     between the two rounded boxes. Set any token to 0 when that layer should
-     be square. */
-  --rux-sidebar-radius-shell: var(--rux-radius-container);
-  --rux-sidebar-radius-rail: max(
-    16px,
-    calc(var(--rux-sidebar-radius-shell) - var(--rux-sidebar-rail-padding))
-  );
-  --rux-sidebar-radius-card: max(
+  /* --rux-sidebar-shell-border-color: var(--rux-debug-border-container); */
+  /* --rux-sidebar-rail-border-color: var(--rux-debug-border-container); */
+  /* --rux-sidebar-card-border-color: var(--rux-debug-border-card); */
+  /* --rux-sidebar-divider-border-color: var(--rux-debug-border-content); */
+  /* --rux-sidebar-control-border-color: var(--rux-debug-border-content); */
+
+  /* Sidebar radii.
+     The outer radius is the single source of truth for every visible outside
+     corner: shell, collapsed rail, sidebar card, and Trip Editor card. */
+  --rux-sidebar-outer-radius: var(--rux-radius-9);
+  --rux-sidebar-slot-radius: 0;
+  --rux-sidebar-icon-button-radius: max(
     0px,
-    calc(var(--rux-sidebar-radius-shell) - var(--rux-sidebar-panel-content-inset))
+    calc(var(--rux-sidebar-outer-radius) - var(--rux-sidebar-rail-padding))
   );
-  --rux-sidebar-radius-slot: 0;
-  --rux-sidebar-radius-icon-button: max(
+  --rux-sidebar-control-radius: max(
     0px,
-    calc(var(--rux-sidebar-radius-rail) - var(--rux-sidebar-rail-padding))
+    calc(var(--rux-sidebar-outer-radius) - var(--rux-sidebar-card-padding-inline))
   );
-  --rux-sidebar-radius-control: max(
-    0px,
-    calc(var(--rux-sidebar-radius-card) - var(--rux-sidebar-card-padding-x))
-  );
-  --rux-sidebar-radius-trip-editor: var(--rux-trpedit-radius);
-  --rux-sidebar-radius-trip-editor-inner: max(
-    0px,
-    calc(var(--rux-sidebar-radius-trip-editor) - var(--rux-sidebar-card-padding-x))
-  );
+  --rux-sidebar-trip-inner-radius: var(--rux-sidebar-control-radius);
 }
 
 /* ==========================================================================
@@ -85,19 +86,18 @@
   display: flex;
   flex-direction: row;
   overflow: visible;
-  background: var(--rux-bg-3);
-  border: 1px solid var(--rux-sidebar-border-shell);
   transition: width var(--rux-sidebar-transition);
 }
 
 .o-app-layout__sidebar--left {
   order: 0;
-  border-radius: 0 var(--rux-sidebar-radius-shell) var(--rux-sidebar-radius-shell) 0;
+  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
 }
 
 .o-app-layout__sidebar--right {
   order: 2;
-  border-radius: var(--rux-sidebar-radius-shell) 0 0 var(--rux-sidebar-radius-shell);
+  border-radius: var(--rux-sidebar-outer-radius) 0 0 var(--rux-sidebar-outer-radius);
+  justify-content: flex-end;
 }
 
 .o-app-layout__sidebar--left.is-collapsed,
@@ -111,16 +111,9 @@
   padding: 0;
   margin: 0;
   width: calc(var(--rux-sidebar-rail-width) + var(--rux-sidebar-panel-width));
-  background: var(--rux-bg-2);
+
 }
 
-.o-app-layout__sidebar--right:not(.is-collapsed) {
-  box-shadow: var(--card-shadow-left);
-}
-
-.o-app-layout__sidebar--left:not(.is-collapsed) {
-  box-shadow: var(--card-shadow-right);
-}
 
 .o-app-layout__sidebar--right.is-hidden,
 body.right-rail-hidden #panelEnd {
@@ -128,7 +121,7 @@ body.right-rail-hidden #panelEnd {
 }
 
 body.right-rail-hidden .o-app-layout {
-  padding-right: var(--rux-sidebar-panel-content-inset);
+  padding-right: var(--rux-sidebar-content-inset);
 }
 
 /* ── Icon Rail ───────────────────────────────────────────────────────────── */
@@ -142,9 +135,9 @@ body.right-rail-hidden .o-app-layout {
   display: flex;
   flex-direction: column;
   gap: var(--rux-sidebar-rail-gap);
-  border: 1px solid var(--rux-sidebar-border-rail);
+
   padding: var(--rux-sidebar-rail-padding);
-  background: var(--rux-bg-3);
+  background: var(--rux-bg-2);
   transition:
     width var(--rux-sidebar-transition),
     flex var(--rux-sidebar-transition),
@@ -159,27 +152,37 @@ body.right-rail-hidden .o-app-layout {
 .o-app-layout__sidebar--left .sidebar__rail {
   order: 0;
   align-items: center;
-  border-radius: 0 var(--rux-sidebar-radius-rail) var(--rux-sidebar-radius-rail) 0;
 }
 
 .o-app-layout__sidebar--right .sidebar__rail {
   order: 1;
   align-items: center;
-  border-radius: var(--rux-sidebar-radius-rail) 0 0 var(--rux-sidebar-radius-rail);
+}
+
+.o-app-layout__sidebar--left.is-collapsed .sidebar__rail {
+  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
+  border: 1px solid var(--rux-debug-blue);
+}
+
+.o-app-layout__sidebar--right.is-collapsed .sidebar__rail {
+  border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
+  border: 1px solid var(--rux-debug-blue);
 }
 
 .o-app-layout__sidebar--left:not(.is-collapsed) .sidebar__rail {
-  padding-right: var(--rux-sidebar-rail-padding);
+  width: var(--rux-sidebar-rail-width);
+  flex: 0 0 var(--rux-sidebar-rail-width);
+  border-radius: 0;
+  border-left: 1px solid var(--rux-debug-blue);
+  border-block: 1px solid var(--rux-debug-blue);
 }
 
-.o-app-layout__sidebar--right:not(.is-collapsed) .sidebar__rail {
-  padding-left: var(--rux-sidebar-rail-padding);
-}
-
-.o-app-layout__sidebar--left:not(.is-collapsed) .sidebar__rail,
 .o-app-layout__sidebar--right:not(.is-collapsed) .sidebar__rail {
   width: var(--rux-sidebar-rail-width);
   flex: 0 0 var(--rux-sidebar-rail-width);
+  border-radius: 0;
+  border-right: 1px solid var(--rux-debug-blue);
+  border-block: 1px solid var(--rux-debug-blue);
 }
 
 .sidebar__icon-btn {
@@ -187,9 +190,9 @@ body.right-rail-hidden .o-app-layout {
   height: 32px;
   flex-shrink: 0;
   box-sizing: border-box;
-  border-radius: var(--rux-sidebar-radius-icon-button);
+  border-radius: var(--rux-sidebar-icon-button-radius);
   background: transparent;
-  border: 1px solid var(--rux-sidebar-border-control);
+  border: 1px solid var(--rux-sidebar-control-border-color);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -302,6 +305,7 @@ body.right-rail-hidden .o-app-layout {
 
 .o-app-layout__sidebar--right .sidebar__content {
   order: 0;
+
 }
 
 .o-app-layout__sidebar.is-collapsed .sidebar__content {
@@ -320,10 +324,20 @@ body.right-rail-hidden .o-app-layout {
   width: var(--rux-sidebar-panel-width);
   margin-bottom: 0;
   background: var(--rux-bg-2);
-  border: 1px solid var(--rux-sidebar-border-card);
-  box-shadow: none;
-  border-radius: var(--rux-sidebar-radius-card);
+
   transition: none;
+}
+
+.o-app-layout__sidebar--right .sidebar__content > .rux-card {
+  box-shadow: var(--card-shadow-left);
+  border: 1px solid var(--rux-debug-red);
+border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
+}
+
+.o-app-layout__sidebar--left .sidebar__content > .rux-card {
+  box-shadow: var(--card-shadow-right);
+  border: 1px solid var(--rux-debug-red);
+  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) {
@@ -354,10 +368,19 @@ body.right-rail-hidden .o-app-layout {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   overflow: visible;
-  border-radius: var(--rux-sidebar-radius-slot);
+  border-radius: var(--rux-sidebar-slot-radius);
   /* Correct place for the header/body divider.
-     Do not put the panel's outer border or corner radius here; the card shell owns those. */
-  border-bottom: 1px solid var(--rux-sidebar-border-divider);
+     Do not put the panel's outer border or corner radius here; the card shell owns those.
+     Exception: the directional rules below apply the outer radius to the corner facing
+     center content only — the opposite corner (adjacent to the rail) stays square. */
+}
+
+.o-app-layout__sidebar--right .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
+  border-radius: var(--rux-sidebar-outer-radius) 0 0 0;
+}
+
+.o-app-layout__sidebar--left .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
+  border-radius: 0 var(--rux-sidebar-outer-radius) 0 0;
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-card__body {
@@ -369,7 +392,7 @@ body.right-rail-hidden .o-app-layout {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--rux-text-2);
-  padding-inline: var(--rux-sidebar-card-padding-x);
+  padding-inline: var(--rux-sidebar-card-padding-inline);
   background-color: var(--rux-bg-2);
 }
 
@@ -383,23 +406,21 @@ body.right-rail-hidden .o-app-layout {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   overflow: visible;
-  border-radius: var(--rux-sidebar-radius-slot);
   /* Correct place for the body/footer divider.
      Do not put the panel's outer border or corner radius here; the card shell owns those. */
-  border-top: 1px solid var(--rux-sidebar-border-divider);
 }
 
 /* ── Sidebar-Hosted Panel Content ───────────────────────────────────────── */
 
 /* Trip Editor panel */
 
-#tripInfoCard {
+.trip-editor-card {
   /* Trip Editor only customizes the sidebar card radius.
      The generic sidebar card rule owns surface, border, and clipping. */
-  border-radius: var(--rux-sidebar-radius-trip-editor);
+  border-radius: var(--rux-sidebar-outer-radius);
 }
 
-#tripInfoCard .rux-panel__header {
+.trip-editor-card .rux-panel__header {
   position: relative;
   top: auto;
   z-index: 20;
@@ -408,42 +429,43 @@ body.right-rail-hidden .o-app-layout {
   align-items: stretch;
   justify-content: flex-start;
   gap: 0;
-  height: var(--rux-trpedit-header-height);
-  padding: var(--rux-sidebar-trip-header-padding-y) var(--rux-sidebar-trip-header-padding-x) 0;
+  height: var(--rux-sidebar-trip-header-height);
+  padding: var(--rux-sidebar-trip-header-padding-block)
+    var(--rux-sidebar-trip-header-padding-inline) 0;
   box-sizing: border-box;
   background: var(--rux-bg-2);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  border-radius: var(--rux-sidebar-radius-trip-editor-inner);
+  border-radius: var(--rux-sidebar-trip-inner-radius);
   overflow: visible;
 }
 
-#tripInfoCard .rux-card__body {
-  border: 1px solid var(--rux-sidebar-border-divider);
-  border-radius: var(--rux-sidebar-radius-slot);
-  padding-top: 0;
+.trip-editor-card .rux-card__body {
+  border-block: 1px solid var(--rux-debug-green);
+  border-radius: var(--rux-sidebar-slot-radius);
+  padding: var(--rux-sidebar-trip-body-padding-block) var(--rux-sidebar-trip-body-padding-inline);
 }
 
-#tripInfoCard .form-section-card__label {
+.trip-editor-card .form-section-card__label {
   display: none;
 }
 
-#tripInfoCard .form-group > .rux-btn--toggle-grid {
+.trip-editor-card .form-group > .rux-btn--toggle-grid {
   margin-top: 0;
 }
 
-#tripInfoCard .rux-panel__footer,
-#tripInfoCard .rux-panel__footer--sticky {
+.trip-editor-card .rux-panel__footer,
+.trip-editor-card .rux-panel__footer--sticky {
   position: relative;
   bottom: auto;
-  gap: var(--rux-sidebar-card-padding-x);
+  gap: var(--rux-sidebar-card-padding-inline);
   flex-wrap: nowrap;
   background: var(--rux-bg-2);
-  border-radius: var(--rux-sidebar-radius-slot);
+  border-radius: var(--rux-sidebar-slot-radius);
 }
 
-#tripInfoCard .rux-panel__footer > .rux-btn {
+.trip-editor-card .rux-panel__footer > .rux-btn {
   flex: 1 1 0;
   min-width: 0;
 }
@@ -465,7 +487,7 @@ body.right-rail-hidden .o-app-layout {
   }
 }
 
-#tripInfoCard.is-loading::after {
+.trip-editor-card.is-loading::after {
   content: "";
   position: absolute;
   top: 0;
@@ -485,10 +507,6 @@ body.right-rail-hidden .o-app-layout {
 
 /* Notes panel */
 
-#notesWeekTitle.text-muted {
-  color: var(--rux-text-2);
-}
-
 .notes-textarea,
 .notes__textarea {
   font-family: "Indie Flower", cursive;
@@ -498,8 +516,8 @@ body.right-rail-hidden .o-app-layout {
   padding: var(--rux-sidebar-notes-padding);
   background: #fdf3c8;
   color: #181818;
-  border: 1px solid var(--rux-sidebar-border-control);
-  border-radius: var(--rux-sidebar-radius-control);
+  border: 1px solid var(--rux-sidebar-control-border-color);
+  border-radius: var(--rux-sidebar-control-radius);
   resize: none;
   flex: 1;
   width: auto;
@@ -509,7 +527,7 @@ body.right-rail-hidden .o-app-layout {
   scrollbar-width: none;
   -ms-overflow-style: none;
   outline: none;
-  margin: 0 var(--rux-sidebar-notes-inset-x);
+  margin: 0 var(--rux-sidebar-notes-inset-inline);
   transition: box-shadow 0.12s ease;
 }
 
@@ -524,7 +542,7 @@ body.right-rail-hidden .o-app-layout {
   box-shadow: var(--focus-ring) !important;
 }
 
-#notesCard .rux-card__body {
+.notes-card .rux-card__body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -532,7 +550,7 @@ body.right-rail-hidden .o-app-layout {
 
 .notes__footer {
   display: flex;
-  gap: var(--rux-sidebar-card-padding-x);
+  gap: var(--rux-sidebar-card-padding-inline);
   flex-wrap: nowrap;
 }
 
@@ -583,8 +601,8 @@ body.right-rail-hidden .o-app-layout {
 .quote-calculator__input,
 .quote-calculator__select {
   box-sizing: border-box;
-  border: 1px solid var(--rux-sidebar-border-control);
-  border-radius: var(--rux-sidebar-radius-control);
+  border: 1px solid var(--rux-sidebar-control-border-color);
+  border-radius: var(--rux-sidebar-control-radius);
 }
 
 .quote-calculator__input:focus,
@@ -636,11 +654,11 @@ body.right-rail-hidden .o-app-layout {
 
 .quote-calculator__select-mini {
   background-color: var(--rux-fld-bg);
-  border: 1px solid var(--rux-sidebar-border-control);
-  border-radius: var(--rux-sidebar-radius-control);
+  border: 1px solid var(--rux-sidebar-control-border-color);
+  border-radius: var(--rux-sidebar-control-radius);
   color: var(--rux-text-1);
   font-size: inherit;
-  padding: 0 var(--rux-sidebar-control-padding-x);
+  padding: 0 var(--rux-sidebar-control-padding-inline);
   outline: none;
   cursor: pointer;
   height: var(--rux-fld-height);
@@ -656,7 +674,7 @@ body.right-rail-hidden .o-app-layout {
 .quote-calculator__summary {
   padding: 0 !important;
   background: var(--rux-bg-2);
-  border-top: 1px solid var(--rux-sidebar-border-divider);
+  border-top: 1px solid var(--rux-sidebar-divider-border-color);
   margin-top: auto;
   display: flex;
   flex-direction: column;
@@ -670,7 +688,7 @@ body.right-rail-hidden .o-app-layout {
   align-items: center;
   height: 32px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--rux-sidebar-border-divider);
+  border-bottom: 1px solid var(--rux-sidebar-divider-border-color);
 }
 
 .quote-summary__label {
@@ -712,8 +730,8 @@ body.right-rail-hidden .o-app-layout {
   align-items: center;
   padding: 0 16px;
   background: var(--rux-bg-2);
-  border-top: 1px solid var(--rux-sidebar-border-divider);
-  border-bottom: 1px solid var(--rux-sidebar-border-divider) !important;
+  border-top: 1px solid var(--rux-sidebar-divider-border-color);
+  border-bottom: 1px solid var(--rux-sidebar-divider-border-color) !important;
 }
 
 .quote-summary__row--primary .quote-summary__label {
@@ -770,5 +788,5 @@ body.debug-surfaces .sidebar__content > .rux-card:not(.is-hidden) .rux-card__bod
      Body elements should not own production borders or shell radii. */
   outline: 1px solid var(--rux-debug-border-content);
   outline-offset: -1px;
-  border-radius: var(--rux-sidebar-radius-card);
+  border-radius: var(--rux-sidebar-outer-radius);
 }
