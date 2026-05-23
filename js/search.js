@@ -12,6 +12,7 @@ function openSearch() {
 
 function closeSearch() {
   dom.searchRow.hidden = true;
+  dom.searchDropdown.classList.remove("is-open");
   dom.searchDropdown.hidden = true;
   dom.searchInput.value = "";
   dom.searchToggleBtn.setAttribute("aria-pressed", "false");
@@ -31,12 +32,14 @@ function _positionDropdown() {
 
 async function _runSearch(query) {
   if (!query.trim()) {
+    dom.searchDropdown.classList.remove("is-open");
     dom.searchDropdown.hidden = true;
     return;
   }
   _positionDropdown();
   dom.searchDropdown.innerHTML = `<div class="search-dropdown__loading">Searching…</div>`;
   dom.searchDropdown.hidden = false;
+  requestAnimationFrame(() => dom.searchDropdown.classList.add("is-open"));
   try {
     const results = await api.searchTrips(query);
     _renderSearchResults(results);

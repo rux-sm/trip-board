@@ -42,6 +42,56 @@ if (document.readyState === "loading") {
   initThemeSystem();
 }
 
+// ── Debug surface outlines ────────────────────────────────────────────────
+(function initDebugSurfaces() {
+  const STORAGE_KEY = "debugSurfaces";
+
+  function syncButton(enabled) {
+    const btn = document.getElementById("profileDebugSurfacesToggle");
+    if (!btn) return;
+
+    btn.setAttribute("aria-pressed", String(enabled));
+    const icon = btn.querySelector(".material-symbols-outlined");
+    if (icon) icon.textContent = enabled ? "border_outer" : "border_clear";
+  }
+
+  function setDebugSurfaces(enabled, persist = true) {
+    document.body.classList.toggle("debug-surfaces", enabled);
+    syncButton(enabled);
+
+    if (!persist) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, enabled ? "1" : "0");
+    } catch { }
+  }
+
+  function toggleDebugSurfaces() {
+    setDebugSurfaces(!document.body.classList.contains("debug-surfaces"));
+  }
+
+  window.setDebugSurfaces = setDebugSurfaces;
+  window.syncDebugSurfacesToggle = () =>
+    syncButton(document.body.classList.contains("debug-surfaces"));
+
+  const init = () => {
+    let enabled = false;
+    try {
+      enabled = localStorage.getItem(STORAGE_KEY) === "1";
+    } catch { }
+
+    setDebugSurfaces(enabled, false);
+    document
+      .getElementById("profileDebugSurfacesToggle")
+      ?.addEventListener("click", toggleDebugSurfaces);
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
 // ── Empty-field class toggle (date/time inputs + default selects) ────
 (function initEmptyFieldTracking() {
   const DATE_TIME = 'input[type="date"], input[type="time"]';

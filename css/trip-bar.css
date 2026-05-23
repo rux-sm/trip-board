@@ -462,7 +462,7 @@
   --tripbar-r11-btn-bg:     oklch(0% 0 0 / 25%);
   --tripbar-r11-btn-height: 24px;
   --tripbar-r11-btn-width:  24px;
-  --tripbar-r11-btn-radius: var(--rux-radius-2);
+  --tripbar-r11-btn-radius: var(--rux-radius-md);
 }
 
 /* ==========================================================================

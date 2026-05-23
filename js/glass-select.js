@@ -1,6 +1,6 @@
 // ======================================================
 function wrapSelectInGlassDropdown(sel, opts) {
-  const { statusId, rebuildMenuOnOpen, cellClass, searchable } = opts || {};
+  const { statusId, rebuildMenuOnOpen, cellClass, searchable, useBusesNeededTray } = opts || {};
   const statusIds = new Set([
     "itineraryStatus",
     "contactStatus",
@@ -20,9 +20,10 @@ function wrapSelectInGlassDropdown(sel, opts) {
   trigger.setAttribute("aria-expanded", "false");
 
   const menu = document.createElement("div");
-  menu.className = "dropdown__menu";
+  menu.className = "dropdown__menu" + (useBusesNeededTray ? " buses-needed-dropdown" : "");
   menu.setAttribute("role", "listbox");
   menu.hidden = true;
+  let closeTimer = null;
 
   // Mutually Exclusive: Close when any other floating menu opens
   window.addEventListener("close-all-floating-menus", closeMenu);
@@ -107,6 +108,15 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
     if (statusId && statusIds.has(statusId)) updateStatusSelect(sel);
     trigger.classList.toggle("is-empty", !v || v === "None");
+    syncMenuSelection();
+  }
+
+  function syncMenuSelection() {
+    menu.querySelectorAll(".dropdown__item").forEach((btn) => {
+      const isSelected = btn.dataset.value === sel.value;
+      btn.classList.toggle("is-selected", isSelected);
+      btn.setAttribute("aria-selected", isSelected ? "true" : "false");
+    });
   }
 
   function populateMenu() {
@@ -146,21 +156,21 @@ function wrapSelectInGlassDropdown(sel, opts) {
       if (opt.disabled && !String(opt.value).trim()) return;
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "dropdown__item";
+      btn.className = "dropdown__item" + (useBusesNeededTray ? " buses-needed-option" : "");
       btn.setAttribute("role", "option");
       btn.dataset.value = opt.value;
 
       const v = String(opt.value).trim();
+      const isSelected = opt.value === sel.value;
+      btn.classList.toggle("is-selected", isSelected);
+      btn.setAttribute("aria-selected", isSelected ? "true" : "false");
       const lcValue = v.toLowerCase();
       // Add icon if applicable to the dropdown options
       const isStatusField =
         (statusId && statusIds.has(statusId)) || (sel.name && sel.name.endsWith("Status"));
       if (isStatusField && v) {
         // Apply status color class to button (icons removed, but colors remain via class)
-        const colorClass = getStatusColorClass(
-          statusId || "driverStatus",
-          lcValue,
-        );
+        const colorClass = getStatusColorClass(statusId || "driverStatus", lcValue);
         if (colorClass) {
           btn.classList.add(colorClass);
         }
@@ -201,12 +211,20 @@ function wrapSelectInGlassDropdown(sel, opts) {
   }
 
   function closeMenu() {
-    menu.hidden = true;
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    menu.classList.remove("is-open");
     menu.classList.remove("dropdown__menu--up");
     trigger.setAttribute("aria-expanded", "false");
     trigger.classList.remove("is-open");
     document.removeEventListener("click", outsideClick);
     document.removeEventListener("keydown", handleEscape);
+    closeTimer = setTimeout(() => {
+      menu.hidden = true;
+      closeTimer = null;
+    }, 160);
   }
 
   function handleEscape(e) {
@@ -240,10 +258,10 @@ function wrapSelectInGlassDropdown(sel, opts) {
     menu.style.minWidth = triggerRect.width + "px";
     if (openUpward) {
       menu.style.top = "auto";
-      menu.style.bottom = (window.innerHeight - triggerRect.top + gap) + "px";
+      menu.style.bottom = window.innerHeight - triggerRect.top + gap + "px";
       menu.style.maxHeight = Math.min(cssMaxH, spaceAbove) + "px";
     } else {
-      menu.style.top = (triggerRect.bottom + gap) + "px";
+      menu.style.top = triggerRect.bottom + gap + "px";
       menu.style.bottom = "auto";
       menu.style.maxHeight = Math.min(cssMaxH, spaceBelow) + "px";
     }
@@ -255,9 +273,15 @@ function wrapSelectInGlassDropdown(sel, opts) {
     e.stopPropagation();
     if (menu.hidden) {
       closeAllFloatingMenus();
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
       if (rebuildMenuOnOpen) populateMenu();
+      syncMenuSelection();
       positionMenu();
       menu.hidden = false;
+      requestAnimationFrame(() => menu.classList.add("is-open"));
       trigger.setAttribute("aria-expanded", "true");
       trigger.classList.add("is-open");
       document.addEventListener("click", outsideClick);
@@ -311,13 +335,14 @@ function initGlassSelects() {
 
   // Bus assignment and driver selects (dynamic options, rebuild menu on open)
   dom.busGrid?.querySelectorAll("select").forEach((sel) => {
+    if (sel.closest(".select-dropdown")) return;
     const isStatus = sel.name && sel.name.endsWith("Status");
     wrapSelectInGlassDropdown(sel, {
       rebuildMenuOnOpen: true,
       cellClass: isStatus ? "bus-assign__status-cell" : "bus-assign__cell",
       statusId: isStatus ? "driverStatus" : null,
       searchable: !isStatus,
+      useBusesNeededTray: true,
     });
   });
 }
-

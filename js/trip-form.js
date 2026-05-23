@@ -196,16 +196,21 @@ function updateInvoiceNumberColor() {
   const icon = numInput.closest(".invoice-num-wrap")?.querySelector(".invoice-num-icon");
   numInput.classList.remove("status-pending", "status-assigned", "status-ok");
   if (icon) icon.style.color = "";
-  const invoiceStatus = String($("invoiceStatus")?.value || "").trim().toLowerCase();
+  const invoiceStatus = String($("invoiceStatus")?.value || "")
+    .trim()
+    .toLowerCase();
   if (!invoiceStatus) return;
   const hasNumber = !!numInput.value.trim();
   let cls, iconColor;
   if (invoiceStatus === "paid in full") {
-    cls = "status-ok"; iconColor = "var(--rux-status-green)";
+    cls = "status-ok";
+    iconColor = "var(--rux-status-green)";
   } else if (hasNumber) {
-    cls = "status-assigned"; iconColor = "var(--rux-status-yellow)";
+    cls = "status-assigned";
+    iconColor = "var(--rux-status-yellow)";
   } else {
-    cls = "status-pending"; iconColor = "var(--rux-status-red)";
+    cls = "status-pending";
+    iconColor = "var(--rux-status-red)";
   }
   numInput.classList.add(cls);
   if (icon) icon.style.color = iconColor;
@@ -470,9 +475,9 @@ function getDriverOptions() {
 }
 
 const DRIVER_STATUS_STATES = [
-  { value: "Pending",   cls: "status-pending"  },
-  { value: "Assigned",  cls: "status-assigned" },
-  { value: "Confirmed", cls: "status-ok"       },
+  { value: "Pending", cls: "status-pending" },
+  { value: "Assigned", cls: "status-assigned" },
+  { value: "Confirmed", cls: "status-ok" },
 ];
 
 function getDriverStatusRoleIcon(name) {
@@ -494,7 +499,7 @@ function makeDriverStatusSelect(name) {
   btn.innerHTML = `<span class="material-symbols-outlined">${getDriverStatusRoleIcon(name)}</span>`;
 
   const syncBtn = () => {
-    const state = DRIVER_STATUS_STATES.find(s => s.value === hidden.value);
+    const state = DRIVER_STATUS_STATES.find((s) => s.value === hidden.value);
     const visualState = state || DRIVER_STATUS_STATES[0];
     btn.querySelector("span").textContent = getDriverStatusRoleIcon(name);
     btn.className = `driver-status-cycle ${visualState.cls}`;
@@ -503,7 +508,7 @@ function makeDriverStatusSelect(name) {
   };
 
   btn.addEventListener("click", () => {
-    const cur = DRIVER_STATUS_STATES.findIndex(s => s.value === hidden.value);
+    const cur = DRIVER_STATUS_STATES.findIndex((s) => s.value === hidden.value);
     const next = DRIVER_STATUS_STATES[(cur + 1) % DRIVER_STATUS_STATES.length];
     hidden.value = next.value;
     syncBtn();
@@ -517,7 +522,10 @@ function makeDriverStatusSelect(name) {
   const proto = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
   Object.defineProperty(hidden, "value", {
     get: () => proto.get.call(hidden),
-    set: (v) => { proto.set.call(hidden, v); syncBtn(); },
+    set: (v) => {
+      proto.set.call(hidden, v);
+      syncBtn();
+    },
     configurable: true,
   });
 
@@ -528,7 +536,10 @@ function makeDriverStatusSelect(name) {
 
   // Proxy disabled to both button and hidden
   Object.defineProperty(wrap, "disabled", {
-    set: (v) => { btn.disabled = v; hidden.disabled = v; },
+    set: (v) => {
+      btn.disabled = v;
+      hidden.disabled = v;
+    },
     get: () => btn.disabled,
     configurable: true,
   });
@@ -536,7 +547,9 @@ function makeDriverStatusSelect(name) {
   // Proxy value/dispatchEvent through to hidden input
   Object.defineProperty(wrap, "value", {
     get: () => hidden.value,
-    set: (v) => { hidden.value = v; },
+    set: (v) => {
+      hidden.value = v;
+    },
     configurable: true,
   });
 
@@ -551,7 +564,6 @@ function syncBusSelectEmptyState() {
     const v = (el.value ?? "").trim();
     const cell = el.closest(".select-dropdown") || el;
     cell.classList.toggle("is-empty", !v || v === "None");
-
   });
   checkDriverDoubleBookings();
 }
@@ -571,14 +583,14 @@ function refreshBusSelectOptions() {
 
 function updateBusRowVisibility() {
   const raw = Number(dom.busesNeeded.value);
-  const n   = raw > 0 ? Math.min(10, raw) : 0;
+  const n = raw > 0 ? Math.min(10, raw) : 0;
 
   const wantsD2 = document.getElementById("reqCoDriver")?.getAttribute("aria-pressed") === "true";
   const wantsD3 = document.getElementById("reqRelief")?.getAttribute("aria-pressed") === "true";
   const wantsD4 = document.getElementById("reqRelief2")?.getAttribute("aria-pressed") === "true";
 
   state.busRows.forEach((r, idx) => {
-    const show    = idx < n || idx === 0;
+    const show = idx < n || idx === 0;
     const enabled = raw > 0 && idx < n;
 
     const showD2 = show && (wantsD2 || (r.d2Sel.value && r.d2Sel.value !== "None"));
@@ -591,26 +603,34 @@ function updateBusRowVisibility() {
     r.d3Row.classList.toggle("is-hidden", !showD3);
     r.d4Row.classList.toggle("is-hidden", !showD4);
 
-    r.busSel.disabled      = !enabled;
-    r.d1Sel.disabled       = !enabled;
+    r.busSel.disabled = !enabled;
+    r.d1Sel.disabled = !enabled;
     r.d1StatusSel.disabled = !enabled;
-    r.d1Pay.disabled       = !enabled;
-    r.d2Sel.disabled       = !enabled || !showD2;
+    r.d1Pay.disabled = !enabled;
+    r.d2Sel.disabled = !enabled || !showD2;
     r.d2StatusSel.disabled = !enabled || !showD2;
-    r.d2Pay.disabled       = !enabled || !showD2;
-    r.d3Sel.disabled       = !enabled || !showD3;
+    r.d2Pay.disabled = !enabled || !showD2;
+    r.d3Sel.disabled = !enabled || !showD3;
     r.d3StatusSel.disabled = !enabled || !showD3;
-    r.d3Pay.disabled       = !enabled || !showD3;
-    r.d4Sel.disabled       = !enabled || !showD4;
+    r.d3Pay.disabled = !enabled || !showD3;
+    r.d4Sel.disabled = !enabled || !showD4;
     r.d4StatusSel.disabled = !enabled || !showD4;
-    r.d4Pay.disabled       = !enabled || !showD4;
+    r.d4Pay.disabled = !enabled || !showD4;
 
     if (!show) {
       r.busSel.value = "None";
-      r.d1Sel.value = "None"; r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
-      r.d2Sel.value = "None"; r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
-      r.d3Sel.value = "None"; r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
-      r.d4Sel.value = "None"; r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
+      r.d1Sel.value = "None";
+      r.d1StatusSel.value = "";
+      if (r.d1Pay) r.d1Pay.value = "";
+      r.d2Sel.value = "None";
+      r.d2StatusSel.value = "";
+      if (r.d2Pay) r.d2Pay.value = "";
+      r.d3Sel.value = "None";
+      r.d3StatusSel.value = "";
+      if (r.d3Pay) r.d3Pay.value = "";
+      r.d4Sel.value = "None";
+      r.d4StatusSel.value = "";
+      if (r.d4Pay) r.d4Pay.value = "";
     }
   });
 
@@ -665,19 +685,19 @@ function _makeDriverRow(dSel, dStatusSel, payInput) {
 }
 
 function _buildOneBusRow(i) {
-  const busSel      = makeSelect(`bus${i}`);
-  const d1Sel       = makeSelect(`bus${i}_driver1`);
+  const busSel = makeSelect(`bus${i}`);
+  const d1Sel = makeSelect(`bus${i}_driver1`);
   const d1StatusSel = makeDriverStatusSelect(`bus${i}_driver1Status`);
-  const d1Pay       = _makePayInput(`bus${i}_driver1Pay`);
-  const d2Sel       = makeSelect(`bus${i}_driver2`);
+  const d1Pay = _makePayInput(`bus${i}_driver1Pay`);
+  const d2Sel = makeSelect(`bus${i}_driver2`);
   const d2StatusSel = makeDriverStatusSelect(`bus${i}_driver2Status`);
-  const d2Pay       = _makePayInput(`bus${i}_driver2Pay`);
-  const d3Sel       = makeSelect(`bus${i}_driver3`);
+  const d2Pay = _makePayInput(`bus${i}_driver2Pay`);
+  const d3Sel = makeSelect(`bus${i}_driver3`);
   const d3StatusSel = makeDriverStatusSelect(`bus${i}_driver3Status`);
-  const d3Pay       = _makePayInput(`bus${i}_driver3Pay`);
-  const d4Sel       = makeSelect(`bus${i}_driver4`);
+  const d3Pay = _makePayInput(`bus${i}_driver3Pay`);
+  const d4Sel = makeSelect(`bus${i}_driver4`);
   const d4StatusSel = makeDriverStatusSelect(`bus${i}_driver4Status`);
-  const d4Pay       = _makePayInput(`bus${i}_driver4Pay`);
+  const d4Pay = _makePayInput(`bus${i}_driver4Pay`);
 
   const busCell = document.createElement("div");
   busCell.className = "bus-assign__bus-cell";
@@ -697,12 +717,52 @@ function _buildOneBusRow(i) {
   rowGroup.append(busCell, driverStack);
 
   return {
-    rowGroup, busCell,
-    busSel, d1Sel, d1StatusSel, d1Pay, d1Row,
-    d2Sel, d2StatusSel, d2Pay, d2Row,
-    d3Sel, d3StatusSel, d3Pay, d3Row,
-    d4Sel, d4StatusSel, d4Pay, d4Row,
+    rowGroup,
+    busCell,
+    busSel,
+    d1Sel,
+    d1StatusSel,
+    d1Pay,
+    d1Row,
+    d2Sel,
+    d2StatusSel,
+    d2Pay,
+    d2Row,
+    d3Sel,
+    d3StatusSel,
+    d3Pay,
+    d3Row,
+    d4Sel,
+    d4StatusSel,
+    d4Pay,
+    d4Row,
   };
+}
+
+function _wrapBusAssignmentSelects(row) {
+  if (typeof wrapSelectInGlassDropdown !== "function") return;
+
+  wrapSelectInGlassDropdown(row.busSel, {
+    rebuildMenuOnOpen: true,
+    cellClass: "bus-assign__cell",
+    searchable: false,
+    useBusesNeededTray: true,
+  });
+
+  [row.d1Sel, row.d2Sel, row.d3Sel, row.d4Sel].forEach((sel) => {
+    wrapSelectInGlassDropdown(sel, {
+      rebuildMenuOnOpen: true,
+      cellClass: "bus-assign__cell",
+      searchable: true,
+      useBusesNeededTray: true,
+    });
+  });
+}
+
+function _syncWrappedBusAssignmentSelects(row) {
+  [row.busSel, row.d1Sel, row.d2Sel, row.d3Sel, row.d4Sel].forEach((sel) => {
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
 }
 
 function buildBusRowsOnce() {
@@ -716,14 +776,18 @@ function buildBusRowsOnce() {
 function rebuildBusRows(targetN) {
   const n = Math.min(10, Math.max(0, targetN));
   const currentN = state.busRows.length;
+  const addedRows = [];
 
   if (n > currentN) {
     for (let i = currentN + 1; i <= n; i++) {
       const row = _buildOneBusRow(i);
       dom.busGrid.appendChild(row.rowGroup);
+      _wrapBusAssignmentSelects(row);
       state.busRows.push(row);
+      addedRows.push(row);
     }
     refreshBusSelectOptions();
+    addedRows.forEach(_syncWrappedBusAssignmentSelects);
   } else if (n < currentN) {
     for (let i = currentN - 1; i >= n; i--) {
       state.busRows[i].rowGroup.remove();
@@ -736,7 +800,6 @@ function rebuildBusRows(targetN) {
   syncBusPanelState();
   refreshEmptyStateUI();
 }
-
 
 // ======================================================
 // 26) TRIP MODE + CLEAR
@@ -766,18 +829,22 @@ function setModeEdit(tripKey, tripId) {
 function clearTripInfoCardForNextTrip() {
   const conflictBanner = document.getElementById("tripConflictBanner");
   if (conflictBanner) conflictBanner.classList.add("is-hidden");
-  
+
   dom.tripForm.reset();
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
-    r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
+    r.d1StatusSel.value = "";
+    if (r.d1Pay) r.d1Pay.value = "";
     r.d2Sel.value = "None";
-    r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
+    r.d2StatusSel.value = "";
+    if (r.d2Pay) r.d2Pay.value = "";
     r.d3Sel.value = "None";
-    r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
+    r.d3StatusSel.value = "";
+    if (r.d3Pay) r.d3Pay.value = "";
     r.d4Sel.value = "None";
-    r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
+    r.d4StatusSel.value = "";
+    if (r.d4Pay) r.d4Pay.value = "";
     // Fire change events so custom dropdown triggers update their display labels
     r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
@@ -806,16 +873,13 @@ function clearTripInfoCardForNextTrip() {
   syncBusSegButtons();
   rebuildBusRows(0);
 
-  ["paymentStatus", "driverStatus", "invoiceStatus"].forEach(
-    (id) => updateStatusSelect($(id)),
-  );
+  ["paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) => updateStatusSelect($(id)));
   updateInvoiceNumberVisibility();
 
   // Form has been cleared intentionally; mark as not dirty.
   state.tripFormDirty = false;
   refreshShortcutRow();
 }
-
 
 function setTripFormFromState(tripKey) {
   const t = state.tripByKey?.[tripKey];
@@ -849,12 +913,7 @@ function setTripFormFromState(tripKey) {
 
   if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
-  [
-    "paymentStatus",
-    "driverStatus",
-    "invoiceStatus",
-    "tripColor",
-  ].forEach((id) => {
+  ["paymentStatus", "driverStatus", "invoiceStatus", "tripColor"].forEach((id) => {
     const el = $(id);
     if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
   });
@@ -872,13 +931,17 @@ function setTripFormFromState(tripKey) {
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
-    r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
+    r.d1StatusSel.value = "";
+    if (r.d1Pay) r.d1Pay.value = "";
     r.d2Sel.value = "None";
-    r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
+    r.d2StatusSel.value = "";
+    if (r.d2Pay) r.d2Pay.value = "";
     r.d3Sel.value = "None";
-    r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
+    r.d3StatusSel.value = "";
+    if (r.d3Pay) r.d3Pay.value = "";
     r.d4Sel.value = "None";
-    r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
+    r.d4StatusSel.value = "";
+    if (r.d4Pay) r.d4Pay.value = "";
   });
   assigns.forEach((a, i) => {
     const row = state.busRows[i];
@@ -955,7 +1018,7 @@ function populateFormFromData(t, assigns) {
   if ($("paymentType")) $("paymentType").value = t.paymentType || "";
   if ($("estimatedMileage")) $("estimatedMileage").value = t.estimatedMileage || "";
   if ($("drivingHours")) $("drivingHours").value = t.drivingHours || "";
-  if ($("onDutyHours"))  $("onDutyHours").value  = t.onDutyHours  || "";
+  if ($("onDutyHours")) $("onDutyHours").value = t.onDutyHours || "";
   if ($("quotedPrice")) $("quotedPrice").value = String(t.quotedPrice || "");
   if ($("tripMiles")) $("tripMiles").value = t.tripMiles || "";
   if ($("datePaid")) $("datePaid").value = String(t.datePaid || "").slice(0, 10);
@@ -969,9 +1032,12 @@ function populateFormFromData(t, assigns) {
   if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
   if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
-  const effectiveBusCount = (t.busesNeeded && Number(t.busesNeeded) > 0)
-    ? String(t.busesNeeded)
-    : assigns?.length > 0 ? String(assigns.length) : "";
+  const effectiveBusCount =
+    t.busesNeeded && Number(t.busesNeeded) > 0
+      ? String(t.busesNeeded)
+      : assigns?.length > 0
+        ? String(assigns.length)
+        : "";
   setBusesNeededAndSync(effectiveBusCount);
   dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
   setModeEdit(String(t.tripKey), String(t.tripId || ""));
@@ -979,10 +1045,18 @@ function populateFormFromData(t, assigns) {
   const fallbackDriverStatus = t.driverStatus || "Pending";
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
-    r.d1Sel.value = "None"; r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
-    r.d2Sel.value = "None"; r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
-    r.d3Sel.value = "None"; r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
-    r.d4Sel.value = "None"; r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
+    r.d1Sel.value = "None";
+    r.d1StatusSel.value = "";
+    if (r.d1Pay) r.d1Pay.value = "";
+    r.d2Sel.value = "None";
+    r.d2StatusSel.value = "";
+    if (r.d2Pay) r.d2Pay.value = "";
+    r.d3Sel.value = "None";
+    r.d3StatusSel.value = "";
+    if (r.d3Pay) r.d3Pay.value = "";
+    r.d4Sel.value = "None";
+    r.d4StatusSel.value = "";
+    if (r.d4Pay) r.d4Pay.value = "";
   });
 
   refreshBusSelectOptions();
@@ -992,11 +1066,11 @@ function populateFormFromData(t, assigns) {
     if (n < 1 || n > 10) return;
     const row = state.busRows[n - 1];
     if (!row) return;
-    if (a.busId)   row.busSel.value = String(a.busId).trim();
-    if (a.driver1) row.d1Sel.value  = String(a.driver1).trim();
-    if (a.driver2) row.d2Sel.value  = String(a.driver2).trim();
-    if (a.driver3) row.d3Sel.value  = String(a.driver3).trim();
-    if (a.driver4) row.d4Sel.value  = String(a.driver4).trim();
+    if (a.busId) row.busSel.value = String(a.busId).trim();
+    if (a.driver1) row.d1Sel.value = String(a.driver1).trim();
+    if (a.driver2) row.d2Sel.value = String(a.driver2).trim();
+    if (a.driver3) row.d3Sel.value = String(a.driver3).trim();
+    if (a.driver4) row.d4Sel.value = String(a.driver4).trim();
     row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
     row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
     row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
@@ -1029,7 +1103,7 @@ function populateFormFromData(t, assigns) {
 
 function refreshShortcutRow() {
   const key = dom.tripKey?.value;
-  const pdfUrl = key ? (state.tripByKey?.[key]?.itineraryPdfUrl || "") : "";
+  const pdfUrl = key ? state.tripByKey?.[key]?.itineraryPdfUrl || "" : "";
   const pdfBtn = dom.shortcutPdfBtn;
   if (!pdfBtn) return;
   const glyph = pdfBtn.querySelector(".material-symbols-outlined");
@@ -1051,7 +1125,10 @@ async function openTripForEdit(tripKey) {
     return;
   }
   tripLoadInFlight = true;
-  if (isMobileOnly()) { tripLoadInFlight = false; return openTripDetailsModal(tripKey); }
+  if (isMobileOnly()) {
+    tripLoadInFlight = false;
+    return openTripDetailsModal(tripKey);
+  }
 
   showHeaderStatusNotice("Loading trip…", "loading", {
     sticky: true,
@@ -1059,7 +1136,12 @@ async function openTripForEdit(tripKey) {
     priority: 55,
     force: true,
   });
-  startProgressCreep({ from: 5, to: 80, label: "Loading trip… ", toastOpts: { source: "trip-load", priority: 55, force: true } });
+  startProgressCreep({
+    from: 5,
+    to: 80,
+    label: "Loading trip… ",
+    toastOpts: { source: "trip-load", priority: 55, force: true },
+  });
 
   // Disable/enable all form inputs during load — defined outside try so finally can call it
   const setFormDisabled = (disabled) => {
@@ -1067,44 +1149,61 @@ async function openTripForEdit(tripKey) {
     dom.tripForm.querySelectorAll("input, select, textarea").forEach((el) => {
       el.disabled = disabled;
     });
-    ["oneWay", "req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard"].forEach((id) => {
+    [
+      "oneWay",
+      "req56Pass",
+      "reqSleeper",
+      "reqLift",
+      "reqRelief",
+      "reqRelief2",
+      "reqCoDriver",
+      "reqHotel",
+      "reqFuelCard",
+    ].forEach((id) => {
       const btn = document.getElementById(id);
       if (btn) btn.disabled = disabled;
     });
   };
 
   try {
+    const conflictBanner = document.getElementById("tripConflictBanner");
+    if (conflictBanner) conflictBanner.classList.add("is-hidden");
 
-  const conflictBanner = document.getElementById("tripConflictBanner");
-  if (conflictBanner) conflictBanner.classList.add("is-hidden");
+    // If the trip panel is already open, keep old data visible but lock all inputs.
+    // If the panel is closed, it will open after the fetch with fresh data.
+    const panelAlreadyOpen = getCardPanel("trip") !== null;
 
-  // If the trip panel is already open, keep old data visible but lock all inputs.
-  // If the panel is closed, it will open after the fetch with fresh data.
-  const panelAlreadyOpen = getCardPanel("trip") !== null;
+    // Helper to populate the form fully
+    // populateFormFromData is now a module-level function above openTripForEdit
 
-  // Helper to populate the form fully
-  // populateFormFromData is now a module-level function above openTripForEdit
-
-  if (panelAlreadyOpen) {
-    // Panel is visible — lock inputs so old data stays readable but not editable
-    setFormDisabled(true);
-  } else {
-    // Panel is closed — blank the form while we fetch
-    if (dom.tripForm) dom.tripForm.reset();
-    refreshShortcutRow();
-    state.busRows.forEach((r) => {
-      r.busSel.value = "None";
-      r.d1Sel.value = "None"; r.d1StatusSel.value = ""; if (r.d1Pay) r.d1Pay.value = "";
-      r.d2Sel.value = "None"; r.d2StatusSel.value = ""; if (r.d2Pay) r.d2Pay.value = "";
-      r.d3Sel.value = "None"; r.d3StatusSel.value = ""; if (r.d3Pay) r.d3Pay.value = "";
-      r.d4Sel.value = "None"; r.d4StatusSel.value = ""; if (r.d4Pay) r.d4Pay.value = "";
-    });
-    $("tripIdBadge").textContent = "";
-    $("tripIdBadge").classList.add("is-hidden");
-    updateBusRowVisibility();
-  }
-  dom.saveBtn.disabled = true;
-  if (dom.deleteBtn) dom.deleteBtn.disabled = true;
+    if (panelAlreadyOpen) {
+      // Panel is visible — lock inputs so old data stays readable but not editable
+      setFormDisabled(true);
+    } else {
+      // Panel is closed — blank the form while we fetch
+      if (dom.tripForm) dom.tripForm.reset();
+      refreshShortcutRow();
+      state.busRows.forEach((r) => {
+        r.busSel.value = "None";
+        r.d1Sel.value = "None";
+        r.d1StatusSel.value = "";
+        if (r.d1Pay) r.d1Pay.value = "";
+        r.d2Sel.value = "None";
+        r.d2StatusSel.value = "";
+        if (r.d2Pay) r.d2Pay.value = "";
+        r.d3Sel.value = "None";
+        r.d3StatusSel.value = "";
+        if (r.d3Pay) r.d3Pay.value = "";
+        r.d4Sel.value = "None";
+        r.d4StatusSel.value = "";
+        if (r.d4Pay) r.d4Pay.value = "";
+      });
+      $("tripIdBadge").textContent = "";
+      $("tripIdBadge").classList.add("is-hidden");
+      updateBusRowVisibility();
+    }
+    dom.saveBtn.disabled = true;
+    if (dom.deleteBtn) dom.deleteBtn.disabled = true;
 
     const startTime = Date.now();
 
@@ -1130,7 +1229,9 @@ async function openTripForEdit(tripKey) {
     if (!serverTrip) throw new Error("Trip not found");
     const rawAssigns = localAssigns.length
       ? localAssigns
-      : (assignResp?.ok && assignResp.assignments?.length ? assignResp.assignments : []);
+      : assignResp?.ok && assignResp.assignments?.length
+        ? assignResp.assignments
+        : [];
 
     // Fill empty driver/status fields from weekData local state — guards against
     // getBusAssignments returning a partial record (transient GAS error, partial write)
@@ -1138,24 +1239,34 @@ async function openTripForEdit(tripKey) {
     const mergedAssigns = rawAssigns.map((a) => {
       const normalizedA = normalizeAssignment(a);
       // Find local assignment by busNumber first, then by busId as fallback
-      let local = localAssigns.find((l) => Number(l.busNumber) === normalizedA.busNumber && normalizedA.busNumber > 0);
+      let local = localAssigns.find(
+        (l) => Number(l.busNumber) === normalizedA.busNumber && normalizedA.busNumber > 0,
+      );
       if (!local && normalizedA.busId) {
         local = localAssigns.find((l) => l.busId === normalizedA.busId);
       }
       const merged = {
         ...normalizedA,
-        driver1:       normalizedA.driver1       || local?.driver1       || "",
-        driver2:       normalizedA.driver2       || local?.driver2       || "",
-        driver3:       normalizedA.driver3       || local?.driver3       || "",
-        driver4:       normalizedA.driver4       || local?.driver4       || "",
+        driver1: normalizedA.driver1 || local?.driver1 || "",
+        driver2: normalizedA.driver2 || local?.driver2 || "",
+        driver3: normalizedA.driver3 || local?.driver3 || "",
+        driver4: normalizedA.driver4 || local?.driver4 || "",
         driver1Status: normalizedA.driver1Status || local?.driver1Status || "",
         driver2Status: normalizedA.driver2Status || local?.driver2Status || "",
         driver3Status: normalizedA.driver3Status || local?.driver3Status || "",
         driver4Status: normalizedA.driver4Status || local?.driver4Status || "",
       };
       // Log if local fallback filled missing data
-      if (local && (!normalizedA.driver1 || !normalizedA.driver2 || !normalizedA.driver3 || !normalizedA.driver4)) {
-        console.warn(`Trip ${tripKey}: Merged assignment for bus ${normalizedA.busId || normalizedA.busNumber} using local fallback data.`);
+      if (
+        local &&
+        (!normalizedA.driver1 ||
+          !normalizedA.driver2 ||
+          !normalizedA.driver3 ||
+          !normalizedA.driver4)
+      ) {
+        console.warn(
+          `Trip ${tripKey}: Merged assignment for bus ${normalizedA.busId || normalizedA.busNumber} using local fallback data.`,
+        );
       }
       return merged;
     });
@@ -1190,8 +1301,10 @@ async function openTripForEdit(tripKey) {
     stopProgressCreep();
     tripLoadInFlight = false;
     // Safety net: if neither success nor error notice replaced the loading bar, clear it now.
-    if (state.activeStatusNotice?.source === "trip-load" &&
-        state.activeStatusNotice?.entry?.mode === "loading") {
+    if (
+      state.activeStatusNotice?.source === "trip-load" &&
+      state.activeStatusNotice?.entry?.mode === "loading"
+    ) {
       toastHide(0, { source: "trip-load" });
     }
     setFormDisabled(false);

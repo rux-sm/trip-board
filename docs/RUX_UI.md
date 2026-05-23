@@ -211,7 +211,7 @@ Still referenced in buttons, toggle, header actions, and light theme overrides:
 | Form / Fields | `form.css` | `--field-*` | 🔄 Partial |
 | Layout | `layout.css` | `--size-*`, `--panel-width` | 🔄 Partial |
 | Modals | `modals.css` | (none yet) | ❌ Not started |
-| Dropdowns | `dropdown.css` | (none yet) | ❌ Not started |
+| Dropdowns | `dropdown.css` | radius + motion scale applied | 🔄 Partial |
 | Schedule grid | `schedule.css` | `--schedule-*` | 🔄 Partial |
 | Primitives | `primitives.css` | (mixed) | 🔄 Partial |
 | Typography | `base.css` | heading tokens done | 🔄 Missing body/label |
@@ -255,57 +255,57 @@ Based on an audit of every structural container in the app, **8px is the consist
 - 16px appears as *internal body padding* inside containers, not as the optical gap between curves
 - At depth 3–4, the gap halves to **4px** (`--rux-space-xs`) for micro-elements like badges
 
-The scale is a clean halving sequence — every step is exactly `−8px` (or `−4px` at the micro level):
+The active scale is intentionally small and named. Optical radius adjustments happen at the component level when nested spacing requires them:
 
 ### The Rux Scale
 
 ```
-Depth 0 │ --rux-radius-xl   24px │ Outermost: modals, pill buttons, floating cards
-Depth 1 │ --rux-radius-lg   16px │ Panels, cards              (24 − 8)
-Depth 2 │ --rux-radius-md    8px │ Controls: buttons, inputs  (16 − 8)
-Depth 3 │ --rux-radius-sm    4px │ Nested controls            ( 8 − 4)
-Depth 4 │ --rux-radius-xs    2px │ Atoms: badges, chips       ( 4 − 2)
-        │ --rux-radius-pill 9999px│ Full pill
-        │ --rux-radius-none   0px │ Square
+Depth 0 │ --rux-radius-xl   28px │ Outermost: modals, sheets, floating surfaces
+Depth 1 │ --rux-radius-lg   20px │ Panels, cards, sidebars
+Depth 2 │ --rux-radius-md   12px │ Grouped sections inside cards
+Depth 3 │ --rux-radius-sm    8px │ Controls: buttons, inputs, selects
+Depth 4 │ --rux-radius-xs    0px │ Square atoms, badges, compact slots
 ```
 
 **Rule of thumb:** Every time you nest something with 8px of visible gap, step down one level in the scale. Every time you nest with 4px of visible gap, step down one level at the micro end.
 
-### Semantic Aliases (use these in component CSS)
+### Semantic Aliases
+
+The named scale above is the target for new component tokens. Some existing semantic aliases still preserve older visual sizes during migration; convert them deliberately during an optical-radius pass rather than changing the whole app accidentally.
 
 | Token | Maps to | Use for |
 |---|---|---|
-| `--rux-radius-overlay` | `--rux-radius-xl` | Modals, sheets, popovers |
-| `--rux-radius-surface` | `--rux-radius-lg` | Cards, panels, sidebars |
-| `--rux-radius-section` | `--rux-radius-md` | Grouped sections inside cards |
-| `--rux-radius-control` | `--rux-radius-sm` | Inputs, selects, toolbar buttons |
+| `--rux-radius-overlay` | migration alias | Modals, sheets, popovers |
+| `--rux-radius-surface` | migration alias | Cards, panels, sidebars |
+| `--rux-radius-section` | migration alias | Grouped sections inside cards |
+| `--rux-radius-control` | migration alias | Inputs, selects |
 | `--rux-radius-badge` | `--rux-radius-xs` | Chips, tags, mini-badges |
-| `--rux-radius-button` | `--rux-radius-xl` | Pill/squircle buttons |
+| `--rux-radius-button` | `--rux-radius-md` | All button families |
 
 ### Usage Example
 
 ```css
 /* A card panel (depth 1) */
 .card {
-  border-radius: var(--rux-radius-surface);   /* 16px */
+  border-radius: var(--rux-radius-surface);
   padding: 12px;
   corner-shape: squircle;
 }
 
 /* A section grouped inside the card (depth 2) */
 .card__section {
-  border-radius: var(--rux-radius-section);   /* 10px — 16 minus ~6px gap */
+  border-radius: var(--rux-radius-section);
   corner-shape: squircle;
 }
 
 /* An input inside the section (depth 3) */
 .card__section input {
-  border-radius: var(--rux-radius-control);   /* 6px — 10 minus ~4px gap */
+  border-radius: var(--rux-radius-control);
 }
 
 /* A badge inside the input (depth 4) */
 .badge {
-  border-radius: var(--rux-radius-badge);     /* 3px — 6 minus ~3px gap */
+  border-radius: var(--rux-radius-badge);
 }
 ```
 
@@ -323,13 +323,13 @@ Apply `corner-shape: squircle` consistently at all depth levels for visual coher
 ### Migration Checklist — Optical Radius
 
 - [x] `--rux-radius-*` tokens defined in variables.css
-- [x] `--rux-radius-button` applied in button.css
+- [x] Button families use `--rux-radius-md`
 - [ ] Cards / panels → use `--rux-radius-surface`
 - [ ] Modals → use `--rux-radius-overlay`
 - [ ] Form inputs / selects → use `--rux-radius-control`
 - [ ] Badges / chips / tags → use `--rux-radius-badge`
 - [ ] Trip bar radius → audit and assign correct depth
-- [ ] Dropdown menus → use `--rux-radius-surface`
+- [x] Dropdown/context shells use `--rux-radius-lg`; triggers/items use `--rux-radius-md`
 - [ ] Replace remaining hardcoded `border-radius` values across all CSS files
 
 ---

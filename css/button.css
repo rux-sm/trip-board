@@ -23,7 +23,7 @@
   --rux-btn-hover-lift: 0.1;
 
   --rux-btn-height: 32px;
-  --rux-btn-radius: var(--rux-radius-button);
+  --rux-btn-radius: var(--rux-radius-md);
   --rux-btn-padding: 0 12px;
   --rux-btn-gap: 4px;
 

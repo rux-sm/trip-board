@@ -1288,7 +1288,7 @@
   gap: var(--rux-space-3);
   padding: var(--rux-space-3);
   border: 0;
-  border-radius: var(--rux-radius-2);
+  border-radius: var(--rux-radius-md);
   background: transparent;
   color: var(--rux-text-1);
   text-align: left;
@@ -1379,6 +1379,7 @@
   width: 100%;
   padding: var(--rux-space-3) var(--rux-space-3) var(--rux-space-1);
   border: 0;
+  border-radius: var(--rux-radius-md);
   background: transparent;
   color: var(--rux-text-1);
   text-align: left;
@@ -1516,7 +1517,7 @@
   margin: 0 var(--rux-space-3) var(--rux-space-2);
   place-items: center;
   border: 1px solid oklch(100% 0 0 / 6%);
-  border-radius: 8px;
+  border-radius: var(--rux-radius-md);
   background: oklch(24% 0.012 260);
   color: var(--rux-text-2);
   cursor: pointer;
@@ -1584,7 +1585,7 @@
   padding: 0 6px;
   overflow: hidden;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--rux-radius-md);
   background: transparent;
   color: var(--rux-text-2);
   cursor: pointer;

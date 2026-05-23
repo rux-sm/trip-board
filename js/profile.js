@@ -224,6 +224,10 @@ function _syncPrefToggles() {
     const isCompact = document.body.classList.contains('bars-compact');
     compactBtn.setAttribute('aria-pressed', String(isCompact));
   }
+
+  if (typeof window.syncDebugSurfacesToggle === 'function') {
+    window.syncDebugSurfacesToggle();
+  }
 }
 
 // ── Photo upload ──────────────────────────────────────────────────────────────

@@ -1,10 +1,6 @@
 /* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
 
 :root {
-
-  --rux-radius-lg: 20px;
-  --rux-radius-md: 12px;
-  --rux-radius-sm: 4px;
   /* Sidebar geometry */
   --rux-sidebar-panel-width: 360px;
   --rux-sidebar-rail-width: 48px;
@@ -31,34 +27,24 @@
   --rux-sidebar-notes-inset-inline: var(--rux-space-3);
   --rux-sidebar-notes-padding: 1rem;
 
-  /* Sidebar border colors.
-     Keep these transparent for production; swap in debug tokens when tracing layers. */
-  --rux-sidebar-shell-border-color: var(--rux-debug-border-container);
-  --rux-sidebar-rail-border-color: var(--rux-debug-border-container);
-  --rux-sidebar-card-border-color: var(--rux-debug-border-card);
-  --rux-sidebar-divider-border-color: var(--rux-debug-border-content);
-  --rux-sidebar-control-border-color: var(--rux-debug-border-content);
-
-  /* --rux-sidebar-shell-border-color: var(--rux-debug-border-container); */
-  /* --rux-sidebar-rail-border-color: var(--rux-debug-border-container); */
-  /* --rux-sidebar-card-border-color: var(--rux-debug-border-card); */
-  /* --rux-sidebar-divider-border-color: var(--rux-debug-border-content); */
-  /* --rux-sidebar-control-border-color: var(--rux-debug-border-content); */
+  /* Sidebar surfaces and borders. Debug colors are enabled by body.debug-surfaces. */
+  --rux-sidebar-card-bg: var(--rux-bg-2);
+  --rux-sidebar-shell-border-color: transparent;
+  --rux-sidebar-rail-border-color: var(--rux-border-default);
+  --rux-sidebar-card-border-color: var(--rux-border-default);
+  --rux-sidebar-divider-border-color: var(--rux-border-default);
+  --rux-sidebar-control-border-color: var(--rux-border-default);
 
   /* Sidebar radii.
      The outer radius is the single source of truth for every visible outside
      corner: shell, collapsed rail, sidebar card, and Trip Editor card. */
-  --rux-sidebar-outer-radius: var(--rux-radius-9);
-  --rux-sidebar-slot-radius: 0;
-  --rux-sidebar-icon-button-radius: max(
-    0px,
-    calc(var(--rux-sidebar-outer-radius) - var(--rux-sidebar-rail-padding))
-  );
+  --rux-sidebar-outer-radius: var(--rux-radius-lg);
+  --rux-sidebar-card-radius: var(--rux-sidebar-outer-radius);
+  --rux-sidebar-icon-button-radius: var(--rux-radius-md);
   --rux-sidebar-control-radius: max(
     0px,
     calc(var(--rux-sidebar-outer-radius) - var(--rux-sidebar-card-padding-inline))
   );
-  --rux-sidebar-trip-inner-radius: var(--rux-sidebar-control-radius);
 }
 
 /* ==========================================================================
@@ -78,6 +64,8 @@
 
 .o-app-layout__sidebar--left,
 .o-app-layout__sidebar--right {
+  /* Shell owns placement, width animation, stacking, and side direction.
+     It should not own card surface, card border, or slot dividers. */
   min-width: 0;
   flex-shrink: 0;
   position: relative;
@@ -91,7 +79,7 @@
 
 .o-app-layout__sidebar--left {
   order: 0;
-  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
+  border-radius: 0 var(--rux-sidebar-outer-radius) var(--rux-sidebar-outer-radius) 0;
 }
 
 .o-app-layout__sidebar--right {
@@ -111,9 +99,7 @@
   padding: 0;
   margin: 0;
   width: calc(var(--rux-sidebar-rail-width) + var(--rux-sidebar-panel-width));
-
 }
-
 
 .o-app-layout__sidebar--right.is-hidden,
 body.right-rail-hidden #panelEnd {
@@ -127,6 +113,8 @@ body.right-rail-hidden .o-app-layout {
 /* ── Icon Rail ───────────────────────────────────────────────────────────── */
 
 .sidebar__rail {
+  /* Rail owns icon-button flow and the collapsed outer shape.
+     It should not own the open card's radius or borders. */
   position: relative;
   z-index: 10;
   width: var(--rux-sidebar-rail-width);
@@ -160,29 +148,29 @@ body.right-rail-hidden .o-app-layout {
 }
 
 .o-app-layout__sidebar--left.is-collapsed .sidebar__rail {
-  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
-  border: 1px solid var(--rux-debug-blue);
+  border-radius: 0 var(--rux-sidebar-outer-radius) var(--rux-sidebar-outer-radius) 0;
+  border: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
 .o-app-layout__sidebar--right.is-collapsed .sidebar__rail {
-  border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
-  border: 1px solid var(--rux-debug-blue);
+  border-radius: var(--rux-sidebar-outer-radius) 0 0 var(--rux-sidebar-outer-radius);
+  border: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
 .o-app-layout__sidebar--left:not(.is-collapsed) .sidebar__rail {
   width: var(--rux-sidebar-rail-width);
   flex: 0 0 var(--rux-sidebar-rail-width);
   border-radius: 0;
-  border-left: 1px solid var(--rux-debug-blue);
-  border-block: 1px solid var(--rux-debug-blue);
+  border-left: 1px solid var(--rux-sidebar-rail-border-color);
+  border-block: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
 .o-app-layout__sidebar--right:not(.is-collapsed) .sidebar__rail {
   width: var(--rux-sidebar-rail-width);
   flex: 0 0 var(--rux-sidebar-rail-width);
   border-radius: 0;
-  border-right: 1px solid var(--rux-debug-blue);
-  border-block: 1px solid var(--rux-debug-blue);
+  border-right: 1px solid var(--rux-sidebar-rail-border-color);
+  border-block: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
 .sidebar__icon-btn {
@@ -277,6 +265,8 @@ body.right-rail-hidden .o-app-layout {
 /* ── Content Panel ──────────────────────────────────────────────────────── */
 
 .sidebar__panel {
+  /* Panel is a viewport for the card slot during collapse/expand.
+     It should not add visible chrome; card chrome belongs to .rux-card. */
   position: relative;
   z-index: 1;
   width: var(--rux-sidebar-panel-width);
@@ -291,6 +281,8 @@ body.right-rail-hidden .o-app-layout {
 }
 
 .sidebar__content {
+  /* Content is the card host moved into by panels.js.
+     Keep it flexible and transparent; cards own surfaces and clipping. */
   flex: 1 1 0;
   min-width: 0;
   min-height: 0;
@@ -305,7 +297,6 @@ body.right-rail-hidden .o-app-layout {
 
 .o-app-layout__sidebar--right .sidebar__content {
   order: 0;
-
 }
 
 .o-app-layout__sidebar.is-collapsed .sidebar__content {
@@ -319,28 +310,32 @@ body.right-rail-hidden .o-app-layout {
 /* ── Sidebar Cards ──────────────────────────────────────────────────────── */
 
 .sidebar__content > .rux-card {
+  /* Sidebar card is the animated sheet.
+     It owns the outer surface, border, shadow, radius, and clipping.
+     Header/body/footer are rectangular slots inside this rounded shell. */
   flex: 1;
   min-height: 0;
   width: var(--rux-sidebar-panel-width);
   margin-bottom: 0;
-  background: var(--rux-bg-2);
-
+  background: var(--rux-sidebar-card-bg);
   transition: none;
 }
 
 .o-app-layout__sidebar--right .sidebar__content > .rux-card {
   box-shadow: var(--card-shadow-left);
-  border: 1px solid var(--rux-debug-red);
-border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
+  border: 1px solid var(--rux-sidebar-card-border-color);
+  border-radius: var(--rux-sidebar-card-radius) 0 0 var(--rux-sidebar-card-radius);
 }
 
 .o-app-layout__sidebar--left .sidebar__content > .rux-card {
   box-shadow: var(--card-shadow-right);
-  border: 1px solid var(--rux-debug-red);
-  border-radius: 0 var(--rux-radius-lg) var(--rux-radius-lg) 0;
+  border: 1px solid var(--rux-sidebar-card-border-color);
+  border-radius: 0 var(--rux-sidebar-card-radius) var(--rux-sidebar-card-radius) 0;
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) {
+  /* Three-slot layout: header / scroll body / footer.
+     Do not make the body overlap behind header or footer. */
   flex: 1 1 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -359,6 +354,9 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
+  /* Header slot owns header layout only.
+     Panel-specific dividers may be added by the hosted card below.
+     Do not put outer card radius or shell border here. */
   grid-row: 1;
   grid-column: 1;
   z-index: 2;
@@ -368,22 +366,12 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   overflow: visible;
-  border-radius: var(--rux-sidebar-slot-radius);
-  /* Correct place for the header/body divider.
-     Do not put the panel's outer border or corner radius here; the card shell owns those.
-     Exception: the directional rules below apply the outer radius to the corner facing
-     center content only — the opposite corner (adjacent to the rail) stays square. */
-}
-
-.o-app-layout__sidebar--right .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
-  border-radius: var(--rux-sidebar-outer-radius) 0 0 0;
-}
-
-.o-app-layout__sidebar--left .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
-  border-radius: 0 var(--rux-sidebar-outer-radius) 0 0;
+  border-radius: 0;
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-card__body {
+  /* Body slot owns scrolling and content padding.
+     It should not own top/bottom separators, outer borders, or shell radius. */
   grid-row: 2;
   grid-column: 1;
   overflow-y: auto;
@@ -397,6 +385,8 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__footer {
+  /* Footer slot owns footer layout only.
+     Panel-specific top dividers belong here, not on the body. */
   grid-row: 3;
   grid-column: 1;
   align-self: end;
@@ -406,21 +396,15 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   overflow: visible;
-  /* Correct place for the body/footer divider.
-     Do not put the panel's outer border or corner radius here; the card shell owns those. */
 }
 
 /* ── Sidebar-Hosted Panel Content ───────────────────────────────────────── */
 
 /* Trip Editor panel */
 
-.trip-editor-card {
-  /* Trip Editor only customizes the sidebar card radius.
-     The generic sidebar card rule owns surface, border, and clipping. */
-  border-radius: var(--rux-sidebar-outer-radius);
-}
-
 .trip-editor-card .rux-panel__header {
+  /* Trip editor header owns the header/body divider.
+     Body stays borderless so the separator follows the sticky slot. */
   position: relative;
   top: auto;
   z-index: 20;
@@ -437,13 +421,16 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  border-radius: var(--rux-sidebar-trip-inner-radius);
+  border-bottom: 1px solid var(--rux-sidebar-divider-border-color);
+  border-radius: 0;
   overflow: visible;
 }
 
 .trip-editor-card .rux-card__body {
-  border-block: 1px solid var(--rux-debug-green);
-  border-radius: var(--rux-sidebar-slot-radius);
+  /* Trip editor body is only the scroll/content area.
+     Add debug outlines under body.debug-surfaces, not production borders. */
+  border: 0;
+  border-radius: 0;
   padding: var(--rux-sidebar-trip-body-padding-block) var(--rux-sidebar-trip-body-padding-inline);
 }
 
@@ -455,14 +442,16 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
   margin-top: 0;
 }
 
-.trip-editor-card .rux-panel__footer,
-.trip-editor-card .rux-panel__footer--sticky {
+.trip-editor-card .rux-panel__footer {
+  /* Trip editor footer owns the body/footer divider and button row.
+     Keep footer corners square; the parent card clips the outer radius. */
   position: relative;
   bottom: auto;
   gap: var(--rux-sidebar-card-padding-inline);
   flex-wrap: nowrap;
   background: var(--rux-bg-2);
-  border-radius: var(--rux-sidebar-slot-radius);
+  border-top: 1px solid var(--rux-sidebar-divider-border-color);
+  border-radius: 0;
 }
 
 .trip-editor-card .rux-panel__footer > .rux-btn {
@@ -748,6 +737,8 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
 
 /* ── Sidebar Scrollbars ─────────────────────────────────────────────────── */
 
+/* Cards always live under .sidebar__content, so direct-sidebar card selectors
+   are intentionally omitted here. */
 .o-app-layout__sidebar--left .rux-card__body,
 .o-app-layout__sidebar--right .rux-card__body,
 .o-app-layout__sidebar--right {
@@ -757,36 +748,31 @@ border-radius: var(--rux-radius-lg) 0 0 var(--rux-radius-lg);
 
 .o-app-layout__sidebar--left .rux-card__body::-webkit-scrollbar,
 .o-app-layout__sidebar--right .rux-card__body::-webkit-scrollbar,
-.o-app-layout__sidebar--right::-webkit-scrollbar,
-.o-app-layout__sidebar--left > .rux-card:not(.is-hidden) .rux-card__body::-webkit-scrollbar,
-.o-app-layout__sidebar--right > .rux-card:not(.is-hidden) .rux-card__body::-webkit-scrollbar {
+.o-app-layout__sidebar--right::-webkit-scrollbar {
   display: none;
 }
 
 /* ── Debug Overlays ─────────────────────────────────────────────────────── */
 
+/* Debug colors trace ownership:
+   red = sidebar shell, blue = rail, green = card shell, yellow = slot/content. */
+body.debug-surfaces {
+  --rux-sidebar-shell-border-color: var(--rux-debug-red);
+  --rux-sidebar-rail-border-color: var(--rux-debug-blue);
+  --rux-sidebar-card-border-color: var(--rux-debug-green);
+  --rux-sidebar-divider-border-color: var(--rux-debug-yellow);
+  --rux-sidebar-control-border-color: var(--rux-debug-yellow);
+}
+
 body.debug-surfaces .o-app-layout__sidebar--left:not(.is-collapsed),
 body.debug-surfaces .o-app-layout__sidebar--right:not(.is-collapsed) {
-  background: var(--rux-debug-red);
-  outline: 1px solid var(--rux-debug-border-container);
-  outline-offset: -1px;
-}
-
-body.debug-surfaces .sidebar__content > .rux-card {
-  background: var(--rux-debug-blue);
-  outline: 1px solid var(--rux-debug-border-card);
-  outline-offset: -1px;
-}
-
-body.debug-surfaces .sidebar__content > .rux-card:not(.is-hidden) {
-  outline: 1px solid var(--rux-debug-border-card);
+  outline: 1px solid var(--rux-sidebar-shell-border-color);
   outline-offset: -1px;
 }
 
 body.debug-surfaces .sidebar__content > .rux-card:not(.is-hidden) .rux-card__body {
   /* Debug only: body outlines reveal scroll/slot bounds.
      Body elements should not own production borders or shell radii. */
-  outline: 1px solid var(--rux-debug-border-content);
+  outline: 1px solid var(--rux-debug-yellow);
   outline-offset: -1px;
-  border-radius: var(--rux-sidebar-outer-radius);
 }

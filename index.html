@@ -43,7 +43,7 @@
 
     <link
       rel="stylesheet"
-      href="css/main.css?v=37"
+      href="css/main.css?v=40"
     />
     <link
       rel="stylesheet"
@@ -357,6 +357,17 @@
                 <span class="material-symbols-outlined">right_panel_close</span>
               </button>
             </div>
+            <div class="profile-pref-row">
+              <span>Debug borders</span>
+              <button
+                type="button"
+                id="profileDebugSurfacesToggle"
+                class="rux-btn rux-btn--square"
+                aria-pressed="false"
+              >
+                <span class="material-symbols-outlined">border_clear</span>
+              </button>
+            </div>
           </div>
           <hr class="dropdown__divider" />
           <!-- Views -->
@@ -395,7 +406,7 @@
             id="driverManagerBtn"
             class="dropdown__item"
           >
-            <span class="dropdown__icon material-symbols-outlined">badge</span>
+            <span class="dropdown__icon material-symbols-outlined">id_card</span>
             <span>Manage Drivers</span>
           </button>
           <button
@@ -495,6 +506,15 @@
             >
               <div class="sidebar__rail">
                 <button
+                  id="avatarBtn"
+                  class="sidebar__icon-btn"
+                  data-card="profile"
+                  type="button"
+                  title="Profile & Settings"
+                  aria-label="Profile & Settings"
+                  aria-pressed="false"
+                ></button>
+                <button
                   class="sidebar__icon-btn"
                   data-card="trip"
                   title="Trip Editor"
@@ -532,7 +552,7 @@
                   title="Manage Drivers"
                   aria-pressed="false"
                 >
-                  <span class="material-symbols-outlined">badge</span>
+                  <span class="material-symbols-outlined">id_card</span>
                 </button>
                 <button
                   class="sidebar__icon-btn"
@@ -542,15 +562,6 @@
                 >
                   <span class="material-symbols-outlined">directions_bus</span>
                 </button>
-                <button
-                  id="avatarBtn"
-                  class="sidebar__icon-btn sidebar__profile-btn"
-                  data-card="profile"
-                  type="button"
-                  title="Profile & Settings"
-                  aria-label="Profile & Settings"
-                  aria-pressed="false"
-                ></button>
               </div>
               <div class="sidebar__content"></div>
             </div>
@@ -600,7 +611,7 @@
                   title="Manage Drivers"
                   aria-pressed="false"
                 >
-                  <span class="material-symbols-outlined">badge</span>
+                  <span class="material-symbols-outlined">id_card</span>
                 </button>
                 <button
                   class="sidebar__icon-btn"
@@ -3138,7 +3149,7 @@
       defer
     ></script>
     <script
-      src="js/trip-form.js?v=1"
+      src="js/trip-form.js?v=3"
       defer
     ></script>
     <script
@@ -3162,7 +3173,7 @@
       defer
     ></script>
     <script
-      src="js/search.js?v=1"
+      src="js/search.js?v=2"
       defer
     ></script>
     <script
@@ -3170,7 +3181,7 @@
       defer
     ></script>
     <script
-      src="js/glass-select.js?v=1"
+      src="js/glass-select.js?v=3"
       defer
     ></script>
     <script

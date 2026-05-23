@@ -1,25 +1,25 @@
-@import "variables.css";
-@import "base.css";
-@import "surfaces.css";
-@import "layout.css";
+@import "variables.css?v=40";
+@import "base.css?v=40";
+@import "surfaces.css?v=40";
+@import "layout.css?v=40";
 
 /* Core UI primitives (buttons, cards, headers, icons, toast, loading) */
-@import "button.css";
-@import "form.css";
-@import "dropdown.css";
-@import "profile.css";
-@import "primitives.css";
+@import "button.css?v=40";
+@import "form.css?v=40";
+@import "dropdown.css?v=40";
+@import "profile.css?v=40";
+@import "primitives.css?v=40";
 
 /* Side rails and side panels */
-@import "sidebar.css";
+@import "sidebar.css?v=40";
 
 /* Main schedule shell and grid */
-@import "schedule-shell.css";
-@import "schedule.css";
-@import "trip-bar.css";
+@import "schedule-shell.css?v=40";
+@import "schedule.css?v=40";
+@import "trip-bar.css?v=40";
 
 /* Print layouts (legal, letter-full, legal-v2) */
-@import "print.css";
+@import "print.css?v=40";
 
 /* Modals and Forms (envelope, notes, calculator) */
-@import "modals.css";
+@import "modals.css?v=40";

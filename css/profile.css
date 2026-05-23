@@ -6,7 +6,7 @@
   --profile-avatar-button-size: 32px;
   --profile-avatar-ring-gap:    2px;
   --profile-avatar-ring-width:  2px;
-  --profile-avatar-radius:     var(--rux-radius-button);
+  --profile-avatar-radius:     var(--rux-radius-md);
   --profile-popover-width:     300px;
   --profile-color-swatch-size: 22px;
 
@@ -30,7 +30,7 @@
    ========================================================================== */
 
 .profile-avatar {
-  border-radius: var(--rux-radius-button-avatar);
+  border-radius: var(--rux-radius-md);
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -137,7 +137,7 @@
 /* Full-width dropdown items inside the popover */
 #profilePopover .dropdown__item {
   width: 100%;
-  border-radius: 0;
+  border-radius: var(--rux-radius-md);
 }
 
 .profile-popover__header {
@@ -217,7 +217,7 @@
 .profile-color-swatch {
   width:  var(--profile-color-swatch-size);
   height: var(--profile-color-swatch-size);
-  border-radius: 50%;
+  border-radius: var(--rux-radius-md);
   border: none;
   cursor: pointer;
   padding: 0;

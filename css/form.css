@@ -263,6 +263,7 @@ textarea:focus-visible,
   gap: var(--icon-text-gap);
   width: 100%;
   min-width: 0;
+  border-radius: var(--rux-fld-radius);
   text-align: left;
 }
 
@@ -812,7 +813,7 @@ hr.form-divider {
   padding: 0 8px;
   background: var(--rux-bg-field);
   border: none;
-  border-radius: var(--rux-fld-radius);
+  border-radius: var(--rux-radius-md);
   cursor: pointer;
   font-size: var(--rux-fld-font-size);
   color: var(--rux-text-1);
@@ -833,10 +834,13 @@ hr.form-divider {
 }
 
 .buses-needed-dropdown {
+  --rux-dropdown-open-transform: translateX(-50%) scaleY(1);
+  --rux-dropdown-closed-transform: translateX(-50%) scaleY(0);
+
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%) scaleY(0);
+  transform: var(--rux-dropdown-closed-transform);
   transform-origin: top center;
   margin-top: 8px;
   z-index: 100;
@@ -850,7 +854,7 @@ hr.form-divider {
   pointer-events: none;
   background: var(--rux-bg-4);
   border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-radius-3);
+  border-radius: var(--rux-radius-lg);
   box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
   scrollbar-width: thin;
   scrollbar-color: var(--rux-border-3) transparent;
@@ -861,7 +865,7 @@ hr.form-divider {
 
 .buses-needed-dropdown.is-open {
   opacity: 1;
-  transform: translateX(-50%) scaleY(1);
+  transform: var(--rux-dropdown-open-transform);
   pointer-events: auto;
 }
 
@@ -886,7 +890,7 @@ hr.form-divider {
   padding: 0;
   background: var(--rux-bg-5);
   border: none;
-  border-radius: var(--rux-radius-2);
+  border-radius: var(--rux-radius-md);
   cursor: pointer;
   font-size: var(--rux-fld-font-size);
   color: var(--rux-text-1);
@@ -982,7 +986,7 @@ hr.form-divider {
   padding: 0 8px;
   background: var(--rux-bg-field);
   border: none;
-  border-radius: var(--rux-fld-radius);
+  border-radius: var(--rux-radius-md);
   cursor: pointer;
   transition: background var(--transition-fast);
 }
@@ -1010,10 +1014,13 @@ hr.form-divider {
 
 /* Floating dropdown — anchored to .trip-color-swatches */
 .trip-color-dropdown {
+  --rux-dropdown-open-transform: translateY(-50%) scaleX(1);
+  --rux-dropdown-closed-transform: translateY(-50%) scaleX(0);
+
   position: absolute;
   top: 50%;
   left: calc(100% + 8px);
-  transform: translateY(-50%) scaleX(0);
+  transform: var(--rux-dropdown-closed-transform);
   transform-origin: left center;
   z-index: 100;
   display: flex;
@@ -1025,7 +1032,7 @@ hr.form-divider {
   pointer-events: none;
   background: var(--rux-bg-4);
   border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-radius-3);
+  border-radius: var(--rux-radius-lg);
   box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
   width: max-content;
   transition:
@@ -1035,7 +1042,7 @@ hr.form-divider {
 
 .trip-color-dropdown.is-open {
   opacity: 1;
-  transform: translateY(-50%) scaleX(1);
+  transform: var(--rux-dropdown-open-transform);
   pointer-events: auto;
 }
 
@@ -1043,7 +1050,7 @@ hr.form-divider {
 .trip-color-swatch {
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: var(--rux-radius-md);
   border: none;
   cursor: pointer;
   padding: 0;
