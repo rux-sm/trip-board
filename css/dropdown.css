@@ -1,6 +1,11 @@
 /* ==========================================================================
-   DROPDOWN MENU 
+   DROPDOWN SYSTEM
+   Owns all custom dropdown surfaces, triggers, items, and wrappers.
+   Native <select> / <input> / <textarea> base styles live in form.css.
    ========================================================================== */
+
+/* ── 1. Menu surface (.dropdown__menu) ───────────────────────────────────── */
+/* Owns: background-color, border, border-radius, box-shadow, scrollbar      */
 
 .dropdown__menu {
   --rux-dropdown-origin-x: center;
@@ -14,49 +19,58 @@
   width: max-content;
   padding: 8px;
   gap: 8px;
-  margin: 2px 0 0;
+  margin: 0;
   font-size: var(--input-font-size);
   text-align: left;
   list-style: none;
-  background-color: var(--rux-bg-4);
+  background-color: var(--rux-bg-4); /* surface */
   background-clip: padding-box;
-  border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-radius-lg);
-  box-shadow: 0 6px 20px oklch(0% 0 0 / 45%);
+  border: 1px solid var(--rux-border-default); /* border */
+  border-radius: var(--rux-radius-md); /* radius */
+  box-shadow: 0 6px 20px oklch(0% 0 0 / 45%); /* elevation */
   max-height: 300px;
   overflow-y: auto;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: var(--rux-dropdown-closed-transform);
   transform-origin: var(--rux-dropdown-origin-x) var(--rux-dropdown-origin-y);
+  /* visibility delay matches animation duration so the element hides after fading out */
   transition:
     opacity 150ms cubic-bezier(0.2, 0, 0, 1),
-    transform 150ms cubic-bezier(0.2, 0, 0, 1);
-
-  /* Hiding scrollbar while maintaining scroll functionality */
+    transform 150ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0ms 150ms;
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
+}
+
+.dropdown__menu::-webkit-scrollbar {
+  display: none;
 }
 
 .dropdown__menu.is-open,
-.dropdown-menu.is-open,
 .context-menu.is-open {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: var(--rux-dropdown-open-transform);
+  /* no delay — visibility becomes visible immediately so the open animation is visible */
+  transition:
+    opacity 150ms cubic-bezier(0.2, 0, 0, 1),
+    transform 150ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0ms 0ms;
 }
 
-.dropdown__menu.dropdown__menu--up {
+/* ── 2. Menu modifiers ───────────────────────────────────────────────────── */
+
+/* Upward-opening menus — reverses animation origin to bottom */
+.dropdown__menu--up {
   --rux-dropdown-origin-y: bottom;
   --rux-dropdown-closed-transform: translateY(8px) scale(0.96);
 }
 
+/* Bus number select menus created by glass-select (useBusesNeededTray: true) */
 .dropdown__menu.buses-needed-dropdown {
-  --rux-dropdown-closed-transform: translateY(-8px) scale(0.96);
-  --rux-dropdown-open-transform: translateY(0) scale(1);
-
   left: auto;
   top: auto;
   width: max-content;
@@ -68,45 +82,53 @@
   --rux-dropdown-open-transform: translateY(0) scale(1);
 }
 
-.dropdown__menu.buses-needed-dropdown .buses-needed-option {
-  width: 100%;
-  height: 40px;
-  justify-content: flex-start;
-  padding: 0 16px;
-  text-align: left;
-}
-
-.dropdown__menu.buses-needed-dropdown .buses-needed-option.is-selected {
+/* Selected state override for bus number items — uses focus ring instead of primary fill */
+.dropdown__menu.buses-needed-dropdown .dropdown__item.is-selected {
   background: var(--rux-bg-5);
   color: var(--rux-text-1) !important;
   box-shadow: var(--focus-ring);
 }
 
-.dropdown__menu.buses-needed-dropdown .buses-needed-option.is-selected::before {
+.dropdown__menu.buses-needed-dropdown .dropdown__item.is-selected::before {
   content: none;
 }
 
-/* Chrome, Safari and Opera */
-.dropdown__menu::-webkit-scrollbar {
-  display: none;
+/* Bus count picker tray (1–10 buttons). Extends .dropdown__menu for surface + animation.
+   Only overrides: center-anchored position, vertical flex, fixed narrow width. */
+.dropdown__menu.bus-count-tray {
+  --rux-dropdown-open-transform: translateX(-50%) scaleY(1);
+  --rux-dropdown-closed-transform: translateX(-50%) scaleY(0);
+
+  top: 100%;
+  left: 50%;
+  transform-origin: top center;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  width: 48px;
+  max-height: none;
 }
 
-/* Unify dropdown__item for button, div, or any element */
+/* ── 3. Items (.dropdown__item) ─────────────────────────────────────────── */
+/* Owns: background, border-radius, font family, font size, height           */
+
 .dropdown__item {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 40px;
+  height: auto;
   flex-shrink: 0;
   padding: 0 16px;
-  background: var(--rux-bg-5);
-  color: var(--rux-text-1);
-  font-family: var(--font-sans);
-  font-size: var(--input-font-size);
-  text-align: left;
+  background: var(--rux-bg-5); /* surface */
+  color: var(--rux-text-1); /* font color */
+  font-family: var(--font-sans); /* font */
+  font-size: var(--rux-size-4); /* font size */
+  text-align: center;
   box-sizing: border-box;
-  border: none;
-  border-radius: var(--rux-radius-md);
+  border: 1px solid var(--rux-border-default);
+  border-radius: var(--rux-radius-sm); /* radius */
   cursor: pointer;
   opacity: 0;
   transform: translateY(-8px) scale(0.95);
@@ -117,32 +139,23 @@
     transform 100ms ease;
 }
 
+/* Entrance — items fade + slide in when the menu opens */
 .dropdown__menu.is-open .dropdown__item {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-.dropdown__menu.is-open .dropdown__item:nth-of-type(1) {
-  transition-delay: 0ms;
-}
-.dropdown__menu.is-open .dropdown__item:nth-of-type(2) {
-  transition-delay: 30ms;
-}
-.dropdown__menu.is-open .dropdown__item:nth-of-type(3) {
-  transition-delay: 60ms;
-}
-.dropdown__menu.is-open .dropdown__item:nth-of-type(4) {
-  transition-delay: 90ms;
-}
-.dropdown__menu.is-open .dropdown__item:nth-of-type(5) {
-  transition-delay: 120ms;
-}
-.dropdown__menu.is-open .dropdown__item:nth-of-type(n + 6) {
-  transition-delay: 150ms;
-}
+/* Stagger delay so items cascade in one after another */
+.dropdown__menu.is-open .dropdown__item:nth-of-type(1) { transition-delay: 0ms; }
+.dropdown__menu.is-open .dropdown__item:nth-of-type(2) { transition-delay: 30ms; }
+.dropdown__menu.is-open .dropdown__item:nth-of-type(3) { transition-delay: 60ms; }
+.dropdown__menu.is-open .dropdown__item:nth-of-type(4) { transition-delay: 90ms; }
+.dropdown__menu.is-open .dropdown__item:nth-of-type(5) { transition-delay: 120ms; }
+.dropdown__menu.is-open .dropdown__item:nth-of-type(n + 6) { transition-delay: 150ms; }
 
+/* Selected state */
 .dropdown__item.is-selected {
-  background: var(--rux-btn-bg-primary);
+  background: var(--rux-btn-bg-primary); /* surface */
   color: var(--rux-color-white) !important;
 }
 
@@ -154,14 +167,7 @@
   line-height: 1;
 }
 
-/* Make meta/info items visually consistent but less prominent */
-.dropdown__item--meta {
-  color: var(--rux-text-2);
-  font-style: italic;
-  cursor: default;
-  background: none;
-}
-
+/* Hover / focus */
 .dropdown__item:hover,
 .dropdown__item:focus-visible {
   background-color: var(--rux-bg-overlay);
@@ -174,6 +180,34 @@
   color: var(--rux-color-white) !important;
 }
 
+/* Meta items — non-interactive info rows */
+.dropdown__item--meta {
+  color: var(--rux-text-2);
+  font-style: italic;
+  cursor: default;
+  background: none;
+}
+
+/* ── 4. Bus count tray item overrides ────────────────────────────────────── */
+
+.bus-count-tray .dropdown__item {
+  justify-content: center;
+  padding: 0; /* tray padding (8px) provides the inset — item padding would overflow the 32px width */
+}
+
+.bus-count-tray .dropdown__item.is-selected {
+  background: var(--rux-bg-5);
+  color: var(--rux-text-1) !important;
+  box-shadow: var(--focus-ring);
+}
+
+.bus-count-tray .dropdown__item.is-selected::before {
+  content: none;
+}
+
+/* ── 5. Item parts ───────────────────────────────────────────────────────── */
+
+/* Material Symbol icon inside an item */
 .dropdown__icon {
   font-size: var(--icon-field-size);
   font-variation-settings:
@@ -185,20 +219,21 @@
   color: var(--rux-text-2);
 }
 
-/* Force the text span to stay on a single line */
+/* Keep label text on a single line */
 .dropdown__item span:not(.dropdown__icon) {
   white-space: nowrap;
   line-height: 1;
 }
 
-/* Search input inside searchable dropdowns */
+/* Search input inside searchable menus */
+/* Owns: background, border-radius, font */
 .dropdown__search {
   display: block;
   width: 100%;
   padding: 6px 12px;
-  background: var(--rux-bg-5);
+  background: var(--rux-bg-5); /* surface — matches item background */
   border: none;
-  border-radius: var(--rux-radius-md);
+  border-radius: var(--rux-radius-md); /* radius */
   color: var(--rux-text-1);
   font-family: var(--font-sans);
   font-size: var(--input-font-size);
@@ -210,7 +245,378 @@
   color: var(--rux-text-2);
 }
 
-/* Style all <option> tags globally for dark theme consistency */
+/* Driver conflict warning icon appended to a menu item */
+.dropdown__conflict-icon {
+  font-size: var(--icon-field-size);
+  font-variation-settings:
+    "FILL" var(--icon-field-fill),
+    "wght" var(--icon-field-wght),
+    "GRAD" var(--icon-field-grad),
+    "opsz" var(--icon-field-opsz);
+  color: var(--rux-status-yellow);
+  flex-shrink: 0;
+  margin-left: var(--icon-text-gap);
+}
+
+/* Dims item text when a conflict icon is present */
+.driver-conflict-item {
+  color: color-mix(in oklch, var(--rux-text-1) 70%, var(--rux-status-yellow));
+}
+
+/* ── 6. Status colors ────────────────────────────────────────────────────── */
+
+/* Status icon inside a trigger */
+.dropdown-icon.status-pending { color: var(--rux-status-red); }
+.dropdown-icon.status-ok { color: var(--rux-status-green); }
+.dropdown-icon.status-assigned { color: var(--rux-status-yellow); }
+.dropdown-icon.status-blue { color: var(--rux-status-blue); }
+
+/* Status color on menu items */
+.dropdown__item.status-pending,
+.dropdown__item.status-pending .dropdown-icon {
+  color: var(--rux-status-red) !important;
+}
+
+.dropdown__item.status-ok,
+.dropdown__item.status-ok .dropdown-icon {
+  color: var(--rux-status-green) !important;
+}
+
+.dropdown__item.status-assigned,
+.dropdown__item.status-assigned .dropdown-icon {
+  color: var(--rux-status-yellow) !important;
+}
+
+.dropdown__item.status-blue,
+.dropdown__item.status-blue .dropdown-icon {
+  color: var(--rux-status-blue) !important;
+}
+
+/* Status tint on the select trigger field itself */
+/* Owns: background-color tint, font color */
+.select-trigger.status-pending {
+  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--rux-fld-bg));
+  color: var(--rux-status-red);
+}
+
+.select-trigger.status-ok {
+  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--rux-fld-bg));
+  color: var(--rux-status-green);
+}
+
+.select-trigger.status-assigned {
+  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--rux-fld-bg));
+  color: var(--rux-status-yellow);
+}
+
+.select-trigger.status-blue {
+  background-color: color-mix(in srgb, var(--rux-status-blue) 20%, var(--rux-fld-bg));
+  color: var(--rux-status-blue);
+}
+
+/* ── 7. Glass-select wrapper (.select-dropdown) ──────────────────────────── */
+
+.select-dropdown {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* Menu anchored to full width of its wrapper */
+.select-dropdown .dropdown__menu {
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  min-width: 100%;
+}
+
+/* Bus grid cells: uncap height, always scroll */
+.bus-grid .select-dropdown .dropdown__menu {
+  max-height: auto;
+  overflow-y: auto;
+}
+
+/* Strip the native <select> chevron in compact bus grid cells */
+.bus-grid select {
+  background-image: none;
+  padding-right: var(--rux-space-2);
+}
+
+/* Hide the trigger chevron in bus grid cells */
+.bus-grid .select-trigger::after {
+  display: none;
+}
+
+/* Hidden native <select> kept for a11y / form submission fallback */
+.select-dropdown .select-native {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Driver double-booking conflict — yellow border + glow on the trigger */
+.select-dropdown.driver-conflict .select-trigger {
+  border-color: var(--rux-status-yellow);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--rux-status-yellow) 30%, transparent);
+}
+
+/* ── 8. Select trigger (.select-trigger) ─────────────────────────────────── */
+/* Owns: background (--rux-fld-bg), border-radius (--rux-fld-radius),        */
+/*       height (--rux-fld-height), font family + size + weight              */
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--icon-text-gap);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  height: var(--rux-fld-height); /* height */
+  padding: 0 var(--rux-space-2);
+  background-color: var(--rux-fld-bg); /* surface */
+  border: none;
+  border-radius: var(--rux-fld-radius); /* radius */
+  font-size: var(--rux-fld-font-size); /* font */
+  font-weight: var(--rux-fld-font-weight);
+  color: var(--rux-text-1);
+  text-align: left;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
+    border-color 0.11s,
+    box-shadow 0.11s;
+}
+
+.select-trigger:focus,
+.select-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring), var(--rux-fld-shadow);
+}
+
+/* Chevron pseudo-element */
+.select-trigger::after {
+  content: "";
+  width: var(--chevron-size);
+  height: var(--chevron-size);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  opacity: var(--chevron-opacity);
+}
+
+/* Open state — same focus ring as native inputs */
+.select-trigger.is-open {
+  outline: none;
+  box-shadow: var(--focus-ring), var(--rux-fld-shadow);
+}
+
+/* Empty / placeholder state */
+.select-trigger.is-empty {
+  color: var(--rux-text-placeholder);
+}
+
+.select-trigger.is-empty .dropdown-icon.is-active {
+  color: var(--rux-text-placeholder);
+}
+
+/* Disabled — propagated from the wrapper's :has() so pointer-events stay off */
+.select-dropdown:has(select:disabled) .select-trigger {
+  opacity: var(--rux-fld-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── 9. Bus count picker ─────────────────────────────────────────────────── */
+
+/* Wrapper — in-flow; bumps z-index when tray is open */
+.buses-needed-picker {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+}
+
+.buses-needed-picker:has(.bus-count-tray.is-open) {
+  z-index: 100;
+}
+
+/* Trigger — compact pill showing the current count                          */
+/* Owns: background (--rux-bg-field), border, border-radius, font            */
+.buses-needed-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: var(--rux-fld-height); /* height */
+  width: 100%;
+  padding: 0px;
+  background: var(--rux-bg-field); /* surface */
+  border: 1px solid var(--rux-border-default); /* border */
+  border-radius: var(--rux-radius-md); /* radius */
+  cursor: pointer;
+  font-size: var(--rux-fld-font-size); /* font */
+  color: var(--rux-text-1);
+  transition: background var(--transition-fast);
+}
+
+.buses-needed-trigger:hover {
+  background: var(--rux-bg-3);
+}
+
+.buses-needed-chevron {
+  font-size: 16px;
+  color: var(--rux-text-3);
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+
+.buses-needed-trigger[aria-expanded="true"] .buses-needed-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── 10. Trip color picker ───────────────────────────────────────────────── */
+
+/* Wrapper */
+.trip-color-swatches {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+}
+
+.trip-color-swatches:has(.trip-color-dropdown.is-open) {
+  z-index: 100;
+}
+
+/* Trigger — compact swatch preview button                                   */
+/* Owns: background (--rux-bg-field), border-radius                         */
+.trip-color-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: var(--rux-fld-height); /* height */
+  width: 100%;
+  padding: 0 8px;
+  background: var(--rux-bg-field); /* surface */
+  border: none;
+  border-radius: var(--rux-radius-md); /* radius */
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.trip-color-trigger:hover {
+  background: var(--rux-bg-3);
+}
+
+.trip-color-trigger__preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.trip-color-trigger__chevron {
+  font-size: 16px;
+  color: var(--rux-text-3);
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+
+.trip-color-trigger[aria-expanded="true"] .trip-color-trigger__chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown palette — horizontal swatches, opens to the right of the trigger */
+/* Owns: background, border, border-radius, box-shadow                       */
+.trip-color-dropdown {
+  --rux-dropdown-open-transform: translateY(-50%) scaleX(1);
+  --rux-dropdown-closed-transform: translateY(-50%) scaleX(0);
+
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: var(--rux-dropdown-closed-transform);
+  transform-origin: left center;
+  z-index: 100;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  gap: 8px;
+  padding: 10px;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--rux-bg-4); /* surface */
+  border: 1px solid var(--rux-border-2); /* border */
+  border-radius: var(--rux-radius-lg); /* radius */
+  box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45); /* elevation */
+  width: max-content;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.trip-color-dropdown.is-open {
+  opacity: 1;
+  transform: var(--rux-dropdown-open-transform);
+  pointer-events: auto;
+}
+
+/* Swatch items */
+.trip-color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--rux-radius-md); /* radius */
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+  transition:
+    opacity 0.1s ease,
+    transform 0.1s ease,
+    box-shadow var(--transition-fast);
+}
+
+.trip-color-swatch.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.trip-color-swatch.is-visible:hover {
+  transform: scale(1.2);
+}
+
+.trip-color-swatch.is-selected {
+  box-shadow: var(--focus-ring);
+}
+
+.trip-color-swatch--none {
+  background: transparent;
+  border: 2px dashed var(--rux-border-3);
+}
+
+.trip-color-swatch--oos {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--rux-bg-5) 0px,
+    var(--rux-bg-5) 4px,
+    var(--rux-bg-4) 4px,
+    var(--rux-bg-4) 8px
+  );
+}
+
+/* ── 11. Native <option> fallback ─────────────────────────────────────────── */
+/* Ensures native <select> option lists match the dark theme                  */
+
 option {
   background: var(--rux-bg-2) !important;
   color: var(--rux-text-1) !important;

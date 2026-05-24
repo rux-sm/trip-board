@@ -8,24 +8,19 @@
   --rux-sidebar-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Sidebar spacing.
-     Padding/inset tokens feed the optical radius calculations below. */
+     All sidebar card bodies use --rux-sidebar-card-body-padding (8px) uniformly.
+     Cards that manage their own internal padding override to 0. */
   --rux-sidebar-rail-padding: var(--rux-space-3);
   --rux-sidebar-card-padding-inline: var(--rux-space-3);
+  --rux-sidebar-card-body-padding: var(--rux-space-5);
   --rux-sidebar-content-inset: var(--rux-space-3);
   --rux-sidebar-control-padding-inline: var(--rux-space-2);
 
+
   /* Sidebar-hosted Trip Editor */
-  --rux-sidebar-trip-header-height: 92px;
-  --rux-sidebar-trip-header-padding-block: var(--rux-space-3);
-  --rux-sidebar-trip-header-padding-inline: var(--rux-space-3);
-  --rux-sidebar-trip-body-padding-block: var(--rux-space-3);
   --rux-sidebar-trip-body-padding-inline: calc(
     var(--rux-sidebar-card-padding-inline) + var(--rux-space-3)
   );
-
-  /* Sidebar-hosted Notes */
-  --rux-sidebar-notes-inset-inline: var(--rux-space-3);
-  --rux-sidebar-notes-padding: 1rem;
 
   /* Sidebar surfaces and borders. Debug colors are enabled by body.debug-surfaces. */
   --rux-sidebar-card-bg: var(--rux-bg-2);
@@ -41,10 +36,7 @@
   --rux-sidebar-outer-radius: var(--rux-radius-lg);
   --rux-sidebar-card-radius: var(--rux-sidebar-outer-radius);
   --rux-sidebar-icon-button-radius: var(--rux-radius-md);
-  --rux-sidebar-control-radius: max(
-    0px,
-    calc(var(--rux-sidebar-outer-radius) - var(--rux-sidebar-card-padding-inline))
-  );
+  --rux-sidebar-control-radius: var(--rux-radius-md);
 }
 
 /* ==========================================================================
@@ -161,7 +153,7 @@ body.right-rail-hidden .o-app-layout {
   width: var(--rux-sidebar-rail-width);
   flex: 0 0 var(--rux-sidebar-rail-width);
   border-radius: 0;
-  border-left: 1px solid var(--rux-sidebar-rail-border-color);
+  border-inline: 1px solid var(--rux-sidebar-rail-border-color);
   border-block: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
@@ -169,7 +161,7 @@ body.right-rail-hidden .o-app-layout {
   width: var(--rux-sidebar-rail-width);
   flex: 0 0 var(--rux-sidebar-rail-width);
   border-radius: 0;
-  border-right: 1px solid var(--rux-sidebar-rail-border-color);
+  border-inline: 1px solid var(--rux-sidebar-rail-border-color);
   border-block: 1px solid var(--rux-sidebar-rail-border-color);
 }
 
@@ -324,12 +316,14 @@ body.right-rail-hidden .o-app-layout {
 .o-app-layout__sidebar--right .sidebar__content > .rux-card {
   box-shadow: var(--card-shadow-left);
   border: 1px solid var(--rux-sidebar-card-border-color);
+  border-right: none;
   border-radius: var(--rux-sidebar-card-radius) 0 0 var(--rux-sidebar-card-radius);
 }
 
 .o-app-layout__sidebar--left .sidebar__content > .rux-card {
   box-shadow: var(--card-shadow-right);
   border: 1px solid var(--rux-sidebar-card-border-color);
+  border-left:none;
   border-radius: 0 var(--rux-sidebar-card-radius) var(--rux-sidebar-card-radius) 0;
 }
 
@@ -354,9 +348,8 @@ body.right-rail-hidden .o-app-layout {
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-panel__header {
-  /* Header slot owns header layout only.
-     Panel-specific dividers may be added by the hosted card below.
-     Do not put outer card radius or shell border here. */
+  /* Shared header slot for all sidebar cards.
+     Owns grid placement, background, and the header/body divider. */
   grid-row: 1;
   grid-column: 1;
   z-index: 2;
@@ -365,13 +358,15 @@ body.right-rail-hidden .o-app-layout {
   background: var(--rux-bg-2);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  overflow: visible;
+  border-bottom: 1px solid var(--rux-sidebar-divider-border-color);
   border-radius: 0;
+  overflow: visible;
 }
 
 .sidebar__content > .rux-card:not(.is-hidden) .rux-card__body {
   /* Body slot owns scrolling and content padding.
-     It should not own top/bottom separators, outer borders, or shell radius. */
+     Default padding is --rux-sidebar-card-body-padding (8px) all sides.
+     Cards that manage their own internal layout override to padding: 0. */
   grid-row: 2;
   grid-column: 1;
   overflow-y: auto;
@@ -380,7 +375,7 @@ body.right-rail-hidden .o-app-layout {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--rux-text-2);
-  padding-inline: var(--rux-sidebar-card-padding-inline);
+  padding: var(--rux-sidebar-card-body-padding);
   background-color: var(--rux-bg-2);
 }
 
@@ -402,36 +397,34 @@ body.right-rail-hidden .o-app-layout {
 
 /* Trip Editor panel */
 
-.trip-editor-card .rux-panel__header {
-  /* Trip editor header owns the header/body divider.
-     Body stays borderless so the separator follows the sticky slot. */
-  position: relative;
-  top: auto;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 0;
-  height: var(--rux-sidebar-trip-header-height);
-  padding: var(--rux-sidebar-trip-header-padding-block)
-    var(--rux-sidebar-trip-header-padding-inline) 0;
-  box-sizing: border-box;
+/* 4-row grid: header / tab-bar / body / footer */
+.sidebar__content > .trip-editor-card:not(.is-hidden) {
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.trip-editor-card .trip-editor__tab-bar {
+  grid-row: 2;
+  grid-column: 1;
+  padding: var(--rux-space-3);
   background: var(--rux-bg-2);
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border-bottom: 1px solid var(--rux-sidebar-divider-border-color);
-  border-radius: 0;
-  overflow: visible;
+  z-index: 1;
 }
 
 .trip-editor-card .rux-card__body {
-  /* Trip editor body is only the scroll/content area.
-     Add debug outlines under body.debug-surfaces, not production borders. */
   border: 0;
   border-radius: 0;
-  padding: var(--rux-sidebar-trip-body-padding-block) var(--rux-sidebar-trip-body-padding-inline);
+}
+
+/* Override shared grid-row: 2 — needs full context to beat base specificity */
+.sidebar__content > .trip-editor-card:not(.is-hidden) .rux-card__body {
+  grid-row: 3;
+}
+
+/* padding-bottom on the scroll container is ignored by Chrome/Safari flex-overflow.
+   Target the last form section directly; scoped to trip editor to avoid global side effects. */
+.trip-editor-card .rux-card__body > .form-section-card:last-of-type {
+  padding-bottom: var(--rux-sidebar-card-body-padding);
 }
 
 .trip-editor-card .form-section-card__label {
@@ -443,8 +436,6 @@ body.right-rail-hidden .o-app-layout {
 }
 
 .trip-editor-card .rux-panel__footer {
-  /* Trip editor footer owns the body/footer divider and button row.
-     Keep footer corners square; the parent card clips the outer radius. */
   position: relative;
   bottom: auto;
   gap: var(--rux-sidebar-card-padding-inline);
@@ -457,6 +448,11 @@ body.right-rail-hidden .o-app-layout {
 .trip-editor-card .rux-panel__footer > .rux-btn {
   flex: 1 1 0;
   min-width: 0;
+}
+
+/* Override shared grid-row: 3 — needs full context to beat base specificity */
+.sidebar__content > .trip-editor-card:not(.is-hidden) .rux-panel__footer {
+  grid-row: 4;
 }
 
 @keyframes trip-load-shimmer {
@@ -499,10 +495,9 @@ body.right-rail-hidden .o-app-layout {
 .notes-textarea,
 .notes__textarea {
   font-family: "Indie Flower", cursive;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--rux-size-4);
+  font-weight: 600;
   line-height: 1.55;
-  padding: var(--rux-sidebar-notes-padding);
   background: #fdf3c8;
   color: #181818;
   border: 1px solid var(--rux-sidebar-control-border-color);
@@ -516,7 +511,7 @@ body.right-rail-hidden .o-app-layout {
   scrollbar-width: none;
   -ms-overflow-style: none;
   outline: none;
-  margin: 0 var(--rux-sidebar-notes-inset-inline);
+  margin: 0;
   transition: box-shadow 0.12s ease;
 }
 
@@ -532,9 +527,11 @@ body.right-rail-hidden .o-app-layout {
 }
 
 .notes-card .rux-card__body {
+  /* Notes wrap handles its own 8px padding; body has none. */
+  padding: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .notes__footer {

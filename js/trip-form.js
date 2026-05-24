@@ -56,9 +56,23 @@ function syncStatusToggle(fieldId, value) {
   if (input) input.value = value || "";
   const group = document.querySelector(`.status-toggle-group[data-field="${fieldId}"]`);
   if (!group) return;
+
+  let activeBtn = null;
   group.querySelectorAll(".status-toggle-btn").forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.value === value);
+    const active = btn.dataset.value === value;
+    btn.classList.toggle("is-active", active);
+    if (active) activeBtn = btn;
   });
+
+  const pill = group.querySelector(".seg-ctrl__pill");
+  if (!pill) return;
+  if (activeBtn) {
+    pill.style.width = activeBtn.offsetWidth + "px";
+    pill.style.transform = `translateX(${activeBtn.offsetLeft - 3}px)`;
+  } else {
+    pill.style.width = "0";
+    pill.style.transform = "translateX(0)";
+  }
 }
 
 function updateStatusSelect(el) {
@@ -652,7 +666,7 @@ function syncBusSegButtons() {
   const n = parseInt(dom.busesNeeded.value) || 0;
   const display = document.getElementById("busesNeededDisplay");
   if (display) display.textContent = n > 0 ? String(n) : "–";
-  document.querySelectorAll("#busesNeededDropdown .buses-needed-option").forEach((btn) => {
+  document.querySelectorAll("#busesNeededDropdown .dropdown__item").forEach((btn) => {
     btn.classList.toggle("is-selected", Number(btn.dataset.value) === n);
   });
 }

@@ -515,6 +515,15 @@
                   aria-pressed="false"
                 ></button>
                 <button
+                  id="searchBtn"
+                  class="sidebar__icon-btn"
+                  data-card="search"
+                  title="Search Trips"
+                  aria-pressed="false"
+                >
+                  <span class="material-symbols-outlined">search</span>
+                </button>
+                <button
                   class="sidebar__icon-btn"
                   data-card="trip"
                   title="Trip Editor"
@@ -547,7 +556,7 @@
                   <span class="material-symbols-outlined">checklist</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn sidebar__icon-btn--bottom-start"
+                  class="sidebar__icon-btn"
                   data-card="driverManager"
                   title="Manage Drivers"
                   aria-pressed="false"
@@ -575,6 +584,14 @@
               <div class="sidebar__rail">
                 <button
                   class="sidebar__icon-btn"
+                  data-card="search"
+                  title="Search Trips"
+                  aria-pressed="false"
+                >
+                  <span class="material-symbols-outlined">search</span>
+                </button>
+                <button
+                  class="sidebar__icon-btn"
                   data-card="trip"
                   title="Trip Editor"
                   aria-pressed="false"
@@ -606,7 +623,7 @@
                   <span class="material-symbols-outlined">checklist</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn sidebar__icon-btn--bottom-start"
+                  class="sidebar__icon-btn"
                   data-card="driverManager"
                   title="Manage Drivers"
                   aria-pressed="false"
@@ -992,6 +1009,28 @@
                   </div>
                 </div>
 
+                <!-- Search Card -->
+                <div
+                  class="rux-card rux-card--compact is-hidden search-card"
+                  id="searchCard"
+                  data-js="panel-card-search"
+                >
+                  <div class="rux-panel__header">
+                    <h2 class="rux-header__title">Search</h2>
+                  </div>
+                  <div class="rux-card__body search-card__body">
+                    <input
+                      id="searchInput"
+                      class="search-row__input"
+                      type="search"
+                      placeholder="Search destination, customer, contact…"
+                      autocomplete="off"
+                      spellcheck="false"
+                    />
+                    <div id="searchDropdown" class="search-dropdown" hidden></div>
+                  </div>
+                </div>
+
                 <!-- Driver Manager Card -->
                 <div
                   class="rux-card rux-card--compact is-hidden reference-manager-card"
@@ -1184,6 +1223,8 @@
                       </div>
                       <div class="rux-header__actions"></div>
                     </div>
+                  </div>
+                  <div class="trip-editor__tab-bar">
                     <nav
                       class="trip-editor__tabs"
                       role="tablist"
@@ -1819,6 +1860,7 @@
                             role="group"
                             aria-label="Contract status"
                           >
+                            <div class="seg-ctrl__pill" aria-hidden="true"></div>
                             <button
                               type="button"
                               class="rux-btn rux-btn--secondary status-toggle-btn"
@@ -1864,6 +1906,7 @@
                             role="group"
                             aria-label="Invoice status"
                           >
+                            <div class="seg-ctrl__pill" aria-hidden="true"></div>
                             <button
                               type="button"
                               class="rux-btn rux-btn--secondary status-toggle-btn"
@@ -2027,74 +2070,74 @@
                               </button>
                               <div
                                 id="busesNeededDropdown"
-                                class="buses-needed-dropdown"
+                                class="dropdown__menu bus-count-tray"
                               >
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="1"
                                 >
                                   1
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="2"
                                 >
                                   2
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="3"
                                 >
                                   3
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="4"
                                 >
                                   4
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="5"
                                 >
                                   5
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="6"
                                 >
                                   6
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="7"
                                 >
                                   7
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="8"
                                 >
                                   8
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="9"
                                 >
                                   9
                                 </button>
                                 <button
                                   type="button"
-                                  class="buses-needed-option"
+                                  class="dropdown__item"
                                   data-value="10"
                                 >
                                   10
@@ -2271,32 +2314,6 @@
                     aria-atomic="true"
                   ></span>
                   <div class="rux-header__actions">
-                    <div
-                      id="searchRow"
-                      class="search-row"
-                      hidden
-                    >
-                      <div class="search-row__inner">
-                        <input
-                          id="searchInput"
-                          class="search-row__input"
-                          type="search"
-                          placeholder="Search destination, customer, contact…"
-                          autocomplete="off"
-                          spellcheck="false"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      id="searchToggleBtn"
-                      class="rux-btn rux-btn--secondary rux-btn--icon"
-                      type="button"
-                      aria-label="Search trips"
-                      title="Search trips"
-                      aria-pressed="false"
-                    >
-                      <span class="material-symbols-outlined">search</span>
-                    </button>
                     <div class="rux-icon-toolbar">
                       <button
                         id="prevWeekBtn"
@@ -3221,11 +3238,5 @@
         class="bus-picker__list"
       ></div>
     </div>
-    <!-- Search dropdown — at body level so it can layer above schedule content -->
-    <div
-      id="searchDropdown"
-      class="search-dropdown"
-      hidden
-    ></div>
   </body>
 </html>

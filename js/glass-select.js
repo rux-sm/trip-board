@@ -10,7 +10,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
   ]);
 
   const wrapper = document.createElement("div");
-  wrapper.className = "dropdown select-dropdown" + (cellClass ? " " + cellClass : "");
+  wrapper.className = "select-dropdown" + (cellClass ? " " + cellClass : "");
   wrapper.dataset.selectName = sel.name || "";
 
   const trigger = document.createElement("button");
@@ -37,14 +37,6 @@ function wrapSelectInGlassDropdown(sel, opts) {
     if (name.includes("_driver1Status")) return "person";
     if (name.includes("_driver2Status")) return "person";
     if (name.includes("_driver3Status") || name.includes("_driver4Status")) return "emergency_home";
-    return "";
-  }
-
-  function getBusDriverNameIcon(name) {
-    if (!name) return "";
-    if (/_driver1$/.test(name)) return "person";
-    if (/_driver2$/.test(name)) return "group";
-    if (/_driver3$/.test(name) || /_driver4$/.test(name)) return "emergency_home";
     return "";
   }
 
@@ -90,15 +82,6 @@ function wrapSelectInGlassDropdown(sel, opts) {
   function updateTrigger() {
     trigger.innerHTML = "";
     const v = (sel.value ?? "").trim();
-
-    const roleIcon = getBusDriverNameIcon(sel.name);
-    if (roleIcon) {
-      const iconSpan = document.createElement("span");
-      iconSpan.className = "material-symbols-outlined driver-role-icon";
-      iconSpan.setAttribute("aria-hidden", "true");
-      iconSpan.textContent = roleIcon;
-      trigger.appendChild(iconSpan);
-    }
 
     const textSpan = document.createElement("span");
     textSpan.style.flex = "1";
@@ -156,7 +139,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
       if (opt.disabled && !String(opt.value).trim()) return;
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "dropdown__item" + (useBusesNeededTray ? " buses-needed-option" : "");
+      btn.className = "dropdown__item";
       btn.setAttribute("role", "option");
       btn.dataset.value = opt.value;
 

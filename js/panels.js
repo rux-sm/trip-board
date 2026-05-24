@@ -27,6 +27,7 @@ const CARD_CONFIG = {
   todo: { card: dom.todoCard, btn: dom.todoBtn },
   log: { card: dom.logCard, btn: dom.logBtn },
   profile: { card: dom.profileCard, btn: dom.avatarBtn },
+  search: { card: dom.searchCard, btn: dom.searchBtn },
 };
 
 const MAX_CARDS_PER_PANEL = 1;

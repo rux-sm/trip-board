@@ -481,7 +481,6 @@
 /* Print styles (Legal V1 table + V2 grid) moved to css/print.css */
 
 #driverWeekCard .rux-card__body {
-  padding-inline: var(--rux-space-3);
   display: flex;
   flex-direction: column;
 }
@@ -1080,17 +1079,20 @@ body.bars-compact {
 }
 
 .log-filter-badge {
-  font-size: var(--rux-size-2);
+  font-size: var(--rux-size-3);
   font-family: var(--font-mono);
   font-weight: var(--rux-weight-medium);
   color: var(--rux-color-accent);
-  background: oklch(from var(--rux-color-accent) l c h / 12%);
-  padding: 2px var(--rux-space-2);
-  border-radius: var(--rux-radius-badge);
+  background: oklch(from var(--rux-color-accent) l c h / 0%);
+  padding: 0 var(--rux-space-4);
+  border-radius: var(--rux-radius-md);
+  height: 32px;
   white-space: nowrap;
+  align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+  display:flex;
 }
 
 .log-list {
@@ -1170,7 +1172,39 @@ body.bars-compact {
   background: linear-gradient(to bottom, oklch(100% 0 0 / 0.07), transparent 65%);
 }
 
-/* ── Search row ─────────────────────────────────────────────────────────── */
+/* ── Search card ─────────────────────────────────────────────────────────── */
+
+.search-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rux-space-3);
+}
+
+.search-card__body .search-dropdown {
+  flex: 1;
+  max-height: none;
+}
+
+.search-card__body .search-row__input {
+  flex: none;
+  width: 100%;
+  background-color: var(--rux-fld-bg);
+  border: 1px solid var(--rux-border-2);
+  border-radius: var(--rux-fld-radius);
+  height: var(--rux-fld-height);
+  padding-inline: var(--rux-space-2);
+  box-sizing: border-box;
+  transition: box-shadow 0.11s, border-color 0.11s;
+}
+
+.search-card__body .search-row__input:focus,
+.search-card__body .search-row__input:focus-visible {
+  outline: none;
+  border-color: var(--rux-color-accent);
+  box-shadow: var(--focus-ring), var(--rux-fld-shadow);
+}
+
+/* ── Search row (legacy header version) ──────────────────────────────────── */
 
 .search-row {
   flex: 1;
@@ -1182,7 +1216,7 @@ body.bars-compact {
   align-items: center;
   background-color: var(--rux-fld-bg);
   border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-fld-radius);
+  border-radius: var(--rux-radius-md);
   height: var(--rux-fld-height);
   padding-inline: var(--rux-space-2);
   transition:
@@ -1222,17 +1256,16 @@ body.bars-compact {
 }
 
 .search-dropdown {
-  position: fixed;
-  z-index: 10001;
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 8px;
+  width: 100%;
   background: var(--rux-bg-4);
   border: 1px solid var(--rux-border-2);
   border-radius: var(--rux-radius-lg);
   box-shadow: var(--rux-shadow-2);
-  max-height: 320px;
+  max-height: 280px;
   overflow-y: auto;
   opacity: 0;
   pointer-events: none;
@@ -1258,7 +1291,7 @@ body.bars-compact {
   padding: var(--rux-space-2) var(--rux-space-3);
   background: var(--rux-bg-5);
   border: none;
-  border-bottom: 1px solid var(--rux-border-1);
+  border: 1px solid var(--rux-border-default);
   border-radius: var(--rux-radius-md);
   cursor: pointer;
   color: var(--rux-text-1);

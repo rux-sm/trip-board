@@ -87,9 +87,9 @@
      adjustments locally when nesting requires it. */
   --rux-radius-xl: 28px;
   --rux-radius-lg: 20px;
-  --rux-radius-md: 12px;
-  --rux-radius-sm: 8px;
-  --rux-radius-xs: 0;
+  --rux-radius-md: 10px;
+  --rux-radius-sm: 2px;
+  --rux-radius-xs: 100%;
 
   /* Legacy numeric aliases retained during migration.
      Avoid adding new references to these. */
@@ -218,7 +218,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-border-1: oklch(from var(--rux-color-white) l c h / 4%); /* Subtle */
-  --rux-border-default: oklch(from var(--rux-color-white) l c h / 10%); /* Default */
+  --rux-border-default: oklch(from var(--rux-color-white) 40% c h / 100%); /* Default */
   --rux-border-2: var(--rux-border-default); /* Legacy default alias */
   --rux-border-3: oklch(from var(--rux-color-white) l c h / 24%); /* Strong */
   --rux-border-s: var(--rux-bg-2); /* Matches panel bg for a seamless look */

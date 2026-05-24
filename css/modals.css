@@ -1714,6 +1714,8 @@
 }
 
 .reference-manager-card .rux-card__body {
+  /* reference-manager--panel handles its own 8px padding; body has none. */
+  padding: 0;
   overflow-y: auto;
 }
 

@@ -5,29 +5,15 @@
 let _searchDebounce = null;
 
 function openSearch() {
-  dom.searchRow.hidden = false;
-  dom.searchToggleBtn.setAttribute("aria-pressed", "true");
-  requestAnimationFrame(() => dom.searchInput.focus());
+  requestAnimationFrame(() => dom.searchInput?.focus());
 }
 
 function closeSearch() {
-  dom.searchRow.hidden = true;
-  dom.searchDropdown.classList.remove("is-open");
-  dom.searchDropdown.hidden = true;
-  dom.searchInput.value = "";
-  dom.searchToggleBtn.setAttribute("aria-pressed", "false");
-}
-
-function toggleSearch() {
-  if (!dom.searchRow.hidden) { closeSearch(); return; }
-  openSearch();
-}
-
-function _positionDropdown() {
-  const rect = dom.searchRow.getBoundingClientRect();
-  dom.searchDropdown.style.top   = `${rect.bottom + 4}px`;
-  dom.searchDropdown.style.left  = `${rect.left}px`;
-  dom.searchDropdown.style.width = `${rect.width}px`;
+  if (dom.searchDropdown) {
+    dom.searchDropdown.classList.remove("is-open");
+    dom.searchDropdown.hidden = true;
+  }
+  if (dom.searchInput) dom.searchInput.value = "";
 }
 
 async function _runSearch(query) {
@@ -36,7 +22,6 @@ async function _runSearch(query) {
     dom.searchDropdown.hidden = true;
     return;
   }
-  _positionDropdown();
   dom.searchDropdown.innerHTML = `<div class="search-dropdown__loading">Searching…</div>`;
   dom.searchDropdown.hidden = false;
   requestAnimationFrame(() => dom.searchDropdown.classList.add("is-open"));
@@ -82,6 +67,7 @@ function _renderSearchResults(results) {
 
 async function jumpToSearchResult(tripKey, departureDate) {
   closeSearch();
+  hideCard("search");
   if (!confirmDiscardIfDirty()) return;
 
   const targetDate = parseYMD(departureDate);

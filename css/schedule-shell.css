@@ -5,7 +5,7 @@
   --rux-schedule-card-padding: var(--rux-space-3);
   --rux-schedule-outer-radius: var(--rux-radius-9);
   --rux-schedule-surface-radius: var(--rux-radius-card);
-  --rux-schedule-card-border-color: var(--rux-debug-green);
+  --rux-schedule-card-border-color: var(--rux-border-default);
   --rux-schedule-surface-border-color: transparent;
 }
 
@@ -39,7 +39,7 @@
   flex-direction: column;
   overflow: visible;
   border-radius: var(--rux-schedule-outer-radius);
-  border: 2px solid var(--rux-schedule-card-border-color);
+  border: 1px solid var(--rux-schedule-card-border-color);
   background: var(--rux-bg-2);
 }
 

@@ -193,8 +193,8 @@ const dom = {
 
   itineraryPdfInput: $("itineraryPdfInput"),
 
-  searchToggleBtn: $("searchToggleBtn"),
-  searchRow: $("searchRow"),
+  searchCard: $("searchCard"),
+  searchBtn: $("searchBtn"),
   searchInput: $("searchInput"),
   searchDropdown: $("searchDropdown"),
 };

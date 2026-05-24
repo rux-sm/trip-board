@@ -50,7 +50,7 @@
   --rux-btn-square-icon-opsz: 24;
 
   --rux-btn-icon-only-size: var(--size-toolbar-action);
-  --rux-btn-icon-toolbar-gap: var(--rux-space-2);
+  --rux-btn-icon-toolbar-gap: var(--rux-space-1);
 }
 
 /* ── 1. Element Reset ───────────────────────────────────────────────────── */
@@ -91,7 +91,7 @@ button {
 
   cursor: pointer;
   border-radius: var(--rux-btn-radius);
-  border: none;
+  border: 1px solid var(--rux-border-default);
   background-color: var(--btn-background);
   color: var(--btn-text);
   box-shadow: var(--btn-shadow);
@@ -289,7 +289,7 @@ button {
 
 .rux-btn-group {
   display: inline-flex;
-  gap: 1px;
+  gap: 4px;
   border-radius: var(--rux-btn-radius);
   overflow: hidden;
   background: var(--rux-border-2);

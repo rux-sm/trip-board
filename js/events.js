@@ -492,7 +492,6 @@ function wireEvents() {
     const modalClosers = [
       { el: document.getElementById("busPicker"), close: closeBusPicker },
       { el: dom.pdfViewerModal, close: closePdfModal },
-      { el: dom.searchRow, close: closeSearch },
       { el: dom.itineraryModal, close: closeItineraryModal },
       { el: dom.tripDetailsModal, close: closeTripDetailsModal },
       { el: dom.envelopeModal, close: closeEnvelopeModal },
@@ -1069,9 +1068,6 @@ function wireEvents() {
 
     function closeBusesDropdown() {
       if (!bnDropdown) return;
-      bnDropdown
-        .querySelectorAll(".buses-needed-option")
-        .forEach((o) => o.classList.remove("is-visible"));
       bnDropdown.classList.remove("is-open");
       bnTrigger?.setAttribute("aria-expanded", "false");
     }
@@ -1079,9 +1075,6 @@ function wireEvents() {
     function openBusesDropdown() {
       bnDropdown.classList.add("is-open");
       bnTrigger.setAttribute("aria-expanded", "true");
-      bnDropdown.querySelectorAll(".buses-needed-option").forEach((opt, i) => {
-        setTimeout(() => opt.classList.add("is-visible"), i * 30);
-      });
     }
 
     bnTrigger?.addEventListener("click", (e) => {
@@ -1090,7 +1083,7 @@ function wireEvents() {
     });
 
     bnDropdown?.addEventListener("click", (e) => {
-      const opt = e.target.closest(".buses-needed-option");
+      const opt = e.target.closest(".dropdown__item");
       if (!opt) return;
       setBusesNeededAndSync(opt.dataset.value);
       dom.busesNeeded.dispatchEvent(new Event("change", { bubbles: true }));
@@ -1959,7 +1952,14 @@ function wireProfilePopover() {
 
   // ── Search ─────────────────────────────────────────────────────────────────
 
-  dom.searchToggleBtn?.addEventListener("click", toggleSearch);
+  // Auto-focus input when a search rail button opens the card
+  document.querySelectorAll('.sidebar__icon-btn[data-card="search"]').forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = dom.searchCard;
+      if (card && !card.classList.contains("is-hidden")) openSearch();
+      else requestAnimationFrame(() => openSearch());
+    });
+  });
 
   dom.searchInput?.addEventListener("input", (e) => {
     clearTimeout(_searchDebounce);

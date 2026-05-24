@@ -30,7 +30,7 @@
    ========================================================================== */
 
 .profile-avatar {
-  border-radius: var(--rux-radius-md);
+  border-radius: 6px;
   flex-shrink: 0;
   overflow: hidden;
 }

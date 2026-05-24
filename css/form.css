@@ -6,7 +6,7 @@
 
   /* Fields */
   --rux-fld-height: 32px;
-  --rux-fld-radius: var(--rux-radius-3);
+  --rux-fld-radius: var(--rux-radius-md);
   --rux-fld-padding: 0 var(--rux-space-2);
   --rux-fld-bg: var(--rux-bg-field);
   --rux-fld-bg-hover: var(--rux-bg-3);
@@ -69,15 +69,14 @@ textarea {
 
 input,
 select,
-textarea,
-.select-trigger {
+textarea {
   display: block;
   width: 100%;
   box-sizing: border-box;
   height: var(--rux-fld-height);
   padding: 0 var(--rux-space-2);
   background-color: var(--rux-fld-bg);
-  border: none;
+  border: 1px solid var(--rux-border-default);
   border-radius: var(--rux-fld-radius);
   font-size: var(--rux-fld-font-size);
   font-weight: var(--rux-fld-font-weight);
@@ -192,82 +191,14 @@ textarea::placeholder {
 input:focus,
 select:focus,
 textarea:focus,
-.select-trigger:focus,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible,
-.select-trigger:focus-visible {
+textarea:focus-visible {
   outline: none;
   border-color: var(--rux-color-accent);
   box-shadow: var(--focus-ring), var(--rux-fld-shadow);
 }
 
-/* ── 6b. Driver double-booking conflict highlight ──────────────────────────── */
-
-.select-dropdown.driver-conflict .select-trigger {
-  border-color: var(--rux-status-yellow);
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--rux-status-yellow) 30%, transparent);
-}
-
-/* Warning icon inside the dropdown list item */
-.dropdown__conflict-icon {
-  font-size: var(--icon-field-size);
-  font-variation-settings:
-    "FILL" var(--icon-field-fill),
-    "wght" var(--icon-field-wght),
-    "GRAD" var(--icon-field-grad),
-    "opsz" var(--icon-field-opsz);
-  color: var(--rux-status-yellow);
-  flex-shrink: 0;
-  margin-left: var(--icon-text-gap);
-}
-
-/* Dim the conflicting item text slightly so the icon pops */
-.driver-conflict-item {
-  color: color-mix(in oklch, var(--rux-text-1) 70%, var(--rux-status-yellow));
-}
-
-/* ── 7. Custom Select Widget (.select-dropdown / .select-trigger) ─────────── */
-
-.select-dropdown {
-  position: relative;
-  display: block;
-  width: 100%;
-}
-
-.select-dropdown .dropdown__menu {
-  inset-inline-start: 0;
-  inset-inline-end: 0;
-  min-width: 100%;
-}
-
-.bus-grid .select-dropdown .dropdown__menu {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-.bus-grid select {
-  background-image: none;
-  padding-right: var(--rux-space-2);
-}
-
-.bus-grid .select-trigger::after {
-  display: none;
-}
-
-/* Trigger: a button styled to look like an input */
-.select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--icon-text-gap);
-  width: 100%;
-  min-width: 0;
-  border-radius: var(--rux-fld-radius);
-  text-align: left;
-}
-
-.select-dropdown:has(select:disabled) .select-trigger,
 input:disabled,
 textarea:disabled {
   opacity: var(--rux-fld-disabled-opacity);
@@ -275,97 +206,6 @@ textarea:disabled {
   pointer-events: none;
 }
 
-/* Chevron pseudo-element */
-.select-trigger::after {
-  content: "";
-  width: var(--chevron-size);
-  height: var(--chevron-size);
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: center;
-  flex-shrink: 0;
-  opacity: var(--chevron-opacity);
-}
-
-/* Open state — same focus ring as inputs */
-.select-trigger.is-open {
-  outline: none;
-  box-shadow: var(--focus-ring), var(--rux-fld-shadow);
-}
-
-/* Visually-hidden native fallback for a11y */
-.select-dropdown .select-native {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-/* Muted icon color when trigger has no selection */
-.select-trigger.is-empty .dropdown-icon.is-active {
-  color: var(--rux-text-placeholder);
-}
-
-/* Status icon colors inside select triggers */
-.dropdown-icon.status-pending {
-  color: var(--rux-status-red);
-}
-
-.dropdown-icon.status-ok {
-  color: var(--rux-status-green);
-}
-
-.dropdown-icon.status-assigned {
-  color: var(--rux-status-yellow);
-}
-
-.dropdown-icon.status-blue {
-  color: var(--rux-status-blue);
-}
-
-/* Status colors on dropdown menu items */
-.dropdown__item.status-pending,
-.dropdown__item.status-pending .dropdown-icon {
-  color: var(--rux-status-red) !important;
-}
-
-.dropdown__item.status-ok,
-.dropdown__item.status-ok .dropdown-icon {
-  color: var(--rux-status-green) !important;
-}
-
-.dropdown__item.status-assigned,
-.dropdown__item.status-assigned .dropdown-icon {
-  color: var(--rux-status-yellow) !important;
-}
-
-.dropdown__item.status-blue,
-.dropdown__item.status-blue .dropdown-icon {
-  color: var(--rux-status-blue) !important;
-}
-
-/* Status colors on the select field itself */
-.select-trigger.status-pending {
-  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--rux-fld-bg));
-  color: var(--rux-status-red);
-}
-
-.select-trigger.status-ok {
-  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--rux-fld-bg));
-  color: var(--rux-status-green);
-}
-
-.select-trigger.status-assigned {
-  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--rux-fld-bg));
-  color: var(--rux-status-yellow);
-}
-
-.select-trigger.status-blue {
-  background-color: color-mix(in srgb, var(--rux-status-blue) 20%, var(--rux-fld-bg));
-  color: var(--rux-status-blue);
-}
 
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */
 
@@ -374,8 +214,7 @@ input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
   color: var(--rux-text-placeholder);
 }
 
-select.is-empty:not(:focus),
-.select-trigger.is-empty {
+select.is-empty:not(:focus) {
   color: var(--rux-text-placeholder);
 }
 
@@ -519,7 +358,6 @@ select.is-empty:not(:focus),
   width: 100%;
   gap: 8px;
   scrollbar-width: none;
-  padding-top: 8px;
   min-width: 0;
 }
 
@@ -722,12 +560,12 @@ hr.form-divider {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   row-gap: var(--rux-fld-row-gap);
   column-gap: var(--rux-fld-col-gap);
-  padding: var(--rux-space-5);
   background: var(--rux-bg-4);
   border: none;
   border-radius: var(--rux-radius-section);
   overflow: visible;
   box-shadow: var(--rux-btn-shadow-inset);
+  margin-top: var(--rux-space-3);
 }
 
 .form-section-card.is-active {
@@ -740,7 +578,7 @@ hr.form-divider {
   background: transparent;
   box-shadow: none;
   border-radius: 0;
-  padding: 0;
+  padding-bottom: var(--rux-fld-row-gap);
   overflow: visible;
 }
 .form-section-card.form-section-flat:first-of-type {
@@ -790,147 +628,66 @@ hr.form-divider {
   min-width: 0;
 }
 
-/* ── Buses needed picker ─────────────────────────────────────────────────── */
-
-.buses-needed-picker {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-}
-
-.buses-needed-picker:has(.buses-needed-dropdown.is-open) {
-  z-index: 100;
-}
-
-.buses-needed-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: var(--rux-fld-height);
-  width: 100%;
-  padding: 0 8px;
-  background: var(--rux-bg-field);
-  border: none;
-  border-radius: var(--rux-radius-md);
-  cursor: pointer;
-  font-size: var(--rux-fld-font-size);
-  color: var(--rux-text-1);
-  transition: background var(--transition-fast);
-}
-.buses-needed-trigger:hover {
-  background: var(--rux-bg-3);
-}
-
-.buses-needed-chevron {
-  font-size: 16px;
-  color: var(--rux-text-3);
-  pointer-events: none;
-  transition: transform var(--transition-fast);
-}
-.buses-needed-trigger[aria-expanded="true"] .buses-needed-chevron {
-  transform: rotate(180deg);
-}
-
-.buses-needed-dropdown {
-  --rux-dropdown-open-transform: translateX(-50%) scaleY(1);
-  --rux-dropdown-closed-transform: translateX(-50%) scaleY(0);
-
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: var(--rux-dropdown-closed-transform);
-  transform-origin: top center;
-  margin-top: 8px;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
-  max-height: auto;
-  overflow-y: auto;
-  opacity: 0;
-  pointer-events: none;
-  background: var(--rux-bg-4);
-  border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-radius-lg);
-  box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
-  scrollbar-width: thin;
-  scrollbar-color: var(--rux-border-3) transparent;
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.buses-needed-dropdown.is-open {
-  opacity: 1;
-  transform: var(--rux-dropdown-open-transform);
-  pointer-events: auto;
-}
-
-.buses-needed-dropdown::-webkit-scrollbar {
-  width: 4px;
-}
-.buses-needed-dropdown::-webkit-scrollbar-track {
-  background: transparent;
-}
-.buses-needed-dropdown::-webkit-scrollbar-thumb {
-  background: var(--rux-border-3);
-  border-radius: 4px;
-}
-.buses-needed-dropdown::-webkit-scrollbar-thumb:hover {
-  background: var(--rux-border-2);
-}
-
-.buses-needed-option {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  padding: 0;
-  background: var(--rux-bg-5);
-  border: none;
-  border-radius: var(--rux-radius-md);
-  cursor: pointer;
-  font-size: var(--rux-fld-font-size);
-  color: var(--rux-text-1);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(-8px) scale(0.95);
-  transition:
-    opacity 0.1s ease,
-    transform 0.1s ease,
-    background var(--transition-fast);
-}
-.buses-needed-option.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-.buses-needed-option.is-visible:hover {
-  background: var(--rux-bg-3);
-  transform: scale(1.1);
-}
-.buses-needed-option.is-selected {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-/* ── Status toggle button group ─────────────────────────────────────────── */
+/* ── Status toggle segmented control ─────────────────────────────────────── */
 
 .status-toggle-group {
+  position: relative;
   width: 100%;
+  padding: 4px;
+  gap: 0;
+  background: var(--rux-bg-3);
+  border: 1px solid var(--rux-border-default);
+  border-radius: calc(var(--rux-btn-radius) + 4px);
+}
+
+.seg-ctrl__pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  width: 0;
+  border-radius: var(--rux-btn-radius);
+  background: var(--rux-btn-bg-primary);
+  pointer-events: none;
+  z-index: 0;
+  transition:
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .status-toggle-btn {
+  --btn-background: transparent;
+  --btn-active-background: transparent;
+  --btn-shadow: none;
+  --btn-text: var(--rux-text-2);
+  position: relative;
+  z-index: 1;
   flex: 1;
+  border: none;
+  border-radius: 0;
+  transition: color 150ms;
+}
+
+.status-toggle-group > .status-toggle-btn:first-of-type {
+  border-top-left-radius: var(--rux-btn-radius);
+  border-bottom-left-radius: var(--rux-btn-radius);
+}
+
+.status-toggle-group > .status-toggle-btn:last-of-type {
+  border-top-right-radius: var(--rux-btn-radius);
+  border-bottom-right-radius: var(--rux-btn-radius);
+}
+
+.status-toggle-btn:hover {
+  --btn-background: transparent;
+  --btn-text: var(--rux-text-1);
 }
 
 .status-toggle-btn.is-active {
-  --btn-background: var(--rux-btn-bg-primary);
-  --btn-text: var(--rux-color-black);
+  --btn-background: transparent;
+  --btn-text: var(--rux-color-white);
+  font-weight: var(--rux-weight-semibold);
 }
 
 .dispatch-control-row {
@@ -962,128 +719,3 @@ hr.form-divider {
   align-self: end;
 }
 
-/* ── Trip color popover ──────────────────────────────────────────────────── */
-
-.trip-color-swatches {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-}
-
-.trip-color-swatches:has(.trip-color-dropdown.is-open) {
-  z-index: 100;
-}
-
-/* Trigger button — matches buses-needed-trigger */
-.trip-color-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: var(--rux-fld-height);
-  width: 100%;
-  padding: 0 8px;
-  background: var(--rux-bg-field);
-  border: none;
-  border-radius: var(--rux-radius-md);
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-.trip-color-trigger:hover {
-  background: var(--rux-bg-3);
-}
-
-.trip-color-trigger__preview {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  pointer-events: none;
-}
-
-.trip-color-trigger__chevron {
-  font-size: 16px;
-  color: var(--rux-text-3);
-  pointer-events: none;
-  transition: transform var(--transition-fast);
-}
-.trip-color-trigger[aria-expanded="true"] .trip-color-trigger__chevron {
-  transform: rotate(180deg);
-}
-
-/* Floating dropdown — anchored to .trip-color-swatches */
-.trip-color-dropdown {
-  --rux-dropdown-open-transform: translateY(-50%) scaleX(1);
-  --rux-dropdown-closed-transform: translateY(-50%) scaleX(0);
-
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 8px);
-  transform: var(--rux-dropdown-closed-transform);
-  transform-origin: left center;
-  z-index: 100;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  gap: 8px;
-  padding: 10px;
-  opacity: 0;
-  pointer-events: none;
-  background: var(--rux-bg-4);
-  border: 1px solid var(--rux-border-2);
-  border-radius: var(--rux-radius-lg);
-  box-shadow: 0 6px 20px oklch(0% 0 0 / 0.45);
-  width: max-content;
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.trip-color-dropdown.is-open {
-  opacity: 1;
-  transform: var(--rux-dropdown-open-transform);
-  pointer-events: auto;
-}
-
-/* Swatches (used inside dropdown) */
-.trip-color-swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: var(--rux-radius-md);
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
-  opacity: 0;
-  transform: translateY(-8px) scale(0.95);
-  transition:
-    opacity 0.1s ease,
-    transform 0.1s ease,
-    box-shadow var(--transition-fast);
-}
-.trip-color-swatch.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-.trip-color-swatch.is-visible:hover {
-  transform: scale(1.2);
-}
-.trip-color-swatch.is-selected {
-  box-shadow: var(--focus-ring);
-}
-
-.trip-color-swatch--none {
-  background: transparent;
-  border: 2px dashed var(--rux-border-3);
-}
-
-.trip-color-swatch--oos {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--rux-bg-5) 0px,
-    var(--rux-bg-5) 4px,
-    var(--rux-bg-4) 4px,
-    var(--rux-bg-4) 8px
-  );
-}
