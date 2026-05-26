@@ -17,7 +17,7 @@
 
   --rux-color-black: oklch(0% 0 250);
   --rux-color-white: oklch(100% 0 250);
-  --rux-color-gray: oklch(50% 0.006 250);
+  --rux-color-gray: oklch(50% 0.004 260);
   --rux-color-red: oklch(50% 0.18 24);
   --rux-color-orange: oklch(50% 0.2 65);
   --rux-color-yellow: oklch(50% 0.2 90);
@@ -149,17 +149,17 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-bg-1: oklch(from var(--rux-color-gray) 0% c h); /* App canvas — pure black */
-  --rux-bg-field: oklch(from var(--rux-color-gray) 28% c h);
-  --rux-bg-2: oklch(from var(--rux-color-gray) 20% c h); /* Panels, sidebar, inputs */
+  --rux-bg-field: oklch(from var(--rux-color-gray) 33% c h);
+  --rux-bg-2: oklch(from var(--rux-color-gray) 22% c h); /* Panels, sidebar, inputs */
   --rux-bg-3: oklch(from var(--rux-color-gray) 24% c h); /* Headers, footers, menus */
   --rux-bg-4: oklch(from var(--rux-color-gray) 26% c h); /* Cards, grouped sections */
   --rux-bg-5: oklch(from var(--rux-color-gray) 32% c h); /* Modals — highest elevation */
   --rux-bg-notes: oklch(from var(--rux-color-yellow) 80% 0.15 h); /* Form fields, dropdowns, popovers */
   --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h); /* Scrim / backdrop */
-  --rux-bg-schedule-headers: oklch(from var(--rux-color-red) 28% c h);
-  --rux-bg-schedule-headers-a: color-mix(in srgb, var(--rux-bg-schedule-headers) 50%);
+  --rux-bg-schedule-headers: oklch(from var(--rux-color-gray) 33% c h);
+  --rux-bg-schedule-headers-a: color-mix(in srgb, var(--rux-bg-schedule-headers) 100%);
   --rux-bg-schedule-headers-b: oklch(from var(--rux-color-gray) 28% c h);
-  --rux-bg-schedule: oklch(from var(--rux-color-gray) 28% c h); /* App canvas — pure black */
+  --rux-bg-schedule: oklch(from var(--rux-color-gray) 22% c h);/* App canvas — pure black */
   --rux-bg-trip-bar: oklch(from var(--rux-color-gray) 32% c h); /* App canvas — pure black */
   --rux-bg-scrollbar-track: oklch(from var(--rux-color-gray) 26% c h / 100%); /* Scrollbar track — matches panel bg */
   --rux-bg-scrollbar-thumb: oklch(from var(--rux-color-gray) 60% c h);
@@ -167,7 +167,7 @@
   --rux-bg-scrollbar-thumb-active: oklch(from var(--rux-color-gray) 80% c h);
 
   /* The core background token */
-  --rux-bg--glass: rgba(255, 255, 255, 0);
+  --rux-bg--glass: rgb(31,31,31);
 
   /* Optional: Supporting tokens for a complete effect */
   --rux-border--glass: var(--rux-border-schedule);
@@ -279,4 +279,11 @@
 
   /* Layout */
   --rux-layout-spacing: var(--rux-space-3);
+
+ /* Shadows */
+  --input-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 
+              0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --button-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 
+              0 1px 3px 1px rgba(0, 0, 0, 0.15);
+
 }

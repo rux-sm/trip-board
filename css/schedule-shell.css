@@ -6,7 +6,7 @@
   --rux-schedule-outer-radius: var(--rux-radius-lg);
   --rux-schedule-surface-radius: var(--rux-radius-md);
   --rux-schedule-card-border-color: var(--rux-border-default);
-  --rux-schedule-surface-border-color: var(--schedule-outer-border);
+  --rux-schedule-surface-border-color: var(--rux-border-divider);
 }
 
 /* ==========================================================================

@@ -156,21 +156,21 @@
   /* ── COLOR SYSTEM ───────────────────────────────────────────────────── */
 
   /* Per-variant accent seeds — change a color here */
-  --tripbar-default-accent:     oklch(55% 0.2 260 / 100%);
-  --tripbar-unconfirmed-accent: oklch(55% 0.2 24 / 100%);
-  --tripbar-blue-accent:        oklch(55% 0.2 250 / 100%);
-  --tripbar-red-accent:         oklch(55% 0.2 24 / 100%);
-  --tripbar-green-accent:       oklch(55% 0.2 150 / 100%);
-  --tripbar-yellow-accent:      oklch(55% 0.2 90 / 100%);
-  --tripbar-orange-accent:      oklch(55% 0.2 65 / 100%);
-  --tripbar-purple-accent:      oklch(55% 0.2 285 / 100%);
-  --tripbar-violet-accent:      oklch(55% 0.2 300 / 100%);
-  --tripbar-indigo-accent:      oklch(55% 0.2 275 / 100%);
-  --tripbar-pink-accent:        oklch(55% 0.2 350 / 100%);
-  --tripbar-cyan-accent:        oklch(55% 0.2 210 / 100%);
-  --tripbar-teal-accent:        oklch(55% 0.2 185 / 100%);
-  --tripbar-mint-accent:        oklch(55% 0.2 165 / 100%);
-  --tripbar-brown-accent:       oklch(55% 0.2 55 / 100%);
+  --tripbar-default-accent:     oklch(44% 0.2 260 / 100%);
+  --tripbar-unconfirmed-accent: oklch(44% 0.2 24 / 100%);
+  --tripbar-blue-accent:        oklch(44% 0.2 250 / 100%);
+  --tripbar-red-accent:         oklch(60% 0.24 24 / 100%);
+  --tripbar-green-accent:       oklch(60% 0.24 150 / 100%);
+  --tripbar-yellow-accent:      oklch(60% 0.24 90 / 100%);
+  --tripbar-orange-accent:      oklch(60% 0.24 65 / 100%);
+  --tripbar-purple-accent:      oklch(60% 0.24 285 / 100%);
+  --tripbar-violet-accent:      oklch(60% 0.24 300 / 100%);
+  --tripbar-indigo-accent:      oklch(60% 0.24 275 / 100%);
+  --tripbar-pink-accent:        oklch(60% 0.24 350 / 100%);
+  --tripbar-cyan-accent:        oklch(60% 0.24 210 / 100%);
+  --tripbar-teal-accent:        oklch(60% 0.24 185 / 100%);
+  --tripbar-mint-accent:        oklch(60% 0.24 165 / 100%);
+  --tripbar-brown-accent:       oklch(60% 0.24 55 / 100%);
   --tripbar-gray-accent:        oklch(from var(--rux-color-gray) 40% 0.05 h / 100%);
 
   /* Active accent — overridden per variant by .color-* and .unconfirmed */
@@ -180,7 +180,7 @@
   /* ── Time row special ───────────────────────────────────────────────── */
 
   --tripbar-time-color: var(--tripbar-r5-color);
-  --tripbar-time-flagged-hue: 70deg;
+  --tripbar-time-flagged-color: oklch(90% 0.24 100 / 100%);
 
   /* ════════════════════════════════════════════════════════════════════════
      PER-ROW TOKENS — organized by property type, then by row
@@ -243,10 +243,10 @@
 
   /* ── Padding Inline (inner horizontal text inset) ────────────────────── */
 
-  --tripbar-r1-padding-inline:   0px;
+  --tripbar-r1-padding-inline:   1px;
   --tripbar-r2-padding-inline:   0px;
   --tripbar-r3-padding-inline:   0px;
-  --tripbar-r4-padding-inline:   0px;
+  --tripbar-r4-padding-inline:   1px;
   --tripbar-r5-padding-inline:   4px;
   --tripbar-r6-padding-inline:   0px;
   --tripbar-r7-padding-inline:   0px;
@@ -254,12 +254,6 @@
   --tripbar-r9-padding-inline:   0px;
   --tripbar-r10-padding-inline:  0px;
   --tripbar-r11-padding-inline:  0px;
-
-
-
-
-
-
 
   /* ── Letter Spacing ──────────────────────────────────────────────────── */
 
@@ -318,16 +312,16 @@
 
   --tripbar-r5-border-color: oklch(100% 0 0 / 20%);
 
-  --tripbar-r1-icon-size:  14px;
-  --tripbar-r2-icon-size:  14px;
-  --tripbar-r3-icon-size:  14px;
-  --tripbar-r4-icon-size:  14px;
+  --tripbar-r1-icon-size:  16px;
+  --tripbar-r2-icon-size:  16px;
+  --tripbar-r3-icon-size:  16px;
+  --tripbar-r4-icon-size:  16px;
   --tripbar-r5-icon-size:  16px;
-  --tripbar-r6-icon-size:  14px;
-  --tripbar-r7-icon-size:  14px;   /* icons not used on pay row */
-  --tripbar-r8-icon-size:  14px;
-  --tripbar-r9-icon-size:  14px;
-  --tripbar-r10-icon-size: 14px;
+  --tripbar-r6-icon-size:  16px;
+  --tripbar-r7-icon-size:  16px;   /* icons not used on pay row */
+  --tripbar-r8-icon-size:  16px;
+  --tripbar-r9-icon-size:  16px;
+  --tripbar-r10-icon-size: 16px;
   --tripbar-r11-icon-size: 16px;
 
   /* ── Icon Color ──────────────────────────────────────────────────────── */
@@ -417,7 +411,7 @@
 
   /* ── r1 — Top-status badge group (b$  bI  bC — far right of row 1) ──── */
 
-  --tripbar-r1-status-badge-gap: 0px;
+  --tripbar-r1-status-badge-gap: 1px;
 
   /* ── r1 — Date pill chips (departure / arrival labels) ───────────────── */
 
@@ -521,9 +515,9 @@
   --tripbar-border:     var(--tripbar-active-variant-color);
   --tripbar-text-color: var(--tripbar-r8-color);
 
-  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r1-color-l) c h / var(--tripbar-r1-color-a));
-  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r2-color-l) c h / var(--tripbar-r2-color-a));
-  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r3-color-l) c h / var(--tripbar-r3-color-a));
+  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r1-color-a));
+  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r2-color-a));
+  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r3-color-a));
   --tripbar-r4-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r4-color-l) c h / var(--tripbar-r4-color-a));
   --tripbar-r5-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r5-color-l) c h / var(--tripbar-r5-color-a));
   --tripbar-r6-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r6-color-l) 0 h / var(--tripbar-r6-color-a));
@@ -532,7 +526,7 @@
   --tripbar-r9-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r9-color-l) c h / var(--tripbar-r9-color-a));
   --tripbar-r10-color: oklch(from var(--tripbar-active-variant-color) var(--tripbar-r10-color-l) c h / var(--tripbar-r10-color-a));
   --tripbar-time-color: var(--tripbar-r5-color);
-  --tripbar-time-color-flagged: oklch(from var(--tripbar-active-variant-color) var(--tripbar-r5-color-l) 0.1 var(--tripbar-time-flagged-hue) / var(--tripbar-r5-color-a));
+  --tripbar-time-color-flagged: var(--tripbar-time-flagged-color);
 
   background: var(--tripbar-background);
 
@@ -644,9 +638,10 @@
   --tripbar-r2-color-a: 1;
   --tripbar-r3-color-a: 1;
   box-shadow:
-    0 0 0 2px var(--rux-color-accent),
-    0 8px 24px oklch(0% 0 0 / 0.65),
-    0 24px 48px oklch(0% 0 0 / 0.45);
+      /* Extract the dynamic color, set custom Lightness and Chroma, keep the dynamic Hue (h) */
+      0 0 0 4px oklch(from var(--rux-color-accent) 80% 0.3 h),
+      0 8px 24px oklch(0% 0 0 / 0.65),
+      0 24px 48px oklch(0% 0 0 / 0.45);
 }
 
 .schedule-grid__trip-bar.danger::after {
@@ -724,9 +719,9 @@ body.trip-bar-selected .schedule-grid__trip-bar:not(.selected) {
   --tripbar-r11-row-height: 30px;
   z-index: 600;
   box-shadow:
-    0 0 0 2px var(--rux-color-accent),
-    0 8px 24px oklch(0% 0 0 / 0.6),
-    0 24px 48px oklch(0% 0 0 / 0.4);
+      0 0 0 4px oklch(from var(--rux-color-accent) 80% 0.3 h),
+      0 8px 24px oklch(0% 0 0 / 0.65),
+      0 24px 48px oklch(0% 0 0 / 0.45);
 }
 
 /* ── Continuation edges ───────────────────────────────────────────────────── */
@@ -1045,7 +1040,7 @@ body.bars-compact {
   padding-inline: var(--tripbar-r4-padding-inline);
   background: var(--tripbar-r4-bg);
 
-  border-radius: 0 0 var(--tripbar-radius) var(--tripbar-radius);
+  border-radius: 0;
 
 }
 

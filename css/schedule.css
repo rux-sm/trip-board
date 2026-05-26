@@ -136,7 +136,7 @@
   vertical-align: middle;
 
   /* 1. Apply your background token */
-  background: var(--rux-bg--glass);
+  background: var(--rux-bg-schedule-headers);
 
   /* 2. Apply the blur effect (critical for glassmorphism) */
   backdrop-filter: var(--rux-blur--glass);
@@ -320,7 +320,7 @@
   padding: 0 !important;
 
   /* 1. Apply your background token */
-  background: var(--rux-bg--glass);
+  background: var(--rux-bg-schedule-headers);
 
   /* 2. Apply the blur effect (critical for glassmorphism) */
   backdrop-filter: var(--rux-blur--glass);

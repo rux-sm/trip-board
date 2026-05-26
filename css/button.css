@@ -15,11 +15,11 @@
 /* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
 
 :root {
-  --rux-btn-bg-primary: oklch(from var(--rux-color-accent) 70% 0.18 h);
-  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 30% c h);
-  --rux-btn-bg-danger: oklch(from var(--rux-color-gray) 30% c h);
+  --rux-btn-bg-primary: oklch(from var(--rux-color-accent) 60% 0.24 h);
+  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 33% c h);
+  --rux-btn-bg-danger: oklch(from var(--rux-color-gray) 33% c h);
   --rux-btn-text: var(--rux-color-white);
-  --rux-btn-text-danger: oklch(from var(--rux-color-red) 80% 0.3 h);
+  --rux-btn-text-danger: oklch(from var(--rux-color-red) 80% 0.24 h);
   --rux-btn-hover-lift: 0.1;
 
   --rux-btn-height: 32px;
@@ -29,7 +29,7 @@
 
   --rux-btn-font-family: var(--rux-font-sans);
   --rux-btn-font-size: var(--rux-size-4);
-  --rux-btn-font-weight: var(--rux-weight-regular);
+  --rux-btn-font-weight: var(--rux-weight-semibold);
 
   /*--rux-btn-shadow-inset: var(--rux-surface-shadow-inset);
 
@@ -94,7 +94,7 @@ button {
   border: 1px solid var(--rux-border-default);
   background-color: var(--btn-background);
   color: var(--btn-text);
-  box-shadow: var(--btn-shadow);
+  box-shadow: var(--button-box-shadow);
 
   transition:
     background-color var(--transition-fast),
@@ -149,7 +149,7 @@ button {
 }
 
 .rux-btn--tertiary {
-  --btn-background: transparent;
+  --btn-background: oklch(from var(--rux-color-gray) 33% c h);
   --btn-border: var(--rux-border-3);
   --btn-hover-background: var(--overlay-hover-up);
   --btn-active-background: var(--overlay-active-up);
@@ -220,7 +220,7 @@ button {
 /* ── 7. Toggle — chip-style requirement toggles ─────────────────────────── */
 
 .rux-btn--toggle {
-  --btn-background: var(--rux-bg-4);
+  --btn-background: oklch(from var(--rux-color-gray) 33% c h);
   --btn-active-background: var(--rux-bg-4);
   --btn-shadow: var(--rux-btn-shadow-inset);
   --btn-text: var(--rux-text-2);
@@ -293,7 +293,7 @@ button {
   gap: 4px;
   border-radius: var(--rux-btn-radius);
   overflow: hidden;
-  background: var(--rux-border-2);
+  background: oklch(from var(--rux-color-gray) 33% c h);
   box-shadow:
     0 1px 2px oklch(0% 0 0 / 40%),
     0 2px 8px oklch(0% 0 0 / 20%);
