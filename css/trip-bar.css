@@ -157,21 +157,21 @@
   /* ── COLOR SYSTEM ───────────────────────────────────────────────────── */
 
   /* Per-variant accent seeds — change a color here */
-  --tripbar-default-accent:     oklch(60% 0.24 260 / 20%);
-  --tripbar-unconfirmed-accent: oklch(60% 0.24 24 / 20%);
-  --tripbar-blue-accent:        oklch(60% 0.24 250 / 20%);
-  --tripbar-red-accent:         oklch(60% 0.24 24 / 20%);
-  --tripbar-green-accent:       oklch(60% 0.24 150 / 20%);
-  --tripbar-yellow-accent:      oklch(60% 0.24 90 / 20%);
-  --tripbar-orange-accent:      oklch(60% 0.24 65 / 20%);
-  --tripbar-purple-accent:      oklch(60% 0.24 285 / 20%);
-  --tripbar-violet-accent:      oklch(60% 0.24 300 / 20%);
-  --tripbar-indigo-accent:      oklch(60% 0.24 275 / 20%);
-  --tripbar-pink-accent:        oklch(60% 0.24 350 / 20%);
-  --tripbar-cyan-accent:        oklch(60% 0.24 210 / 20%);
-  --tripbar-teal-accent:        oklch(60% 0.24 185 / 20%);
-  --tripbar-mint-accent:        oklch(60% 0.24 165 / 20%);
-  --tripbar-brown-accent:       oklch(60% 0.24 55 / 20%);
+  --tripbar-default-accent:     oklch(50% 0.24 260 / 100%);
+  --tripbar-unconfirmed-accent: oklch(50% 0.24 24 / 100%);
+  --tripbar-blue-accent:        oklch(50% 0.24 250 / 100%);
+  --tripbar-red-accent:         oklch(50% 0.24 24 / 100%);
+  --tripbar-green-accent:       oklch(50% 0.24 150 / 100%);
+  --tripbar-yellow-accent:      oklch(50% 0.24 90 / 100%);
+  --tripbar-orange-accent:      oklch(50% 0.24 65 / 100%);
+  --tripbar-purple-accent:      oklch(50% 0.24 285 / 100%);
+  --tripbar-violet-accent:      oklch(50% 0.24 300 / 100%);
+  --tripbar-indigo-accent:      oklch(50% 0.24 275 / 100%);
+  --tripbar-pink-accent:        oklch(50% 0.24 350 / 100%);
+  --tripbar-cyan-accent:        oklch(50% 0.24 210 / 100%);
+  --tripbar-teal-accent:        oklch(50% 0.24 185 / 100%);
+  --tripbar-mint-accent:        oklch(50% 0.24 165 / 100%);
+  --tripbar-brown-accent:       oklch(50% 0.24 55 / 100%);
   --tripbar-gray-accent:        oklch(from var(--rux-color-gray));
 
   /* Active accent — overridden per variant by .color-* and .unconfirmed */
@@ -517,12 +517,12 @@
   --tripbar-border:     var(--tripbar-active-variant-color);
   --tripbar-text-color: var(--tripbar-r8-color);
 
-  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r1-color-a));
-  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r2-color-a));
-  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
-  --tripbar-r4-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
-  --tripbar-r5-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
-  --tripbar-r6-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r1-color-a));
+  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r2-color-a));
+  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r4-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r4-color-a));
+  --tripbar-r5-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r5-color-a));
+  --tripbar-r6-color:  oklch(from var(--tripbar-active-variant-color) 100% .2 h / var(--tripbar-r6-color-a));
   --tripbar-r7-color:  oklch(10% 0 0 / 100%);
   --tripbar-r8-color:  oklch(10% 0 0 / 100%);
   --tripbar-r9-color:  oklch(60% 0.2 24 / 100%);

@@ -123,7 +123,7 @@ const CONFIG = {
   APP_NAME: "ETB Schedule",
   APP_VERSION: "",
   SUPABASE_URL: "https://zydejdsyyuyzruvdbeyp.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_hp1zCzRuHgduMGBVg3aYgg_QujSsGyx",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZGVqZHN5eXV5enJ1dmRiZXlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzU0MjEsImV4cCI6MjA5NDU1MTQyMX0.LmjLOYZkwkc9vv72HS91UaJ8JgPHPznmUwwpL0cvyos",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
