@@ -12,9 +12,9 @@
                script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com https://cdn.jsdelivr.net;
                style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
                font-src 'self' https://fonts.gstatic.com;
-               connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://rux-supabase-etb.rux-smercado.workers.dev;
+               connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://rux-supabase-etb.rux-smercado.workers.dev wss://rux-supabase-etb.rux-smercado.workers.dev ws://127.0.0.1:* ws://localhost:*;
                frame-src 'self' https://script.google.com https://script.googleusercontent.com https://drive.google.com;
-               img-src 'self' data: https://*.supabase.co;"
+               img-src 'self' data: https://*.supabase.co https://rux-supabase-etb.rux-smercado.workers.dev;"
     />
     <title>TripBoard</title>
     <link
@@ -184,6 +184,14 @@
             id="loginSetPasswordForm"
             class="login__form"
           >
+            <input
+              type="text"
+              name="username"
+              autocomplete="username"
+              aria-hidden="true"
+              tabindex="-1"
+              style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;"
+            />
             <div class="form-group">
               <label for="loginNewPassword">New password</label>
               <input
