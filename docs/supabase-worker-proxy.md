@@ -75,10 +75,8 @@ The anon key remains the same key from the Supabase project.
 Allow both HTTP and WebSocket connections to the Worker:
 
 ```html
-connect-src
-  'self'
-  https://your-worker.your-account.workers.dev
-  wss://your-worker.your-account.workers.dev;
+connect-src 'self' https://your-worker.your-account.workers.dev
+wss://your-worker.your-account.workers.dev;
 ```
 
 If the app loads public Storage assets through the Worker, also allow the Worker in `img-src`:

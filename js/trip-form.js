@@ -1269,15 +1269,20 @@ async function openTripForEdit(tripKey) {
         driver3Status: normalizedA.driver3Status || local?.driver3Status || "",
         driver4Status: normalizedA.driver4Status || local?.driver4Status || "",
       };
-      // Log if local fallback filled missing data
-      if (
-        local &&
-        (!normalizedA.driver1 ||
-          !normalizedA.driver2 ||
-          !normalizedA.driver3 ||
-          !normalizedA.driver4)
-      ) {
-        console.warn(
+      const filledFallbackFields = local
+        ? [
+            "driver1",
+            "driver2",
+            "driver3",
+            "driver4",
+            "driver1Status",
+            "driver2Status",
+            "driver3Status",
+            "driver4Status",
+          ].filter((field) => !normalizedA[field] && local[field])
+        : [];
+      if (filledFallbackFields.length) {
+        console.debug(
           `Trip ${tripKey}: Merged assignment for bus ${normalizedA.busId || normalizedA.busNumber} using local fallback data.`,
         );
       }
