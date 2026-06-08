@@ -1,24 +1,80 @@
-/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+/* ==========================================================================
+   FORMS — standalone field + form layout system
+   ==========================================================================
+   Design system: 3D Buttons.html primitives — no external CSS dependencies
+   ========================================================================== */
+
+/* ── Primitives ─────────────────────────────────────────────────────────── */
 
 :root {
+
+  /* base surfaces */
+  --bg-0: #0a0a0a;
+  --bg-1: #161616;
+  --bg-2: #1f1f1f;
+  --hairline: #2a2a2a;
+
+  /* type */
+  --fg-0: #ffffff;
+  --fg-1: #b3b3b3;
+  --fg-2: #7a7a7a;
+  --fg-3: #535353;
+
+  /* accent — blue */
+  --accent-h: 255;
+  --accent:    oklch(0.55 0.18 var(--accent-h));
+  --accent-hi: oklch(0.62 0.18 var(--accent-h));
+  --accent-lo: oklch(0.42 0.18 var(--accent-h));
+  --accent-ink: #ffffff;
+
+  /* danger — red */
+  --danger:    oklch(0.55 0.20 24);
+  --danger-hi: oklch(0.62 0.20 24);
+  --danger-lo: oklch(0.42 0.20 24);
+  --danger-ink: #ffffff;
+
+  /* motion */
+  --motion-fast: 120ms ease;
+
+  /* shadows */
+  --shadow-recessed:
+    inset 0 2px 3px oklch(0% 0 0 / 55%),
+    inset 0 -1px 0 oklch(100% 0 0 / 4%);
+  --shadow-raised:
+    inset 0 1px 0 oklch(100% 0 0 / 18%),
+    inset 0 -1px 0 oklch(0% 0 0 / 45%),
+    0 1px 0 oklch(0% 0 0 / 55%),
+    0 2px 4px oklch(0% 0 0 / 35%),
+    0 6px 12px -4px oklch(0% 0 0 / 40%);
+
+  /* focus */
+  --focus-ring: 0 0 0 3px oklch(0.55 0.18 var(--accent-h) / 0.35);
+
+  /* typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+/* ── Tier 3 tokens ───────────────────────────────────────────────────────── */
+
   /* Form layout */
-  --rux-form-grid-radius: var(--rux-radius-0);
+  --rux-form-grid-radius: 100%;
 
   /* Fields */
   --rux-fld-height: 32px;
-  --rux-fld-radius: var(--rux-radius-md);
-  --rux-fld-padding: 0 var(--rux-space-2);
-  --rux-fld-bg: var(--rux-bg-field);
-  --rux-fld-bg-hover: var(--rux-bg-3);
+  --rux-fld-radius: 6px;
+  --rux-fld-padding: 0 6px;
+  --rux-fld-bg: var(--bg-2);
+  --rux-fld-bg-hover: oklch(24% 0 0);
+  --rux-fld-bg-focus: var(--bg-2);
   --rux-fld-shadow: inset 0 2px 4px oklch(0% 0 0 / 0%);
   --rux-fld-disabled-opacity: 0.5;
-  --rux-fld-font-size: var(--rux-size-4);
-  --rux-fld-font-weight: var(--rux-weight-semibold);
+  --rux-fld-font-size: 0.875rem;
+  --rux-fld-font-weight: 500;
 
   /* Labels */
-  --rux-fld-label-color: var(--rux-text-2);
-  --rux-fld-label-font-size: var(--rux-size-3);
-  --rux-fld-label-font-weight: var(--rux-weight-regular);
+  --rux-fld-label-color: var(--fg-1);
+  --rux-fld-label-font-size: 0.75rem;
+  --rux-fld-label-font-weight: 400;
   --rux-fld-label-letter-spacing: 0.02em;
   --rux-fld-label-margin: 8px;
   --rux-fld-label-indent: 2px;
@@ -31,9 +87,9 @@
   --rux-fld-section-gap: 24px;
 
   /* Section labels */
-  --rux-fld-section-label-color: var(--rux-text-2);
-  --rux-fld-section-label-font-size: var(--rux-size-3);
-  --rux-fld-section-label-font-weight: var(--rux-weight-regular);
+  --rux-fld-section-label-color: var(--fg-1);
+  --rux-fld-section-label-font-size: 0.75rem;
+  --rux-fld-section-label-font-weight: 400;
   --rux-fld-section-label-letter-spacing: 0.02em;
 
   /* Field icons & chevron */
@@ -44,6 +100,8 @@
   --icon-field-opsz: 18;
   --icon-field-inset: 0px;
   --icon-text-gap: 4px;
+  --rux-fld-icon-filter: brightness(0.7);
+  --rux-fld-icon-filter-hover: brightness(1);
   --chevron-size: 14px;
   --chevron-inset: 0px;
   --chevron-opacity: 0.8;
@@ -65,7 +123,6 @@ textarea {
 }
 
 /* ── 2. Shared Base Styles ───────────────────────────────────────────────── */
-/* All field types share these — full border, square corners, drop shadow */
 
 input,
 select,
@@ -74,16 +131,17 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   height: var(--rux-fld-height);
-  padding: 0 var(--rux-space-2);
+  padding: 0 6px;
   background-color: var(--rux-fld-bg);
-  border: 1px solid var(--rux-border-default);
+  border: 1px solid var(--hairline);
+  border: none;
   border-radius: var(--rux-fld-radius);
   font-size: var(--rux-fld-font-size);
   font-weight: var(--rux-fld-font-weight);
-  color: var(--rux-text-1);
+  color: var(--fg-0);
   text-align: left;
   outline: none;
-  box-shadow: var(--input-box-shadow);
+  box-shadow: var(--shadow-recessed);
   cursor: text;
   transition:
     background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
@@ -91,27 +149,30 @@ textarea {
     box-shadow 0.11s;
 }
 
+input:hover:not(:disabled),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  background-color: var(--rux-fld-bg-hover);
+}
+
 /* ── 3. Input Type Variants ──────────────────────────────────────────────── */
 
-/* Text inputs — explicit cursor */
 input[type="text"],
 input[type="tel"],
 input[type="number"] {
   cursor: text;
 }
 
-/* Date / Time / Number — strip native chrome */
 input[type="date"],
 input[type="time"],
 input[type="number"] {
   appearance: none;
 }
 
-/* Safari: fixed height without line-height leaves datetime-edit top-aligned */
 input[type="date"],
 input[type="time"] {
   line-height: var(--rux-fld-height);
-  color-scheme: dark; /* Natively turns default icons white */
+  color-scheme: dark;
 }
 
 input[type="date"]::-webkit-datetime-edit,
@@ -123,35 +184,32 @@ input[type="time"]::-webkit-datetime-edit-fields-wrapper {
 
 /* ── Consolidated Global Calendar/Time Picker Icon ── */
 ::-webkit-calendar-picker-indicator {
-  opacity: 1; /* Override any native transparency */
+  opacity: 1;
   cursor: pointer;
   padding: 0px;
   margin-inline-start: 0px;
-  /* Dims the pure white icon to ~68% lightness, visually matching var(--rux-text-2) */
-  filter: brightness(0.7);
-  transition: filter var(--transition-fast);
+  filter: var(--rux-fld-icon-filter);
+  transition: filter var(--motion-fast);
 }
 
-/* Brighten icon to pure white on hover for better UX */
 ::-webkit-calendar-picker-indicator:hover {
-  filter: brightness(1);
+  filter: var(--rux-fld-icon-filter-hover);
 }
 
 /* Firefox Fallback */
 input[type="date"]::-moz-calendar-picker-indicator,
 input[type="time"]::-moz-calendar-picker-indicator {
-  color: var(--rux-text-2);
+  color: var(--fg-1);
   opacity: 1;
 }
 
 /* ── 4. Native Select ────────────────────────────────────────────────────── */
 
 select {
-  padding: 0 calc(var(--chevron-inset) + var(--chevron-size) + 10px) 0 var(--rux-space-2);
+  padding: 0 calc(var(--chevron-inset) + var(--chevron-size) + 10px) 0 6px;
   -webkit-appearance: none;
   appearance: none;
   color-scheme: dark;
-  /* Stroke is set to %23A0A0A0 (Hex #A0A0A0) to visually match your --text-secondary token */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right var(--chevron-inset) center;
@@ -174,7 +232,7 @@ select.select--centered {
 textarea {
   min-height: var(--rux-fld-height);
   height: auto;
-  padding: 11px var(--rux-space-2);
+  padding: 11px 6px;
   resize: vertical;
   line-height: 1.4;
   cursor: text;
@@ -184,7 +242,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--rux-text-placeholder);
+  color: var(--fg-2);
   opacity: 1;
 }
 
@@ -195,7 +253,8 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  border-color: var(--rux-color-accent);
+  background-color: var(--rux-fld-bg-focus);
+  border-color: var(--accent);
   box-shadow: var(--focus-ring), var(--rux-fld-shadow);
 }
 
@@ -211,11 +270,11 @@ textarea:disabled {
 
 input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
 input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
-  color: var(--rux-text-placeholder);
+  color: var(--fg-2);
 }
 
 select.is-empty:not(:focus) {
-  color: var(--rux-text-placeholder);
+  color: var(--fg-2);
 }
 
 /* ── 9. Labels ───────────────────────────────────────────────────────────── */
@@ -226,7 +285,7 @@ select.is-empty:not(:focus) {
   display: block;
   font-size: var(--rux-fld-label-font-size);
   font-weight: var(--rux-fld-label-font-weight);
-  color: var(--rux-text-2);
+  color: var(--fg-1);
   line-height: 1;
   margin-bottom: var(--rux-fld-label-margin);
   padding-left: var(--rux-fld-label-indent);
@@ -235,7 +294,6 @@ select.is-empty:not(:focus) {
   text-shadow: none;
 }
 
-/* Label text inside trip details grid rows */
 .trip-details__label {
   grid-column: auto;
   margin-bottom: 0;
@@ -250,18 +308,16 @@ select.is-empty:not(:focus) {
   width: auto;
 }
 
-/* Itinerary modal input */
 #itineraryModalField {
   text-align: center;
 }
 
 #itineraryModalField:focus {
   outline: none;
-  border-color: var(--rux-color-accent);
+  border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
 
-/* Itinerary modal textarea */
 .modal--itinerary .modal__body textarea {
   flex: 1 1 auto;
   min-height: 0;
@@ -275,15 +331,14 @@ select.is-empty:not(:focus) {
   line-height: 1.5;
   letter-spacing: normal;
   font-variant-numeric: normal;
-  font-weight: var(--rux-weight-light);
+  font-weight: 400;
   white-space: pre-wrap;
-  color: var(--rux-text-2);
-  background: var(--rux-bg-2);
+  color: var(--fg-1);
+  background: oklch(22% 0 0);
   border: none;
   border-radius: 0;
 }
 
-/* Trip details — read-only itinerary scroll */
 .detail-text.detail-itinerary-scroll,
 .trip-details__itinerary-scroll {
   flex: 1;
@@ -293,8 +348,8 @@ select.is-empty:not(:focus) {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   white-space: pre;
-  color: var(--rux-text-2);
-  background: var(--rux-bg-2);
+  color: var(--fg-1);
+  background: oklch(22% 0 0);
   padding: 12px;
   line-height: 1.5;
   letter-spacing: normal;
@@ -318,17 +373,17 @@ select.is-empty:not(:focus) {
 .fld-affix__suffix {
   position: absolute;
   font-size: var(--rux-fld-font-size);
-  color: var(--rux-text-2);
+  color: var(--fg-1);
   pointer-events: none;
   user-select: none;
   line-height: 1;
 }
 
 .fld-affix__prefix {
-  left: var(--rux-space-2);
+  left: 6px;
 }
 .fld-affix__suffix {
-  right: var(--rux-space-2);
+  right: 6px;
 }
 
 .fld-affix--prefix input {
@@ -345,7 +400,7 @@ select.is-empty:not(:focus) {
   align-items: center;
   justify-content: space-between;
   min-width: 100%;
-  gap: var(--rux-space-3);
+  gap: 8px;
 }
 
 .trip-editor__header-row .log-header__title-wrap {
@@ -366,9 +421,9 @@ select.is-empty:not(:focus) {
   justify-content: center;
   width: 100%;
   min-width: 0;
-  padding: 0 var(--rux-space-2);
+  padding: 0 6px;
   box-sizing: border-box;
-  font-size: var(--rux-size-4);
+  font-size: 0.875rem;
   line-height: 1;
 }
 
@@ -410,7 +465,6 @@ select.is-empty:not(:focus) {
   box-sizing: border-box;
 }
 
-/* Reset stray margins on all grid children */
 .form-group,
 .col-2,
 .col-3,
@@ -424,36 +478,14 @@ select.is-empty:not(:focus) {
   min-width: 0;
 }
 
-/* Column spans */
-.col-2 {
-  grid-column: span 2;
-}
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
 
-.col-3 {
-  grid-column: span 3;
-}
-
-.col-4 {
-  grid-column: span 4;
-}
-
-.col-5 {
-  grid-column: span 5;
-}
-
-.col-6 {
-  grid-column: span 6;
-}
-
-.col-8 {
-  grid-column: span 8;
-}
-
-.col-12 {
-  grid-column: span 12;
-}
-
-/* Compact height for inputs inside the form grid */
 .form-grid input,
 .form-grid select,
 .form-grid textarea,
@@ -461,7 +493,6 @@ select.is-empty:not(:focus) {
   width: 100%;
 }
 
-/* Section dividers */
 .subsection {
   grid-column: span 12;
   border-top: none;
@@ -530,7 +561,7 @@ hr.form-divider {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--rux-border-default);
+  background: var(--danger);
   pointer-events: none;
 }
 
@@ -555,28 +586,30 @@ hr.form-divider {
 
 .trip-color-swatch:hover {
   transform: scale(1.15);
+  box-shadow: var(--shadow-raised);
 }
 
 .trip-color-swatch--none {
-  background: var(--rux-border-default);
+  background: var(--hairline);
 }
 
 .trip-color-swatch--oos {
   background: repeating-linear-gradient(
     45deg,
-    var(--rux-status-red) 0,
-    var(--rux-status-red) 3px,
+    oklch(90% 0.3 24) 0,
+    oklch(90% 0.3 24) 3px,
     transparent 3px,
     transparent 8px
   );
 }
 
 .trip-color-swatch.is-selected {
-  border-color: var(--rux-btn-bg-primary);
+  border-color: var(--accent);
   outline: none;
 }
 
 /* ── Section Dividers ────────────────────────────────────────── */
+
 .form-divider {
   grid-column: span 12;
   display: flex;
@@ -589,31 +622,32 @@ hr.form-divider {
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--rux-border-2);
+  background: var(--hairline);
 }
 
 .form-divider__label {
   font-size: var(--rux-fld-section-label-font-size);
   font-weight: var(--rux-fld-section-label-font-weight);
   letter-spacing: var(--rux-fld-section-label-letter-spacing);
-  color: var(--rux-text-2);
+  color: var(--fg-1);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 /* ── Section Cards ───────────────────────────────────────────── */
+
 .form-section-card {
   grid-column: span 12;
   display: none;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   row-gap: var(--rux-fld-row-gap);
   column-gap: var(--rux-fld-col-gap);
-  background: var(--rux-bg-4);
+  background: oklch(26% 0 0);
   border: none;
-  border-radius: var(--rux-radius-section);
+  border-radius: 6px;
   overflow: visible;
-  box-shadow: var(--rux-btn-shadow-inset);
-  margin-top: var(--rux-space-3);
+  box-shadow: none;
+  margin-top: 8px;
 }
 
 .form-section-card.is-active {
@@ -621,12 +655,11 @@ hr.form-divider {
   overflow: visible;
 }
 
-/* Flattened variant — unified panel surface, divider-only section headers */
 .form-section-card.form-section-flat {
   background: transparent;
   box-shadow: none;
   border-radius: 0;
-  padding-bottom: var(--rux-space-4);
+  padding-bottom: 12px;
   overflow: visible;
 }
 .form-section-card.form-section-flat:first-of-type {
@@ -635,15 +668,15 @@ hr.form-divider {
 
 .form-section-card__label {
   grid-column: 1 / -1;
-  font-family: var(--rux-font-sans);
-  font-size: var(--rux-size-4);
-  font-weight: var(--rux-weight-semibold);
-  color: var(--rux-text-2);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-1);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding-bottom: var(--rux-space-2);
-  border-bottom: 1px solid var(--rux-border-2);
-  margin-bottom: var(--rux-space-1);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 4px;
 }
 
 .form-section-card[data-tab-panel="estimate"].is-active {
@@ -659,19 +692,21 @@ hr.form-divider {
 
 .estimate-itinerary-field textarea {
   flex: 1 1 auto;
-  font-family: var(--rux-font-mono);
+  font-family: var(--font-mono);
+  font-weight: 400;
   min-height: 160px;
   resize: none;
   font-size: 12px;
 }
 
 /* ── Bus Segmented Selector ─────────────────────────────── */
+
 .bus-seg {
   display: flex;
-  gap: var(--rux-space-1);
+  gap: 4px;
 }
 
-.bus-seg .rux-btn--toggle {
+.bus-seg .rux-button--toggle {
   flex: 1;
   min-width: 0;
 }
@@ -679,65 +714,37 @@ hr.form-divider {
 /* ── Status toggle segmented control ─────────────────────────────────────── */
 
 .status-toggle-group {
-  position: relative;
   width: 100%;
-  padding: 4px;
-  gap: 4;
-  background: oklch(from var(--rux-color-gray) 33% c h);
-  border: none;
-  border-radius: var(--rux-radius-md);
-}
-
-.seg-ctrl__pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  right: 4px;
-  width: 0;
-  border-radius: var(--rux-radius-md);
-  background: var(--rux-btn-bg-primary);
-  pointer-events: none;
-  z-index: 0;
-  transition:
-    transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    width 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .status-toggle-btn {
-  --btn-background: oklch(from var(--rux-color-gray) 33% c h);
-  --btn-active-background: oklch(from var(--rux-color-gray) 33% c h);
-  --btn-shadow: none;
-  --btn-text: var(--rux-text-2);
-  position: relative;
-  z-index: 1;
   flex: 1;
-  border: none;
-  border-radius: var(--rux-radius-md);
-  transition: color 150ms;
+  min-width: 0;
 }
 
-/*
-.status-toggle-group > .status-toggle-btn:first-of-type {
-  border-top-left-radius: var(--rux-btn-radius);
-  border-bottom-left-radius: var(--rux-btn-radius);
+.status-toggle-group > .status-toggle-btn {
+  --button-bg: transparent;
+  --button-bg-hover: oklch(34% 0 0);
+  --button-bg-active: oklch(20% 0 0);
+  --button-shadow: none;
+  --button-text: var(--fg-1);
 }
 
-.status-toggle-group > .status-toggle-btn:last-of-type {
-  border-top-right-radius: var(--rux-btn-radius);
-  border-bottom-right-radius: var(--rux-btn-radius);
-}
-*/
 .status-toggle-btn:hover {
-  --btn-background: transparent;
-  --btn-text: var(--rux-text-1);
+  --button-text: var(--fg-0);
 }
 
-.status-toggle-btn.is-active {
-  --btn-background: transparent;
-  --btn-text: var(--rux-color-white);
-  font-weight: var(--rux-weight-semibold);
+.status-toggle-group > .status-toggle-btn.is-active,
+.status-toggle-group > .status-toggle-btn[aria-pressed="true"] {
+  --button-bg: var(--accent);
+  --button-bg-hover: var(--accent-hi);
+  --button-bg-active: var(--accent-lo);
+  --button-shadow: var(--shadow-raised);
+  --button-text: var(--fg-0);
+  text-shadow: 0 -1px 0 oklch(0% 0 0 / 18%);
 }
+
+/* ── Dispatch layout ──────────────────────────────────────────────────────── */
 
 .dispatch-control-row {
   grid-column: span 12;
@@ -767,4 +774,3 @@ hr.form-divider {
 .dispatch-requirement-toggle {
   align-self: end;
 }
-

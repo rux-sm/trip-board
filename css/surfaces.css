@@ -234,7 +234,7 @@
 }
 
 /* Direct buttons fill the footer row equally */
-.rux-panel__footer > .rux-btn {
+.rux-panel__footer > .rux-button {
   flex: 1;
 }
 
@@ -251,7 +251,7 @@
     justify-content: space-evenly;
     gap: 0;
   }
-  .rux-app__actions .rux-btn--square {
+  .rux-app__actions .rux-button--square {
     flex: 1;
   }
 }

@@ -80,7 +80,7 @@ function updatePanelCollapsedStates() {
 }
 
 function syncCardButtonStates() {
-  document.querySelectorAll(".sidebar__icon-btn[data-card]").forEach((btn) => {
+  document.querySelectorAll(".rux-button--square[data-card]").forEach((btn) => {
     const cardType = btn.dataset.card;
     const panel = getPanelForButton(btn);
     const active = !!cardType && state.cardPanelAssignments[cardType] === panel;
@@ -101,7 +101,7 @@ function syncCardButtonStates() {
 }
 
 function markRailButtonDeactivating(cardType, panel) {
-  document.querySelectorAll(".sidebar__icon-btn[data-card]").forEach((btn) => {
+  document.querySelectorAll(".rux-button--square[data-card]").forEach((btn) => {
     if (btn.dataset.card !== cardType || getPanelForButton(btn) !== panel) return;
     clearTimeout(btn._deactivatingTimeout);
     btn.classList.remove("is-deactivating");
@@ -392,7 +392,7 @@ function setPanelStartMode(show) {
 }
 
 function wireIconRail() {
-  document.querySelectorAll(".sidebar__icon-btn").forEach((btn) => {
+  document.querySelectorAll(".rux-button--square[data-card]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const cardType = btn.dataset.card;
       const panel = getPanelForButton(btn);

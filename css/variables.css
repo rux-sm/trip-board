@@ -87,8 +87,8 @@
      adjustments locally when nesting requires it. */
   --rux-radius-xl: 28px;
   --rux-radius-lg: 20px;
-  --rux-radius-md: 10px;
-  --rux-radius-sm: 2px;
+  --rux-radius-md: 6px;
+  --rux-radius-sm: 6px;
   --rux-radius-xs: 100%;
 
   /* Legacy numeric aliases retained during migration.
@@ -148,18 +148,17 @@
       46.76%   Scrollbar
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-bg-1: oklch(from var(--rux-color-gray) 0% c h); /* App canvas — pure black */
-  --rux-bg-field: oklch(from var(--rux-color-gray) 33% c h);
-  --rux-bg-2: oklch(from var(--rux-color-gray) 22% c h); /* Panels, sidebar, inputs */
-  --rux-bg-3: oklch(from var(--rux-color-gray) 24% c h); /* Headers, footers, menus */
-  --rux-bg-4: oklch(from var(--rux-color-gray) 26% c h); /* Cards, grouped sections */
+  --rux-bg-1: #0a0a0a; /* App canvas — pure black */
+  --rux-bg-2: #161616; /* Panels, sidebar, inputs */
+  --rux-bg-3: #161616; /* Headers, footers, menus */
+  --rux-bg-4: #161616; /* Cards, grouped sections */
   --rux-bg-5: oklch(from var(--rux-color-gray) 32% c h); /* Modals — highest elevation */
   --rux-bg-notes: oklch(from var(--rux-color-yellow) 80% 0.15 h); /* Form fields, dropdowns, popovers */
   --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h); /* Scrim / backdrop */
   --rux-bg-schedule-headers: oklch(from var(--rux-color-gray) 33% c h);
   --rux-bg-schedule-headers-a: color-mix(in srgb, var(--rux-bg-schedule-headers) 100%);
   --rux-bg-schedule-headers-b: oklch(from var(--rux-color-gray) 28% c h);
-  --rux-bg-schedule: oklch(from var(--rux-color-gray) 22% c h);/* App canvas — pure black */
+  --rux-bg-schedule: oklch(22% 0 250%);/* App canvas — pure black */
   --rux-bg-trip-bar: oklch(from var(--rux-color-gray) 32% c h); /* App canvas — pure black */
   --rux-bg-scrollbar-track: oklch(from var(--rux-color-gray) 26% c h / 100%); /* Scrollbar track — matches panel bg */
   --rux-bg-scrollbar-thumb: oklch(from var(--rux-color-gray) 60% c h);
@@ -224,7 +223,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-border-1: oklch(from var(--rux-color-white) l c h / 4%); /* Subtle */
-  --rux-border-default: oklch(from var(--rux-color-white) 40% c h / 0%); /* Default */
+  --rux-border-default: oklch(from var(--rux-color-white) 40% c h / 100%); /* Default */
   --rux-border-schedule: oklch(from var(--rux-color-white) 20% c h / 100%); /* Default */
   --rux-border-2: var(--rux-border-default); /* Legacy default alias */
   --rux-border-3: oklch(from var(--rux-color-white) l c h / 24%); /* Strong */
@@ -252,10 +251,32 @@
   --focus-ring-color: var(--rux-color-accent);
   --focus-ring: 0 0 0 2px var(--focus-ring-color);
   --transition-fast: var(--rux-duration-1) var(--rux-ease-1);
-  --overlay-hover:      oklch(0% 0 0 / 5%);
-  --overlay-hover-up:   oklch(from var(--rux-color-white) l c h / 8%);
-  --overlay-active-up:  oklch(from var(--rux-color-white) l c h / 15%);
   --rux-color-accent-subtle: oklch(from var(--rux-color-accent) l c h / 15%);
+  --rux-color-accent-hover: oklch(from var(--rux-color-accent) 62% 0.18 h);
+  --rux-color-accent-pressed: oklch(from var(--rux-color-accent) 42% 0.18 h);
+  --rux-color-danger: oklch(from var(--rux-color-red) 55% 0.2 h);
+  --rux-color-danger-hover: oklch(from var(--rux-color-red) 62% 0.2 h);
+  --rux-color-danger-pressed: oklch(from var(--rux-color-red) 42% 0.2 h);
+  --rux-color-success: oklch(from var(--rux-color-green) 55% 0.18 h);
+  --rux-color-success-hover: oklch(from var(--rux-color-green) 62% 0.18 h);
+  --rux-color-success-pressed: oklch(from var(--rux-color-green) 42% 0.18 h);
+  --rux-chip-bg: oklch(from var(--rux-color-gray) 27% 0 h);
+  --rux-chip-bg-hover: oklch(from var(--rux-color-gray) 34% 0 h);
+  --rux-chip-bg-pressed: oklch(from var(--rux-color-gray) 20% 0 h);
+  --rux-chip-text: var(--rux-color-white);
+  --rux-state-bg-hover: var(--rux-bg-3);
+  --rux-state-bg-pressed: var(--rux-bg-2);
+  --rux-state-bg-subtle-hover: oklch(from var(--rux-color-white) l c h / 8%);
+  --rux-state-bg-subtle-pressed: oklch(from var(--rux-color-white) l c h / 15%);
+  --rux-state-bg-selected: var(--rux-color-accent);
+  --rux-state-bg-selected-hover: var(--rux-color-accent-hover);
+  --rux-state-bg-selected-pressed: var(--rux-color-accent-pressed);
+  --rux-state-text-hover: var(--rux-text-1);
+  --rux-state-text-accent: var(--rux-color-accent);
+  --rux-state-text-selected: var(--rux-color-white);
+  --rux-state-opacity-hover: 1;
+  --rux-state-opacity-subtle-hover: 0.7;
+  --rux-state-transform-hover-scale: scale(1.15);
   --text-shadow: none;
 
   /* Surface inset highlight/bevel */
@@ -263,6 +284,36 @@
   --rux-surface-bevel: oklch(0% 0 0 / 50%);
   --rux-surface-shadow-inset:
     inset 0 2px 0 var(--rux-surface-highlight), inset 0 -2px 0 var(--rux-surface-bevel);
+
+  /* Shared shadow primitives */
+  --rux-depth-cast: 0 1px 0 oklch(0% 0 0 / 55%);
+  --rux-shadow-outer:
+    0 1px 0 oklch(0% 0 0 / 55%),
+    0 2px 4px oklch(0% 0 0 / 35%),
+    0 6px 12px -4px oklch(0% 0 0 / 40%);
+  --rux-shadow-inner-light:
+    inset 0 1px 0 oklch(100% 0 0 / 18%),
+    inset 0 -1px 0 oklch(0% 0 0 / 45%);
+  --rux-shadow-recessed:
+    inset 0 2px 3px oklch(0% 0 0 / 55%),
+    inset 0 -1px 0 oklch(100% 0 0 / 4%);
+
+  /* Component shadow tokens */
+  --rux-button-shadow:
+    var(--rux-shadow-inner-light),
+    var(--rux-shadow-outer);
+  --rux-button-shadow-pressed:
+    inset 0 2px 4px oklch(0% 0 0 / 40%),
+    inset 0 -1px 0 oklch(100% 0 0 / 6%),
+    0 1px 0 oklch(0% 0 0 / 40%);
+  --rux-button-shadow-disabled:
+    inset 0 0 0 1px var(--rux-border-1),
+    inset 0 1px 0 oklch(100% 0 0 / 4%);
+  --rux-input-shadow:
+    var(--rux-depth-cast),
+    0 2px 4px oklch(0% 0 0 / 30%),
+    inset 0 1px oklch(0% 0 0 / 30%);
+  --rux-card-shadow: none;
 
   /* Elevation scale — outer drop shadows */
   --rux-shadow-1: 0 1px 3px oklch(0% 0 0 / 40%);
@@ -279,11 +330,35 @@
 
   /* Layout */
   --rux-layout-spacing: var(--rux-space-3);
+}
 
- /* Shadows */
-  --input-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 
-              0 1px 3px 1px rgba(0, 0, 0, 0.15);
-  --button-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 
-              0 1px 3px 1px rgba(0, 0, 0, 0.15);
+/* ── Print tokens ────────────────────────────────────────────────────────── */
 
+:root {
+  /* Grid structure */
+    --rux-print-grid-borders:   #818181;  /* cell borders and day-column dividers */
+
+  --rux-print-grid-border:   #fff;  /* cell borders and day-column dividers */
+  --rux-print-cell-bg:       #fff;    /* bus-cell and bars-area background */
+  --rux-print-cell-height:   88px;     /* bus row height (bus-cell + bars-area) */
+
+  /* Logo */
+  --rux-print-logo-height:   24px;
+
+  /* Typography */
+  --rux-print-font-size:     9pt;      /* body text inside bars */
+  --rux-print-font-size-sm:  8pt;      /* smaller label rows */
+
+  /* Bar colors */
+  --rux-print-bar-bg:        color-mix(in srgb, var(--tripbar-color) 0%, white);
+  --rux-print-bar-bg-mix:    20%;      /* tripbar-color mix ratio for solid bars */
+  --rux-print-bar-stripe-lo: 8%;       /* stripe pattern light stop */
+  --rux-print-bar-stripe-hi: 16%;      /* stripe pattern dark stop */
+
+  /* Text */
+  --rux-print-text-1:        #111;     /* primary / strong text */
+  --rux-print-text-2:        #333;     /* heading / title text */
+  --rux-print-text-3:        #444;     /* secondary / subdued text */
+  --rux-print-text-accent:   #0066cc;  /* accent (year in week date) */
+  --rux-print-separator:     #000;     /* logo–date separator line */
 }

@@ -355,7 +355,7 @@
 }
 
 .next-day-report__table tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: var(--rux-state-bg-subtle-hover);
 }
 
 .next-day-report__table td {
@@ -1037,8 +1037,8 @@
   min-width: 0;
 }
 .driver-contact__tab.is-active {
-  background: var(--rux-btn-bg-primary);
-  color: var(--rux-color-black);
+  background: var(--rux-state-bg-selected);
+  color: var(--rux-state-text-selected);
 }
 
 #driverContactModal.modal--itinerary .modal__card {
@@ -1265,7 +1265,7 @@
   border-top: 1px solid var(--rux-border-2);
 }
 
-.reference-manager__list-foot .rux-btn {
+.reference-manager__list-foot .rux-button {
   width: 100%;
 }
 
@@ -1291,7 +1291,7 @@
 
 .reference-manager__item:hover,
 .reference-manager__item.is-selected {
-  background: var(--rux-bg-3);
+  background: var(--rux-state-bg-hover);
 }
 
 .reference-manager__item.is-inactive {
@@ -1358,8 +1358,8 @@
 
 .reference-manager__driver-card:hover,
 .reference-manager__driver-card.is-expanded {
-  border-color: oklch(52% 0.035 285);
-  background: oklch(20% 0.014 260);
+  border-color: var(--rux-border-3);
+  background: var(--rux-state-bg-hover);
 }
 
 .reference-manager__driver-card.is-inactive {
@@ -1521,8 +1521,8 @@
 }
 
 .reference-manager__driver-chevron:hover {
-  background: oklch(28% 0.014 260);
-  color: var(--rux-text-1);
+  background: var(--rux-state-bg-hover);
+  color: var(--rux-state-text-hover);
 }
 
 .reference-manager__driver-chevron .material-symbols-outlined {
@@ -1592,8 +1592,8 @@
 
 .reference-manager__driver-tab:hover,
 .reference-manager__driver-tab.is-active {
-  background: oklch(25% 0.018 270);
-  color: var(--rux-text-1);
+  background: var(--rux-state-bg-hover);
+  color: var(--rux-state-text-hover);
 }
 
 .reference-manager__driver-panels {
@@ -1630,7 +1630,7 @@
   margin-top: 0;
 }
 
-.reference-manager__driver-actions .rux-btn {
+.reference-manager__driver-actions .rux-button {
   width: 100%;
   min-width: 0;
 }

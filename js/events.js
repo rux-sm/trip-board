@@ -1680,7 +1680,7 @@ function wireEvents() {
   });
 
   // Toggle buttons — click toggles aria-pressed
-  document.querySelectorAll(".rux-btn--toggle").forEach((btn) => {
+  document.querySelectorAll(".rux-button--toggle").forEach((btn) => {
     btn.addEventListener("click", () => {
       const pressed = btn.getAttribute("aria-pressed") === "true";
       btn.setAttribute("aria-pressed", pressed ? "false" : "true");
@@ -1954,6 +1954,15 @@ function wireProfilePopover() {
     });
   });
 
+  dom.printBtnAllRows?.addEventListener("click", () => {
+    setSidePanelMode("off");
+    requestAnimationFrame(() => {
+      setPrintPageSize("legal");
+      buildPrintScheduleAllRowsLegal();
+      window.print();
+    });
+  });
+
   // ── Reports ────────────────────────────────────────────────────────────────
 
   dom.nextDayReportBtn?.addEventListener("click", () => {
@@ -1967,7 +1976,7 @@ function wireProfilePopover() {
   // ── Search ─────────────────────────────────────────────────────────────────
 
   // Auto-focus input when a search rail button opens the card
-  document.querySelectorAll('.sidebar__icon-btn[data-card="search"]').forEach((btn) => {
+  document.querySelectorAll('.rux-button--square[data-card="search"]').forEach((btn) => {
     btn.addEventListener("click", () => {
       const card = dom.searchCard;
       if (card && !card.classList.contains("is-hidden")) openSearch();

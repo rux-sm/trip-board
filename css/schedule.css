@@ -37,6 +37,7 @@
   --bus-lift-color: oklch(from var(--rux-color-white) 50% c h);
   --bus-sleeper-color: oklch(from var(--rux-color-white) 50% c h);
   --bus-accent-color: var(--rux-bg-4);
+  --rux-schedule-bus-cell-bg-hover: var(--bus-accent-color);
   --bus-grid-row-gap: 8px;
   --bus-driver-block-gap: 4px;
   --bus-header-margin: 4px;
@@ -184,7 +185,7 @@
 
 .schedule-grid__compact-btn:hover,
 .schedule-grid__compact-btn.is-active {
-  color: var(--rux-text-1);
+  color: var(--rux-state-text-hover);
 }
 
 /* Header cells: center day labels in the cell */
@@ -224,7 +225,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  background: var(--rux-btn-bg-primary);
+  background: var(--rux-button-bg-primary);
   color: var(--rux-color-white);
   border-radius: 4px;
   text-shadow: none;
@@ -342,7 +343,7 @@
 
 /* Only highlight day cell when hovering empty area, not when hovering a trip bar */
 .schedule-grid__day-cell:not(:has(.schedule-grid__trip-bar:hover)):hover {
-  background-color: var(--overlay-hover);
+  background-color: var(--rux-state-bg-subtle-hover);
   transition: background-color 0.1s ease;
 }
 
@@ -390,7 +391,7 @@
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
 .schedule-grid__row--has-bus-color
   > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
-  background-color: var(--bus-accent-color);
+  background-color: var(--rux-schedule-bus-cell-bg-hover);
 }
 
 .schedule-grid__bus-icons {
@@ -481,7 +482,7 @@
   inset: 0;
   border-radius: var(--rux-radius-card);
   border: 1px solid var(--card-border-02);
-  box-shadow: var(--rux-btn-shadow-inset);
+  box-shadow: var(--rux-surface-shadow-inset);
   pointer-events: none;
   z-index: 99999;
 }
@@ -605,17 +606,17 @@
 }
 
 .driver-week__table tbody tr .driver-week__name-cell:hover {
-  background-color: oklch(from var(--rux-bg-2) calc(l + var(--rux-btn-hover-lift)) c h);
+  background-color: var(--rux-state-bg-hover);
 }
 
 .driver-week__table tbody tr .driver-week__name-cell.is-selected {
-  background-color: var(--rux-btn-bg-primary);
-  color: var(--rux-color-black);
+  background-color: var(--rux-state-bg-selected);
+  color: var(--rux-state-text-selected);
   font-weight: 600;
 }
 
 .driver-week__table tbody tr .driver-week__name-cell.is-selected:hover {
-  background-color: oklch(from var(--rux-btn-bg-primary) calc(l + var(--rux-btn-hover-lift)) c h);
+  background-color: var(--rux-state-bg-selected-hover);
 }
 
 .driver-week__schedule-icon {
@@ -624,22 +625,22 @@
   margin-right: 8px;
   color: var(--rux-text-1);
   vertical-align: middle;
-  font-size: var(--rux-btn-icon-size);
+  font-size: var(--rux-button-icon-size);
   font-variation-settings:
-    "FILL" var(--rux-btn-icon-fill),
-    "wght" var(--rux-btn-icon-wght),
-    "GRAD" var(--rux-btn-icon-grad),
-    "opsz" var(--rux-btn-icon-opsz);
+    "FILL" var(--rux-button-icon-fill),
+    "wght" var(--rux-button-icon-wght),
+    "GRAD" var(--rux-button-icon-grad),
+    "opsz" var(--rux-button-icon-opsz);
   transition: opacity var(--transition-fast);
   flex-shrink: 0;
 }
 
 .driver-week__name-cell:hover .driver-week__schedule-icon {
-  opacity: 0.7;
+  opacity: var(--rux-state-opacity-subtle-hover);
 }
 
 .driver-week__schedule-icon:hover {
-  opacity: 1 !important;
+  opacity: var(--rux-state-opacity-hover) !important;
 }
 
 /* Dim all non-selected trip bars when a driver filter is active */
@@ -691,10 +692,10 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 .driver-week__relief-icon {
   font-size: 14px;
   font-variation-settings:
-    "FILL" var(--rux-btn-icon-fill),
-    "wght" var(--rux-btn-icon-wght),
-    "GRAD" var(--rux-btn-icon-grad),
-    "opsz" var(--rux-btn-icon-opsz);
+    "FILL" var(--rux-button-icon-fill),
+    "wght" var(--rux-button-icon-wght),
+    "GRAD" var(--rux-button-icon-grad),
+    "opsz" var(--rux-button-icon-opsz);
   opacity: 1;
   pointer-events: none;
   vertical-align: middle;
@@ -775,7 +776,7 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 .driver-role-icon {
-  font-size: var(--rux-btn-icon-size);
+  font-size: var(--rux-button-icon-size);
   color: var(--rux-text-3);
   opacity: 0.55;
   flex-shrink: 0;
@@ -823,7 +824,7 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 .driver-status-cycle:hover {
-  background: var(--overlay-hover-up);
+  background: var(--rux-state-bg-subtle-hover);
 }
 
 .driver-status-cycle.status-pending {
@@ -1162,10 +1163,12 @@ body.bars-compact {
   width: 100%;
   background-color: var(--rux-fld-bg);
   border: 1px solid var(--rux-border-2);
+  border: none;
   border-radius: var(--rux-fld-radius);
   height: var(--rux-fld-height);
   padding-inline: var(--rux-space-2);
   box-sizing: border-box;
+  box-shadow: var(--rux-input-shadow);
   transition:
     box-shadow 0.11s,
     border-color 0.11s;
@@ -1303,7 +1306,7 @@ body.bars-compact {
 
 .search-dropdown__item:hover,
 .search-dropdown__item:focus-visible {
-  background: var(--rux-bg-3);
+  background: var(--rux-state-bg-hover);
   outline: none;
 }
 

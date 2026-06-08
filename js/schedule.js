@@ -514,7 +514,7 @@ function renderAgenda() {
       dom.agendaBody.innerHTML = `
         <tr><td colspan="${state.viewDays + 1}" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
-          <button onclick="location.reload()" class="rux-btn rux-btn--primary">Reload Page</button>
+          <button onclick="location.reload()" class="rux-button rux-button--primary">Reload Page</button>
         </td></tr>
       `;
     }
@@ -1031,30 +1031,37 @@ function _renderAgendaInner() {
         driverPayRow.append(pay1Slot, pay2Slot, pay3Slot, pay4Slot);
         r7.appendChild(driverPayRow);
 
-        // Row 8: Estimate fields — separate spans; order: price, mi, drv, dot
+        // Row 8: Estimate fields — separate spans; order: mi, price
         const r8 = makeRow("8");
         const estimateRow = document.createElement("div");
         estimateRow.className = "schedule-grid__trip-bar__estimate-row";
         const estPrice = document.createElement("span");
         const estMi    = document.createElement("span");
-        const estDrv   = document.createElement("span");
-        const estDot   = document.createElement("span");
         estPrice.className = estMi.className =
-          estDrv.className = estDot.className =
-            "schedule-grid__trip-bar__estimate-summary";
-        estimateRow.append(estPrice, estMi, estDrv, estDot);
+          "schedule-grid__trip-bar__estimate-summary";
+        estimateRow.append(estMi, estPrice);
         r8.appendChild(estimateRow);
 
-        // Row 9: Billing / invoice fields (invoice number, PO, actual miles)
+        // Row 9: Billing fields — separate spans; order: trip mi, invoice #
         const r9 = makeRow("9");
         const billingRow = document.createElement("div");
         billingRow.className = "schedule-grid__trip-bar__billing-row";
+        const billingMi = document.createElement("span");
+        const billingInv = document.createElement("span");
+        billingMi.className = billingInv.className =
+          "schedule-grid__trip-bar__billing-summary";
+        billingRow.append(billingMi, billingInv);
         r9.appendChild(billingRow);
 
         // Row 10: Payment references (ref1, ref2, ref3, paid date)
         const r10 = makeRow("10");
         const paymentRow = document.createElement("div");
         paymentRow.className = "schedule-grid__trip-bar__payment-row";
+        const paymentLeft = document.createElement("span");
+        const paymentRight = document.createElement("span");
+        paymentLeft.className = "schedule-grid__trip-bar__payment-summary";
+        paymentRight.className = "schedule-grid__trip-bar__payment-summary";
+        paymentRow.append(paymentLeft, paymentRight);
         r10.appendChild(paymentRow);
 
         // Append all rows — rAction is last (bottom of bar when expanded)
@@ -1082,10 +1089,12 @@ function _renderAgendaInner() {
         bar._notes = notesEl;
         bar._estMi    = estMi;
         bar._estPrice = estPrice;
-        bar._estDrv   = estDrv;
-        bar._estDot   = estDot;
         bar._billingRow = billingRow;
+        bar._billingMi = billingMi;
+        bar._billingInv = billingInv;
         bar._paymentRow = paymentRow;
+        bar._paymentLeft = paymentLeft;
+        bar._paymentRight = paymentRight;
         bar._drivers = driversRow;
         bar._d1Slot = d1Slot;
         bar._d2Slot = d2Slot;
@@ -1285,10 +1294,8 @@ function _renderAgendaInner() {
 
       if (bar._estPrice) {
         const estFields = [
-          { el: bar._estPrice, val: t.quotedPrice      ? `$${t.quotedPrice}`          : "" },
           { el: bar._estMi,    val: t.estimatedMileage ? `${t.estimatedMileage}mi`    : "" },
-          { el: bar._estDrv,   val: t.drivingHours     ? String(t.drivingHours)       : "" },
-          { el: bar._estDot,   val: t.onDutyHours      ? String(t.onDutyHours)        : "" },
+          { el: bar._estPrice, val: t.quotedPrice      ? `$${t.quotedPrice}`          : "" },
         ];
         let first = true;
         estFields.forEach(({ el, val }) => {
@@ -1508,16 +1515,18 @@ function _renderAgendaInner() {
       }
 
       if (bar._billingRow) {
-        const invPart = t.invoiceNumber ? `#${t.invoiceNumber}` : "#TBD";
-        const poPart  = t.paymentType   ? `PO${t.paymentType}`  : "";
-        const miPart  = t.tripMiles     ? `${t.tripMiles}mi`    : "";
-        bar._billingRow.textContent = [invPart, poPart, miPart].filter(Boolean).join(" ");
+        if (bar._billingMi) {
+          bar._billingMi.textContent = t.tripMiles ? `${t.tripMiles}mi` : "";
+        }
+        if (bar._billingInv) {
+          bar._billingInv.textContent = t.invoiceNumber ? `#${t.invoiceNumber}` : "";
+        }
       }
 
       if (bar._paymentRow) {
-        const refs = [t.ref1, t.ref2, t.ref3].filter(Boolean);
-        const paidPart = t.datePaid ? `PAID ${formatDateShort(t.datePaid)}` : "";
-        bar._paymentRow.textContent = [...refs, paidPart].filter(Boolean).join(" ");
+        const paidPart = t.datePaid ? `pd ${formatDateShort(t.datePaid)}` : "";
+        if (bar._paymentLeft) bar._paymentLeft.textContent = t.ref1 || "";
+        if (bar._paymentRight) bar._paymentRight.textContent = paidPart;
       }
 
       if (bar._notes) {
@@ -1529,21 +1538,23 @@ function _renderAgendaInner() {
       bar._d3Name.textContent = d3 && d3 !== "—" ? d3 : "";
       bar._d4Name.textContent = d4 && d4 !== "—" ? d4 : "";
 
-      // Row 7: driver pay — "$350 • TBD" format (no D1/D2 labels), combined into first slot
+      // Row 7: driver pay — each assigned driver gets an equal-width slot.
       if (bar._pay1) {
         const fmtSlot = (_idx, pay, driver) => {
-          if (!driver || driver === "—") return "";
-          return pay ? `$${String(pay).replace(/^\$/, "")}` : "TBD";
+          if (!driver || driver === "—" || !pay) return "";
+          return `$${String(pay).replace(/^\$/, "")}`;
         };
-        bar._pay1.textContent = [
-          fmtSlot(1, a.driver1Pay, d1),
-          fmtSlot(2, a.driver2Pay, d2),
-          fmtSlot(3, a.driver3Pay, d3),
-          fmtSlot(4, a.driver4Pay, d4),
-        ].filter(Boolean).join(" • ");
-        if (bar._pay2) bar._pay2.textContent = "";
-        if (bar._pay3) bar._pay3.textContent = "";
-        if (bar._pay4) bar._pay4.textContent = "";
+        [
+          { el: bar._pay1, driver: d1, val: fmtSlot(1, a.driver1Pay, d1) },
+          { el: bar._pay2, driver: d2, val: fmtSlot(2, a.driver2Pay, d2) },
+          { el: bar._pay3, driver: d3, val: fmtSlot(3, a.driver3Pay, d3) },
+          { el: bar._pay4, driver: d4, val: fmtSlot(4, a.driver4Pay, d4) },
+        ].forEach(({ el, driver, val }) => {
+          if (!el) return;
+          const assigned = !!driver && driver !== "—";
+          el.textContent = val;
+          el.hidden = !assigned;
+        });
       }
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);

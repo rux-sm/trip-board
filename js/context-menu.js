@@ -559,7 +559,7 @@ function renderQuickEditTab(tabId, trip, assigns) {
     items.forEach(({ key, label, icon }) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "rux-btn rux-btn--toggle";
+      btn.className = "rux-button rux-button--toggle";
       const isOn = !!trip[key] && trip[key] !== false && trip[key] !== "false";
       btn.setAttribute("aria-pressed", String(isOn));
       btn.dataset.key = key;

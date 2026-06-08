@@ -132,6 +132,7 @@ const dom = {
   themeText2: $("themeText2"),
   printBtn2: $("printBtn2"),
   printBtn2Full: $("printBtn2Full"),
+  printBtnAllRows: $("printBtnAllRows"),
   driverManagerBtn: $("driverManagerBtn"),
   fleetManagerBtn: $("fleetManagerBtn"),
   driverManagerCard: $("driverManagerCard"),

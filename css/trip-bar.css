@@ -22,29 +22,30 @@
      ════════════════════════════════════════════════════════════════════════ */
 
   /* ── Bar heights ────────────────────────────────────────────────────── */
-  --tripbar-height-collapsed: 89px;  /* r11 hidden (0px) + spacer + r1-r6 */
-  --tripbar-height-expanded:  153px; /* r11 hidden (0px) + spacer + r1-r10 */
-  --tripbar-height-active:    185px; /* r11 (top) + spacer + r1-r10 */
+  --tripbar-height-collapsed: 98px;  /* r11 hidden (0px) + spacer + r1-r6 + bottom pad */
+  --tripbar-height-expanded:  170px; /* r11 hidden (0px) + spacer + r1-r10 + bottom pad */
+  --tripbar-height-active:    200px; /* r11 (top) + spacer + r1-r10 + bottom pad */
 
   /* ── Outer insets (space between bar edge and row cell) ─────────────── */
-  --tripbar-inset-top:    2px;
+  --tripbar-inset-top:    3px;
   --tripbar-inset-bottom: 6px;
 
   /* ── Internal vertical spacing ──────────────────────────────────────── */
-  --tripbar-padding-y: 0px;
-  --tripbar-row-gap:   0px;
+  --tripbar-padding-y:      0px;
+  --tripbar-padding-bottom: 2px;
+  --tripbar-row-gap:        0px;
 
   /* ── Row heights (CSS grid track sizes; r11 via @property above) ─────── */
   --tripbar-r1-row-height:  14px;
-  --tripbar-r2-row-height:  11px;
-  --tripbar-r3-row-height:  11px;
+  --tripbar-r2-row-height:  14px;
+  --tripbar-r3-row-height:  14px;
   --tripbar-r4-row-height:  14px; /* -1px */
   --tripbar-r5-row-height:  20px; /* -1px */
   --tripbar-r6-row-height:  16px; /* -1px */
-  --tripbar-r7-row-height:  15px; /* -2px */
-  --tripbar-r8-row-height:  15px; /* -2px */
-  --tripbar-r9-row-height:  15px; /* -2px */
-  --tripbar-r10-row-height: 15px; /* -2px */
+  --tripbar-r7-row-height:  18px; /* -2px */
+  --tripbar-r8-row-height:  18px; /* -2px */
+  --tripbar-r9-row-height:  18px; /* -2px */
+  --tripbar-r10-row-height: 18px; /* -2px */
 
   /* ── Gap above each row (margin-top; adds to height budget) ─────────── */
   --tripbar-r1-gap-above:   0px;  /* +2px to rescue title from the border */
@@ -53,7 +54,7 @@
   --tripbar-r4-gap-above:   0px;
   --tripbar-r5-gap-above:   0px;
   --tripbar-r6-gap-above:   0px;
-  --tripbar-r7-gap-above:   0px;
+  --tripbar-r7-gap-above:   2px;
   --tripbar-r8-gap-above:   1px;
   --tripbar-r9-gap-above:   1px;
   --tripbar-r10-gap-above:  1px;
@@ -63,28 +64,28 @@
     /* ── Line Height ─────────────────────────────────────────────────────── */
 
   --tripbar-r1-line-height:  14px;
-  --tripbar-r2-line-height:  11px;
-  --tripbar-r3-line-height:  11px;
-  --tripbar-r4-line-height:  13px;
+  --tripbar-r2-line-height:  14px;
+  --tripbar-r3-line-height:  14px;
+  --tripbar-r4-line-height:  14px;
   --tripbar-r5-line-height:  20px;
-  --tripbar-r6-line-height:  15px;
-  --tripbar-r7-line-height:  14px;
-  --tripbar-r8-line-height:  14px;
-  --tripbar-r9-line-height:  14px;
-  --tripbar-r10-line-height: 14px;
+  --tripbar-r6-line-height:  16px;
+  --tripbar-r7-line-height:  16px;
+  --tripbar-r8-line-height:  16px;
+  --tripbar-r9-line-height:  16px;
+  --tripbar-r10-line-height: 16px;
 
     /* ── Font Size ───────────────────────────────────────────────────────── */
 
   --tripbar-r1-font-size:  12px;
-  --tripbar-r2-font-size:  11px;
-  --tripbar-r3-font-size:  11px;
-  --tripbar-r4-font-size:  10px;
+  --tripbar-r2-font-size:  12px;
+  --tripbar-r3-font-size:  12px;
+  --tripbar-r4-font-size:  12px;
   --tripbar-r5-font-size:  12px;
   --tripbar-r6-font-size:  12px;
-  --tripbar-r7-font-size:  11px;
-  --tripbar-r8-font-size:  11px;
-  --tripbar-r9-font-size:  11px;
-  --tripbar-r10-font-size: 11px;
+  --tripbar-r7-font-size:  12px;
+  --tripbar-r8-font-size:  12px;
+  --tripbar-r9-font-size:  12px;
+  --tripbar-r10-font-size: 12px;
 
     /* ── Font Weight ─────────────────────────────────────────────────────── */
 
@@ -94,10 +95,10 @@
   --tripbar-r4-font-weight:  500;
   --tripbar-r5-font-weight:  600;
   --tripbar-r6-font-weight:  600;
-  --tripbar-r7-font-weight:  400;
-  --tripbar-r8-font-weight:  400;
-  --tripbar-r9-font-weight:  400;
-  --tripbar-r10-font-weight: 400;
+  --tripbar-r7-font-weight:  500;
+  --tripbar-r8-font-weight:  500;
+  --tripbar-r9-font-weight:  500;
+  --tripbar-r10-font-weight: 500;
 
   /* ════════════════════════════════════════════════════════════════════════
      GEOMETRY — width, radius, lane, horizontal insets (no height effect)
@@ -156,22 +157,22 @@
   /* ── COLOR SYSTEM ───────────────────────────────────────────────────── */
 
   /* Per-variant accent seeds — change a color here */
-  --tripbar-default-accent:     oklch(44% 0.2 260 / 100%);
-  --tripbar-unconfirmed-accent: oklch(44% 0.2 24 / 100%);
-  --tripbar-blue-accent:        oklch(44% 0.2 250 / 100%);
-  --tripbar-red-accent:         oklch(60% 0.24 24 / 100%);
-  --tripbar-green-accent:       oklch(60% 0.24 150 / 100%);
-  --tripbar-yellow-accent:      oklch(60% 0.24 90 / 100%);
-  --tripbar-orange-accent:      oklch(60% 0.24 65 / 100%);
-  --tripbar-purple-accent:      oklch(60% 0.24 285 / 100%);
-  --tripbar-violet-accent:      oklch(60% 0.24 300 / 100%);
-  --tripbar-indigo-accent:      oklch(60% 0.24 275 / 100%);
-  --tripbar-pink-accent:        oklch(60% 0.24 350 / 100%);
-  --tripbar-cyan-accent:        oklch(60% 0.24 210 / 100%);
-  --tripbar-teal-accent:        oklch(60% 0.24 185 / 100%);
-  --tripbar-mint-accent:        oklch(60% 0.24 165 / 100%);
-  --tripbar-brown-accent:       oklch(60% 0.24 55 / 100%);
-  --tripbar-gray-accent:        oklch(from var(--rux-color-gray) 40% 0.05 h / 100%);
+  --tripbar-default-accent:     oklch(60% 0.24 260 / 20%);
+  --tripbar-unconfirmed-accent: oklch(60% 0.24 24 / 20%);
+  --tripbar-blue-accent:        oklch(60% 0.24 250 / 20%);
+  --tripbar-red-accent:         oklch(60% 0.24 24 / 20%);
+  --tripbar-green-accent:       oklch(60% 0.24 150 / 20%);
+  --tripbar-yellow-accent:      oklch(60% 0.24 90 / 20%);
+  --tripbar-orange-accent:      oklch(60% 0.24 65 / 20%);
+  --tripbar-purple-accent:      oklch(60% 0.24 285 / 20%);
+  --tripbar-violet-accent:      oklch(60% 0.24 300 / 20%);
+  --tripbar-indigo-accent:      oklch(60% 0.24 275 / 20%);
+  --tripbar-pink-accent:        oklch(60% 0.24 350 / 20%);
+  --tripbar-cyan-accent:        oklch(60% 0.24 210 / 20%);
+  --tripbar-teal-accent:        oklch(60% 0.24 185 / 20%);
+  --tripbar-mint-accent:        oklch(60% 0.24 165 / 20%);
+  --tripbar-brown-accent:       oklch(60% 0.24 55 / 20%);
+  --tripbar-gray-accent:        oklch(from var(--rux-color-gray));
 
   /* Active accent — overridden per variant by .color-* and .unconfirmed */
   --tripbar-active-variant-color: var(--tripbar-default-accent);
@@ -263,10 +264,10 @@
   --tripbar-r4-letter-spacing:  0em;
   --tripbar-r5-letter-spacing:  -0.04em;
   --tripbar-r6-letter-spacing:  0em;
-  --tripbar-r7-letter-spacing:   0.02em;
-  --tripbar-r8-letter-spacing:   0.02em;
-  --tripbar-r9-letter-spacing:   0em;
-  --tripbar-r10-letter-spacing:  0em;
+  --tripbar-r7-letter-spacing:  -0.04em;
+  --tripbar-r8-letter-spacing:  -0.04em;
+  --tripbar-r9-letter-spacing:  -0.04em;
+  --tripbar-r10-letter-spacing: -0.04em;
 
   /* ── Text Color ──────────────────────────────────────────────────────── */
 
@@ -302,10 +303,10 @@
   --tripbar-r4-bg:  oklch(0% 0 0 / 0%);
   --tripbar-r5-bg:  oklch(0% 0 0 / 25%);
   --tripbar-r6-bg:  oklch(0% 0 0 / 0%);
-  --tripbar-r7-bg:  oklch(100% 0 0 / 25%);
-  --tripbar-r8-bg:  oklch(100% 0 0 / 25%);
-  --tripbar-r9-bg:  oklch(100% 0 0 / 25%);
-  --tripbar-r10-bg: oklch(100% 0 0 / 25%);
+  --tripbar-r7-bg:  oklch(100% 0 0 / 80%);
+  --tripbar-r8-bg:  oklch(100% 0 0 / 80%);
+  --tripbar-r9-bg:  oklch(100% 0 0 / 80%);
+  --tripbar-r10-bg: oklch(100% 0 0 / 80%);
   --tripbar-r11-bg: oklch(0% 0 0 / 0%);
 
   /* ── Icon Size ───────────────────────────────────────────────────────── */
@@ -385,6 +386,7 @@
   --tripbar-r4-icon-grad:  25;
   --tripbar-r5-icon-grad:  25;
   --tripbar-r6-icon-grad:  25;
+  --tripbar-r9-icon-grad:  0;
 
   --tripbar-r11-icon-grad: 0;
 
@@ -490,7 +492,7 @@
   /* height is set entirely by JS — bar.style.height = calc(100% - insetT - insetB) */
   /* no max-height — JS grows the bar to collapsedPx + actionRowH + gap on expand */
   box-sizing: border-box;
-  padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
+  padding: var(--tripbar-padding-y) var(--tripbar-padding-x) var(--tripbar-padding-bottom);
   border-radius: var(--tripbar-radius);
   overflow: hidden;
   cursor: pointer;
@@ -515,16 +517,16 @@
   --tripbar-border:     var(--tripbar-active-variant-color);
   --tripbar-text-color: var(--tripbar-r8-color);
 
-  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r1-color-a));
-  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r2-color-a));
-  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) 90% .2 h / var(--tripbar-r3-color-a));
-  --tripbar-r4-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r4-color-l) c h / var(--tripbar-r4-color-a));
-  --tripbar-r5-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r5-color-l) c h / var(--tripbar-r5-color-a));
-  --tripbar-r6-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r6-color-l) 0 h / var(--tripbar-r6-color-a));
-  --tripbar-r7-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r7-color-l) c h / var(--tripbar-r7-color-a));
-  --tripbar-r8-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r8-color-l) c h / var(--tripbar-r8-color-a));
-  --tripbar-r9-color:  oklch(from var(--tripbar-active-variant-color) var(--tripbar-r9-color-l) c h / var(--tripbar-r9-color-a));
-  --tripbar-r10-color: oklch(from var(--tripbar-active-variant-color) var(--tripbar-r10-color-l) c h / var(--tripbar-r10-color-a));
+  --tripbar-r1-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r1-color-a));
+  --tripbar-r2-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r2-color-a));
+  --tripbar-r3-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r4-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r5-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r6-color:  oklch(from var(--tripbar-active-variant-color) 0% .2 h / var(--tripbar-r3-color-a));
+  --tripbar-r7-color:  oklch(10% 0 0 / 100%);
+  --tripbar-r8-color:  oklch(10% 0 0 / 100%);
+  --tripbar-r9-color:  oklch(60% 0.2 24 / 100%);
+  --tripbar-r10-color: oklch(60% 0.2 150 / 100%);
   --tripbar-time-color: var(--tripbar-r5-color);
   --tripbar-time-color-flagged: var(--tripbar-time-flagged-color);
 
@@ -1214,7 +1216,7 @@ body.bars-compact {
   grid-row: 9;
   overflow: hidden;
   background: var(--tripbar-r7-bg);
-  border-radius: var(--tripbar-radius) var(--tripbar-radius) 0 0;
+  border-radius: var(--rux-radius-sm) var(--rux-radius-sm) 0 0;
   margin-top: var(--tripbar-r7-gap-above);
   margin-inline: var(--tripbar-r7-margin-inline);
   padding-inline: var(--tripbar-r7-padding-inline);
@@ -1238,6 +1240,7 @@ body.bars-compact {
   align-items: center;
   justify-content: center;
   gap: var(--tripbar-r7-gap);
+  width: 100%;
   font-family: var(--font-mono);
   font-size: var(--tripbar-r7-font-size);
   font-weight: var(--tripbar-r7-font-weight);
@@ -1250,10 +1253,16 @@ body.bars-compact {
 }
 
 .schedule-grid__trip-bar__pay-slot {
+  flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
+}
+
+.schedule-grid__trip-bar__pay-slot[hidden] {
+  display: none;
 }
 
 /* ==========================================================================
@@ -1292,6 +1301,7 @@ body.bars-compact {
 }
 
 .schedule-grid__trip-bar__estimate-summary {
+  flex: 1 1 0;
   font-family: var(--font-mono);
   font-size: var(--tripbar-r8-font-size);
   font-weight: var(--tripbar-r8-font-weight);
@@ -1303,7 +1313,7 @@ body.bars-compact {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex-shrink: 1;
+  text-align: center;
   min-width: 0;
 }
 
@@ -1347,6 +1357,11 @@ body.bars-compact {
 }
 
 .schedule-grid__trip-bar__billing-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tripbar-r9-gap);
+  width: 100%;
   font-family: var(--font-mono);
   font-size: var(--tripbar-r9-font-size);
   font-weight: var(--tripbar-r9-font-weight);
@@ -1360,6 +1375,15 @@ body.bars-compact {
   text-overflow: ellipsis;
 }
 
+.schedule-grid__trip-bar__billing-summary {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ==========================================================================
    Row 10 — Payment references (PMT)
    ========================================================================== */
@@ -1371,7 +1395,7 @@ body.bars-compact {
   margin-top: var(--tripbar-r10-gap-above);
   margin-inline: var(--tripbar-r10-margin-inline);
   padding-inline: var(--tripbar-r10-padding-inline);
-  border-radius: 0 0 var(--tripbar-radius) var(--tripbar-radius);
+  border-radius: 0 0 var(--rux-radius-sm) var(--rux-radius-sm);
   max-width: var(--tripbar-max-width);
   min-width: var(--tripbar-min-width);
   justify-self: center;
@@ -1380,8 +1404,9 @@ body.bars-compact {
 .schedule-grid__trip-bar__payment-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: var(--tripbar-r10-gap);
+  width: 100%;
   font-size: var(--tripbar-r10-font-size);
   font-weight: var(--tripbar-r10-font-weight);
   -webkit-font-smoothing: antialiased;
@@ -1392,6 +1417,15 @@ body.bars-compact {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__payment-summary {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -1442,8 +1476,8 @@ body.bars-compact {
 }
 
 .schedule-grid__trip-bar__action-btn:hover {
-  background: oklch(100% 0 0 / 0.15);
-  color: oklch(100% 0 0);
+  background: var(--rux-state-bg-subtle-pressed);
+  color: var(--rux-state-text-selected);
 }
 
 .schedule-grid__trip-bar__action-btn .material-symbols-outlined {
@@ -1487,9 +1521,9 @@ body.bars-compact {
 
 .schedule-grid__trip-bar__mini-badge.has-pdf:hover,
 .schedule-grid__trip-bar__mini-badge.has-action:hover {
-  transform: scale(1.15);
-  color: var(--rux-text-1);
-  background-color: rgba(255, 255, 255, 0.2);
+  transform: var(--rux-state-transform-hover-scale);
+  color: var(--rux-state-text-hover);
+  background-color: var(--rux-state-bg-subtle-pressed);
 }
 
 .schedule-grid__trip-bar__mini-badge.has-text {

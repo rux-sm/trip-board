@@ -107,7 +107,7 @@
 }
 
 .login__forgot:hover {
-  color: var(--rux-text-2);
+  color: var(--rux-state-text-hover);
 }
 
 .login__message {

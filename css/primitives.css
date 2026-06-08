@@ -11,6 +11,9 @@
   --icon-btn-size:     32px;
   --icon-arrow-size:   40px;
   --icon-arrow-offset: 4px;
+  --rux-accordion-heading-bg-hover: var(--rux-state-bg-hover);
+  --rux-bus-picker-item-bg-hover: var(--rux-state-bg-hover);
+  --rux-bus-picker-swap-bg-hover: var(--rux-color-accent-subtle);
 }
 
 /* ==========================================================================
@@ -197,7 +200,7 @@
 }
 
 .cds-accordion__heading:hover {
-  background-color: oklch(from var(--rux-btn-bg-secondary) calc(l + var(--rux-btn-hover-lift)) c h);
+  background-color: var(--rux-accordion-heading-bg-hover);
 }
 
 .cds-accordion__title {
@@ -311,7 +314,9 @@
 .bus-picker:not([hidden]) .bus-picker__item:nth-of-type(5) { transition-delay: 120ms; }
 .bus-picker:not([hidden]) .bus-picker__item:nth-of-type(n + 6) { transition-delay: 150ms; }
 
-.bus-picker__item:hover:not(.bus-picker__item--disabled) { background: var(--overlay-hover); }
+.bus-picker__item:hover:not(.bus-picker__item--disabled) {
+  background: var(--rux-bus-picker-item-bg-hover);
+}
 
 .bus-picker__item--disabled {
   color: var(--rux-text-3);
@@ -345,5 +350,5 @@
 }
 
 .bus-picker__swap-btn:hover {
-  background: var(--rux-color-accent-subtle);
+  background: var(--rux-bus-picker-swap-bg-hover);
 }

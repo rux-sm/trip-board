@@ -6,6 +6,37 @@
 // 32) PRINT
 // ======================================================
 
+function appendPrintAgendaHeader(card, fallbackTitle = "") {
+  const agendaHeader = getScheduleAgendaHeaderEl();
+  const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
+
+  if (headerClone) {
+    headerClone.classList.add("print-header");
+
+    const dateLeft = headerClone.querySelector(".agenda-header__date-left");
+    if (dateLeft) {
+      const logoImg = dateLeft.querySelector(".agenda-header__logo") || document.createElement("img");
+      logoImg.src = "assets/logo.png";
+      logoImg.classList.add("print-header-logo-img");
+      logoImg.alt = "Logo";
+      if (!logoImg.parentElement) dateLeft.insertBefore(logoImg, dateLeft.firstChild);
+    }
+
+    card.appendChild(headerClone);
+    return true;
+  }
+
+  if (fallbackTitle) {
+    const title = document.createElement("div");
+    title.className = "print-title";
+    title.textContent = fallbackTitle;
+    card.appendChild(title);
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Build Legal-landscape print layout by cloning the live schedule-grid.
  * Layout: 2 pages, 5 bus rows each, 2 empty note rows below each bus.
@@ -116,31 +147,7 @@ function buildPrintScheduleTwoPages() {
     const card = document.createElement("div");
     card.className = "print-card";
 
-    const agendaHeader = getScheduleAgendaHeaderEl();
-    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
-    if (headerClone) {
-      headerClone.classList.add("print-header");
-      headerClone
-        .querySelectorAll(
-          ".rux-header__actions, .agenda-header__date-left .rux-btn--tertiary, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
-        )
-        .forEach((el) => el.remove());
-
-      const dateLeft = headerClone.querySelector(".agenda-header__date-left");
-      if (dateLeft) {
-        const logoImg = dateLeft.querySelector(".agenda-header__logo") || document.createElement("img");
-        logoImg.src = "assets/logo.png";
-        logoImg.classList.add("print-header-logo-img");
-        logoImg.alt = "Logo";
-        if (!logoImg.parentElement) dateLeft.insertBefore(logoImg, dateLeft.firstChild);
-      }
-      card.appendChild(headerClone);
-    } else {
-      const title = document.createElement("div");
-      title.className = "print-title";
-      title.textContent = weekTitle;
-      card.appendChild(title);
-    }
+    appendPrintAgendaHeader(card, weekTitle);
     clone.classList.add("print-table");
     card.appendChild(clone);
     page.appendChild(card);
@@ -221,26 +228,7 @@ function buildPrintScheduleLegalCSSGrid() {
     const card = document.createElement("div");
     card.className = "print-card";
 
-    // Agency header (logo + date range) — same approach as existing function
-    const agendaHeader = getScheduleAgendaHeaderEl();
-    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
-    if (headerClone) {
-      headerClone.classList.add("print-header");
-      headerClone
-        .querySelectorAll(
-          ".rux-header__actions, .agenda-header__date-left .rux-btn--tertiary, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
-        )
-        .forEach((el) => el.remove());
-      const dateLeft = headerClone.querySelector(".agenda-header__date-left");
-      if (dateLeft) {
-        const logoImg = dateLeft.querySelector(".agenda-header__logo") || document.createElement("img");
-        logoImg.src = "assets/logo.png";
-        logoImg.classList.add("print-header-logo-img");
-        logoImg.alt = "Logo";
-        if (!logoImg.parentElement) dateLeft.insertBefore(logoImg, dateLeft.firstChild);
-      }
-      card.appendChild(headerClone);
-    }
+    appendPrintAgendaHeader(card);
 
     // CSS Grid schedule
     const grid = document.createElement("div");
@@ -292,15 +280,10 @@ function buildPrintScheduleLegalCSSGrid() {
             const eidx = Number(bar.dataset.eidx);
             if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
             const barClone = bar.cloneNode(true);
-            // Set positioning inline with !important so it beats the base class's
-            // height: var(--tripbar-height) !important and position: absolute rules
             barClone.style.removeProperty("left");
             barClone.style.removeProperty("width");
+            barClone.style.removeProperty("height");
             barClone.style.setProperty("position", "absolute", "important");
-            barClone.style.setProperty("top", "0", "important");
-            barClone.style.setProperty("left", "0", "important");
-            barClone.style.setProperty("width", "100%", "important");
-            barClone.style.setProperty("height", "100%", "important");
             barClone.style.setProperty("max-height", "none", "important");
             // Wrapper is the grid item — grid-column placed here, not on the bar
             const lane = Number(bar.dataset.lane) || 0;
@@ -433,11 +416,122 @@ function buildPrintScheduleFullLetter() {
   printRoot.classList.add("print-mode-letter-full");
 }
 
+function buildPrintScheduleAllRowsLegal() {
+  const printRoot = document.getElementById("printRoot");
+  if (!printRoot) return;
+
+  const weekTable = getScheduleGridTableEl();
+  if (!weekTable) return;
+
+  const theadRow = weekTable.querySelector("thead tr");
+  const dayHeaderCells = theadRow ? Array.from(theadRow.cells).slice(1) : [];
+
+  // Bus rows only — waiting list excluded
+  const tbody = dom.agendaBody;
+  const allRows = tbody ? Array.from(tbody.querySelectorAll("tr.schedule-grid__row")) : [];
+
+  function buildPage(rows) {
+    const page = document.createElement("div");
+    page.className = "print-page";
+
+    const card = document.createElement("div");
+    card.className = "print-card";
+
+    appendPrintAgendaHeader(card);
+
+    const grid = document.createElement("div");
+    grid.className = "pgv2-grid";
+
+    const busHeaderCell = document.createElement("div");
+    busHeaderCell.className = "pgv2-hcell pgv2-hcell--bus";
+    grid.appendChild(busHeaderCell);
+
+    for (let d = 0; d < 7; d++) {
+      const hcell = document.createElement("div");
+      hcell.className = "pgv2-hcell";
+      const srcCell = dayHeaderCells[d];
+      if (srcCell) {
+        const label = srcCell.querySelector(".schedule-grid__day-label");
+        hcell.appendChild(label ? label.cloneNode(true) : document.createTextNode(srcCell.textContent.trim()));
+      }
+      grid.appendChild(hcell);
+    }
+
+    rows.forEach((tr) => {
+      const busCell = document.createElement("div");
+      busCell.className = "pgv2-bus-cell";
+      const srcBusCell = tr.cells[0];
+      if (srcBusCell) {
+        const indicator = srcBusCell.querySelector(".schedule-grid__bus-indicator");
+        if (indicator) busCell.appendChild(indicator.cloneNode(true));
+      }
+      const busAccent = tr.style.getPropertyValue("--bus-accent-color");
+      if (busAccent) busCell.style.setProperty("--bus-accent-color", busAccent);
+      grid.appendChild(busCell);
+
+      const barsArea = document.createElement("div");
+      barsArea.className = "pgv2-bars-area";
+
+      const srcBarsCell = tr.cells[1];
+      if (srcBarsCell) {
+        srcBarsCell.querySelectorAll(".schedule-grid__trip-bar").forEach((bar) => {
+          const sidx = Number(bar.dataset.sidx);
+          const eidx = Number(bar.dataset.eidx);
+          if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
+          const barClone = bar.cloneNode(true);
+          barClone.style.removeProperty("left");
+          barClone.style.removeProperty("width");
+          barClone.style.removeProperty("height");
+          barClone.style.setProperty("position", "absolute", "important");
+          barClone.style.setProperty("max-height", "none", "important");
+          const lane = Number(bar.dataset.lane) || 0;
+          const wrapper = document.createElement("div");
+          wrapper.className = "pgv2-bar-wrapper";
+          wrapper.style.gridColumn = `${sidx + 1} / ${eidx + 2}`;
+          wrapper.style.gridRow = String(lane + 1);
+          wrapper.appendChild(barClone);
+          barsArea.appendChild(wrapper);
+        });
+      }
+      grid.appendChild(barsArea);
+    });
+
+    card.appendChild(grid);
+    page.appendChild(card);
+    return page;
+  }
+
+  printRoot.innerHTML = "";
+  printRoot.classList.remove("print-mode-legal", "print-mode-legal-v2", "print-mode-letter-full", "print-mode-legal-full");
+  printRoot.classList.add("print-mode-legal-full");
+  printRoot.appendChild(buildPage(allRows.slice(0, 5)));
+  printRoot.appendChild(buildPage(allRows.slice(5)));
+
+  // Fit each page to legal landscape: 13.5in × 8in printable at 96dpi
+  const printW = (14 - 0.5) * 96;  // 1296px
+  const printH = (8.5 - 0.5) * 96; // 768px
+
+  printRoot.style.cssText = "position:absolute;left:-9999px;visibility:hidden;";
+  void printRoot.offsetHeight; // force layout
+
+  printRoot.querySelectorAll(".print-page").forEach((page) => {
+    const card = page.querySelector(".print-card");
+    if (!card) return;
+    const h = card.offsetHeight;
+    if (!h) return;
+    const zoom = Math.min(1, printH / h);
+    card.style.width = Math.round(printW / zoom) + "px";
+    card.style.zoom = String(zoom);
+  });
+
+  printRoot.style.cssText = "";
+}
+
 function clearPrintRoot() {
   const printRoot = document.getElementById("printRoot");
   if (printRoot) {
     printRoot.innerHTML = "";
-    printRoot.classList.remove("print-mode-letter-full", "print-mode-legal", "print-mode-legal-v2");
+    printRoot.classList.remove("print-mode-letter-full", "print-mode-legal", "print-mode-legal-v2", "print-mode-legal-full");
   }
 }
 

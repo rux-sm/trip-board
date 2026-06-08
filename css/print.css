@@ -3,6 +3,11 @@
    Consolidated from base.css, schedule.css, and primitives.css
    ========================================================================== */
 
+/* Force light rendering so dark color-scheme doesn't tint white backgrounds gray */
+#printRoot {
+  color-scheme: light;
+}
+
 /* ── From primitives.css ────────────────────────────────────────────────── */
 
 /* Applied outside @media print so the on-screen #printRoot render also shows red */
@@ -34,7 +39,7 @@
 
 @media print {
   #printRoot.print-mode-legal .print-table thead tr:first-child th {
-    border-top: 1px solid #d3d3d3 !important;
+    border-top: 1px solid var(--rux-print-grid-borders) !important;
   }
 }
 
@@ -56,10 +61,22 @@
 
 .print-header-logo-img {
   display: block !important;
-  height: 24px !important;
+  height: var(--rux-print-logo-height) !important;
   width: auto !important;
   margin-right: 12px !important;
   flex-shrink: 0 !important;
+  filter: brightness(0) !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.print-header .agenda-header__separator {
+  background: var(--rux-print-separator) !important;
+}
+
+.print-header .rux-header__actions,
+.print-header .schedule-sync-status {
+  display: none !important;
 }
 
 #printRoot.print-mode-legal .agenda-header__date-left {
@@ -104,7 +121,7 @@
   }
 
   body {
-    background: white !important;
+    background: var(--rux-print-cell-bg) !important;
     color: black !important;
     font-size: 10pt;
   }
@@ -140,7 +157,7 @@
   }
 
   #printRoot.print-mode-letter-full .schedule-grid__day-name {
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
   }
 
   /* Remove "today" highlight colors for print */
@@ -173,7 +190,7 @@
     width: 100% !important;
     height: auto !important;
     overflow: visible !important;
-    background: white !important;
+    background: var(--rux-print-cell-bg) !important;
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -248,7 +265,7 @@
   }
 
   .print-card {
-    background: white;
+    background: var(--rux-print-cell-bg);
     width: 100%;
     transform: scale(var(--print-scale, 1));
     transform-origin: top left;
@@ -256,7 +273,7 @@
 
   /* Print header: schedule-style header (cloned agenda-header) */
   .print-header {
-    background: white !important;
+    background: var(--rux-print-cell-bg) !important;
     height: auto !important;
     min-height: 24px !important;
     margin-bottom: 6px !important;
@@ -283,28 +300,28 @@
   }
 
   .print-header-logo .rux-app__logo {
-    height: 24px;
+    height: var(--rux-print-logo-height);
     width: auto;
     object-fit: contain;
   }
 
   .print-header .rux-header__title {
-    color: #333 !important;
+    color: var(--rux-print-text-2) !important;
     font-size: 14pt !important;
     line-height: 1.2 !important;
   }
 
   .print-header .agenda-header__week-date .wk-month,
   .print-header .agenda-header__week-date .wk-month-end {
-    color: #111 !important;
+    color: var(--rux-print-text-1) !important;
   }
 
   .print-header .agenda-header__week-date .wk-dates {
-    color: #444 !important;
+    color: var(--rux-print-text-3) !important;
   }
 
   .print-header .agenda-header__week-date .wk-year {
-    color: #0066cc !important;
+    color: var(--rux-print-text-accent) !important;
   }
 
   .print-title {
@@ -314,7 +331,7 @@
     text-align: start;
     border-bottom: none;
     padding-bottom: 5px;
-    color: #333;
+    color: var(--rux-print-text-2);
   }
 
   .print-table {
@@ -389,10 +406,10 @@
     border-inline-end: none !important;
     border-right: 1px solid var(--rux-border-2) !important;
     border-bottom: 1px solid var(--rux-border-2) !important;
-    background-color: white !important;
+    background-color: var(--rux-print-cell-bg) !important;
     box-sizing: border-box !important;
     padding: 2px !important;
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
     position: relative;
     height: 90px !important;
     vertical-align: top;
@@ -407,7 +424,7 @@
     border-bottom: 1px solid var(--rux-border-2) !important;
     box-sizing: border-box !important;
     padding: 2px !important;
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
     position: relative;
     height: var(--day-row-h) !important;
     vertical-align: top;
@@ -482,7 +499,7 @@
     display: block !important;
     position: static !important;
     width: 100% !important;
-    background: white !important;
+    background: var(--rux-print-cell-bg) !important;
     color: black !important;
   }
 
@@ -515,10 +532,10 @@
   #printRoot.print-mode-letter-full .print-data-table td {
     border: 1px solid #ccc !important;
     padding: 6px !important;
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
     vertical-align: top !important;
     color: black !important;
-    background: white !important;
+    background: var(--rux-print-cell-bg) !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
@@ -538,7 +555,7 @@
   }
 
   #printRoot.print-mode-letter-full .print-data-table th:first-child {
-    font-size: 8pt !important;
+    font-size: var(--rux-print-font-size-sm) !important;
     padding: 2px !important;
   }
 
@@ -551,7 +568,7 @@
   }
 
   #printRoot.print-mode-letter-full .trip-cell {
-    background-color: white !important;
+    background-color: var(--rux-print-cell-bg) !important;
   }
 
   #printRoot.print-mode-letter-full .trip-content {
@@ -567,7 +584,7 @@
   #printRoot.print-mode-letter-full .trip-times,
   #printRoot.print-mode-letter-full .trip-drivers,
   #printRoot.print-mode-letter-full .trip-notes {
-    font-size: 9pt;
+    font-size: var(--rux-print-font-size);
   }
 }
 
@@ -577,7 +594,7 @@
 #printRoot.print-mode-legal .print-table,
 #printRoot.print-mode-legal .print-table td,
 #printRoot.print-mode-legal .print-table th {
-  border: 1px solid #d3d3d3 !important;
+  border: 1px solid var(--rux-print-grid-borders) !important;
   border-collapse: collapse !important;
   box-sizing: border-box !important;
 }
@@ -591,7 +608,7 @@
         --tripbar-r6-color: #d60000 !important;
       }
       #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__multi-badge {
-        color: #111 !important;
+        color: var(--rux-print-text-1) !important;
       }
     #printRoot.print-mode-legal .schedule-grid__row--notes,
     #printRoot.print-mode-legal .schedule-grid__row--notes .schedule-grid__cell {
@@ -604,7 +621,7 @@
   }
   #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar__time {
     background: none !important;
-    color: #111 !important;
+    color: var(--rux-print-text-1) !important;
     font-weight: bold !important;
     border-radius: 0 !important;
     padding: 0 !important;
@@ -625,7 +642,7 @@
     container-type: normal !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    background: color-mix(in srgb, var(--tripbar-color) 20%, white) !important;
+    background: color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-bg-mix), var(--rux-print-cell-bg)) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     box-shadow: none !important;
@@ -638,17 +655,17 @@
     padding: 3px 5px 3px 2px !important;
     border-radius: 0px !important;
     z-index: 10;
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
   }
 
   /* Restore stripe backgrounds for out-of-service and one-way (overrides the solid bg above) */
   .print-table .schedule-grid__trip-bar.out-of-service,
   .print-table .schedule-grid__trip-bar.one-way {
     background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--tripbar-color) 8%, white),
-        color-mix(in srgb, var(--tripbar-color) 8%, white) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, white) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, white) 16px) !important;
+        color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-stripe-lo), var(--rux-print-cell-bg)),
+        color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-stripe-lo), var(--rux-print-cell-bg)) 8px,
+        color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-stripe-hi), var(--rux-print-cell-bg)) 8px,
+        color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-stripe-hi), var(--rux-print-cell-bg)) 16px) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -669,21 +686,21 @@
   }
 
   .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__title {
-    font-size: 9pt !important;
+    font-size: var(--rux-print-font-size) !important;
   }
 
   .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__sub,
   .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact {
-    font-size: 8pt !important;
+    font-size: var(--rux-print-font-size-sm) !important;
   }
 
   .print-table .schedule-grid__trip-bar__time {
-    font-size: 8pt !important;
+    font-size: var(--rux-print-font-size-sm) !important;
   }
 
   .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
   .print-table .schedule-grid__trip-bar__pre-drivers {
-    font-size: 8pt !important;
+    font-size: var(--rux-print-font-size-sm) !important;
   }
 
   .print-table .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
@@ -713,21 +730,21 @@
   display: grid;
   grid-template-columns: 52px repeat(7, 1fr);
   width: 100%;
-  border-top: 1px solid #d3d3d3;
-  border-left: 1px solid #d3d3d3;
+  border-top: 1px solid var(--rux-print-grid-borders);
+  border-left: 1px solid var(--rux-print-grid-borders);
   box-sizing: border-box;
 }
 
 /* Column header cells */
 #printRoot.print-mode-legal-v2 .pgv2-hcell {
-  font-size: 8pt;
+  font-size: var(--rux-print-font-size-sm);
   font-weight: 600;
   text-align: center;
   padding: 3px 2px;
-  border-right: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
   box-sizing: border-box;
-  background: white;
+  background: var(--rux-print-cell-bg);
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -742,24 +759,24 @@
   font-weight: 400;
 }
 #printRoot.print-mode-legal-v2 .pgv2-hcell .schedule-grid__day-name {
-  font-size: 8pt;
+  font-size: var(--rux-print-font-size-sm);
   font-weight: 600;
 }
 
 /* Bus number cell */
 #printRoot.print-mode-legal-v2 .pgv2-bus-cell {
   grid-column: 1;
-  font-size: 9pt;
+  font-size: var(--rux-print-font-size);
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
   box-sizing: border-box;
-  height: 88px;
+  height: var(--rux-print-cell-height);
   overflow: hidden;
-  background: white;
+  background: var(--rux-print-cell-bg);
   position: relative;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -773,12 +790,12 @@
   grid-auto-rows: 1fr;
   align-content: stretch;
   position: relative;
-  height: 88px;
-  border-right: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
+  height: var(--rux-print-cell-height);
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
   box-sizing: border-box;
   overflow: hidden;
-  background: white;
+  background: var(--rux-print-cell-bg);
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -791,8 +808,8 @@
   background: repeating-linear-gradient(
     to right,
     transparent calc(100% / 7 - 1px),
-    #d3d3d3 calc(100% / 7 - 1px),
-    #d3d3d3 calc(100% / 7)
+    var(--rux-print-grid-borders) calc(100% / 7 - 1px),
+    var(--rux-print-grid-borders) calc(100% / 7)
   );
   pointer-events: none;
   z-index: 0;
@@ -808,10 +825,10 @@
 /* Bar fills the wrapper — comprehensive print-ready overrides */
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  top: var(--tripbar-inset-top, 3px) !important;
+  bottom: var(--tripbar-inset-bottom, 6px) !important;
+  left: var(--tripbar-inset-left, 4px) !important;
+  right: var(--tripbar-inset-right, 6px) !important;
   max-height: none !important;
   box-sizing: border-box !important;
 
@@ -821,7 +838,7 @@
   align-content: center !important;
 
   /* Print-safe background: opaque, not glassmorphism */
-  background: color-mix(in srgb, var(--tripbar-color) 20%, white) !important;
+  background: color-mix(in srgb, var(--tripbar-color) var(--rux-print-bar-bg-mix), var(--rux-print-cell-bg)) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   container-type: normal !important;
@@ -839,7 +856,7 @@
   print-color-adjust: exact !important;
 
   /* Readable text for print (dark text on light bg) */
-  font-size: 8pt !important;
+  font-size: var(--rux-print-font-size-sm) !important;
   overflow: hidden !important;
   cursor: default !important;
   z-index: 10;
@@ -847,17 +864,17 @@
 
 /* Force all text inside V2 trip bars to be dark for print */
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar .schedule-grid__trip-bar__title {
-  color: #111 !important;
+  color: var(--rux-print-text-1) !important;
   text-shadow: none !important;
-  font-size: 8pt !important;
+  font-size: var(--rux-print-font-size-sm) !important;
 }
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar .schedule-grid__trip-bar__sub {
-  color: #333 !important;
+  color: var(--rux-print-text-2) !important;
   text-shadow: none !important;
   font-size: 7pt !important;
 }
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar .schedule-grid__trip-bar__time {
-  color: #111 !important;
+  color: var(--rux-print-text-1) !important;
   text-shadow: none !important;
   font-size: 7pt !important;
   background: none !important;
@@ -871,7 +888,7 @@
   font-weight: bold !important;
 }
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar .schedule-grid__trip-bar__driver {
-  color: #111 !important;
+  color: var(--rux-print-text-1) !important;
   text-shadow: none !important;
   font-size: 7pt !important;
 }
@@ -879,7 +896,7 @@
   display: flex !important;
 }
 #printRoot.print-mode-legal-v2 .pgv2-bar-wrapper .schedule-grid__trip-bar .schedule-grid__trip-bar__multi-badge {
-  color: #111 !important;
+  color: var(--rux-print-text-1) !important;
 }
 
 /* Remove shadows/filters on the entire V2 print root */
@@ -892,7 +909,133 @@
 #printRoot.print-mode-legal-v2 .pgv2-notes-row {
   grid-column: 1 / -1;
   height: 18px;
-  border-right: 1px solid #d3d3d3;
+  border-right: 1px solid var(--rux-print-grid-borders);
   border-bottom: 1px solid #eaeaea;
   box-sizing: border-box;
+}
+
+/* =====================================================
+   LEGAL PRINT FULL — all rows, 5 per page, no notes
+   ===================================================== */
+
+#printRoot.print-mode-legal-full .pgv2-grid {
+  display: grid;
+  grid-template-columns: var(--bus-col-w, 32px) repeat(7, 1fr);
+  width: 100%;
+  border-top: 1px solid var(--rux-print-grid-borders);
+  border-left: 1px solid var(--rux-print-grid-borders);
+  box-sizing: border-box;
+}
+
+#printRoot.print-mode-legal-full .pgv2-hcell {
+  font-size: var(--rux-print-font-size-sm);
+  font-weight: 600;
+  text-align: center;
+  padding: 3px 2px;
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
+  box-sizing: border-box;
+  background: var(--rux-print-cell-bg);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+#printRoot.print-mode-legal-full .pgv2-hcell .schedule-grid__day-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+#printRoot.print-mode-legal-full .pgv2-hcell .schedule-grid__day-date {
+  font-size: 7pt;
+  font-weight: 400;
+}
+#printRoot.print-mode-legal-full .pgv2-hcell .schedule-grid__day-name {
+  font-size: var(--rux-print-font-size-sm);
+  font-weight: 600;
+}
+
+#printRoot.print-mode-legal-full .pgv2-bus-cell {
+  grid-column: 1;
+  font-size: var(--rux-print-font-size);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
+  box-sizing: border-box;
+  height: var(--schedule-row-height, 161px);
+  overflow: hidden;
+  background: var(--rux-print-cell-bg);
+  position: relative;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+#printRoot.print-mode-legal-full .pgv2-bars-area {
+  grid-column: 2 / 9;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+  position: relative;
+  height: var(--schedule-row-height, 161px);
+  border-right: 1px solid var(--rux-print-grid-borders);
+  border-bottom: 1px solid var(--rux-print-grid-borders);
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--rux-print-cell-bg);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+#printRoot.print-mode-legal-full .pgv2-bars-area::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to right,
+    transparent calc(100% / 7 - 1px),
+    var(--rux-print-grid-border) calc(100% / 7 - 1px),
+    var(--rux-print-grid-border) calc(100% / 7)
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+#printRoot.print-mode-legal-full .pgv2-bar-wrapper {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#printRoot.print-mode-legal-full .pgv2-bar-wrapper .schedule-grid__trip-bar {
+  position: absolute !important;
+  top: var(--tripbar-inset-top, 3px) !important;
+  bottom: var(--tripbar-inset-bottom, 6px) !important;
+  left: var(--tripbar-inset-left, 4px) !important;
+  right: var(--tripbar-inset-right, 6px) !important;
+  max-height: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  z-index: 10;
+}
+
+/* Hide the action row (appears on selection in live mode) */
+#printRoot.print-mode-legal-full .schedule-grid__trip-bar__row--11 {
+  display: none !important;
+}
+
+@media print {
+  #printRoot.print-mode-legal-full .print-page {
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  #printRoot.print-mode-legal-full .print-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
 }

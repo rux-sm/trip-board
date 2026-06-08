@@ -267,7 +267,7 @@ function renderReferenceManager(kind, options = {}) {
       <aside class="reference-manager__list">
         <div class="reference-manager__list-head">
           <strong>${isDrivers ? "Drivers" : "Vehicles"}</strong>
-          <button type="button" class="rux-btn rux-btn--secondary rux-btn--sm" data-ref-action="new">
+          <button type="button" class="rux-button rux-button--secondary rux-button--small" data-ref-action="new">
             <span class="material-symbols-outlined">add</span>
             Add
           </button>
@@ -295,7 +295,7 @@ function renderDriverAccordionManager(items, idKey, kind) {
           ${items.length ? items.map((item, idx) => renderRefDriverCard(item, idx, idKey)).join("") : renderRefEmptyDrivers()}
         </div>
         <div class="reference-manager__list-foot reference-manager__list-foot--drivers">
-          <button type="button" class="rux-btn rux-btn--secondary" data-ref-action="new">
+          <button type="button" class="rux-button rux-button--secondary" data-ref-action="new">
             <span class="material-symbols-outlined">add</span>
             Add Driver
           </button>
@@ -487,11 +487,11 @@ function renderRefDriverInlineEditor(item) {
         ${REF_DRIVER_FIELD_GROUPS.map((group, idx) => renderRefDriverPanel(group, item, idx === 0)).join("")}
       </div>
       <div class="reference-manager__actions reference-manager__driver-actions">
-        <button type="button" class="rux-btn rux-btn--danger" data-ref-action="delete-driver">
+        <button type="button" class="rux-button rux-button--danger" data-ref-action="delete-driver">
           <span class="material-symbols-outlined">delete</span>
           Delete
         </button>
-        <button type="submit" class="rux-btn rux-btn--primary">
+        <button type="submit" class="rux-button rux-button--primary">
           <span class="material-symbols-outlined">save</span>
           Save
         </button>
@@ -571,22 +571,22 @@ function renderRefEditor(item, isDrivers, kind) {
         ${
           !isDrivers
             ? `
-          <button type="button" class="rux-btn rux-btn--secondary" data-ref-action="move-up">
+          <button type="button" class="rux-button rux-button--secondary" data-ref-action="move-up">
             <span class="material-symbols-outlined">arrow_upward</span>
             Up
           </button>
-          <button type="button" class="rux-btn rux-btn--secondary" data-ref-action="move-down">
+          <button type="button" class="rux-button rux-button--secondary" data-ref-action="move-down">
             <span class="material-symbols-outlined">arrow_downward</span>
             Down
           </button>
         `
             : ""
         }
-        <button type="button" class="rux-btn rux-btn--secondary" data-ref-action="deactivate">
+        <button type="button" class="rux-button rux-button--secondary" data-ref-action="deactivate">
           <span class="material-symbols-outlined">archive</span>
           Remove
         </button>
-        <button type="submit" class="rux-btn rux-btn--primary">
+        <button type="submit" class="rux-button rux-button--primary">
           <span class="material-symbols-outlined">save</span>
           Save
         </button>

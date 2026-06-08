@@ -57,41 +57,11 @@ function syncStatusToggle(fieldId, value) {
   const group = document.querySelector(`.status-toggle-group[data-field="${fieldId}"]`);
   if (!group) return;
 
-  let activeBtn = null;
   group.querySelectorAll(".status-toggle-btn").forEach((btn) => {
     const active = btn.dataset.value === value;
     btn.classList.toggle("is-active", active);
-    if (active) activeBtn = btn;
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
   });
-
-  const pill = group.querySelector(".seg-ctrl__pill");
-  if (!pill) return;
-
-  function positionPill() {
-    if (activeBtn) {
-      pill.style.width = activeBtn.offsetWidth + "px";
-      pill.style.transform = `translateX(${activeBtn.offsetLeft - 4}px)`;
-    } else {
-      pill.style.width = "0";
-      pill.style.transform = "translateX(0)";
-    }
-  }
-
-  if (activeBtn && activeBtn.offsetWidth === 0) {
-    let prev = 0;
-    function poll() {
-      const w = activeBtn.offsetWidth;
-      if (w > 0 && w === prev) {
-        positionPill();
-      } else {
-        prev = w;
-        requestAnimationFrame(poll);
-      }
-    }
-    requestAnimationFrame(poll);
-  } else {
-    positionPill();
-  }
 }
 
 function updateStatusSelect(el) {

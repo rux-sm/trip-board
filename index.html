@@ -106,7 +106,7 @@
             <button
               type="submit"
               id="loginBtn"
-              class="rux-btn rux-btn--primary login__action-btn"
+              class="rux-button rux-button--primary login__action-btn"
             >
               Sign in
             </button>
@@ -146,7 +146,7 @@
             <button
               type="submit"
               id="loginResetBtn"
-              class="rux-btn rux-btn--primary login__action-btn"
+              class="rux-button rux-button--primary login__action-btn"
             >
               Send reset link
             </button>
@@ -169,7 +169,7 @@
           <button
             type="button"
             id="loginBackBtn2"
-            class="rux-btn rux-btn--primary login__action-btn"
+            class="rux-button rux-button--primary login__action-btn"
           >
             Back to sign in
           </button>
@@ -202,7 +202,7 @@
             <button
               type="submit"
               id="loginUpdateBtn"
-              class="rux-btn rux-btn--primary login__action-btn"
+              class="rux-button rux-button--primary login__action-btn"
             >
               Update password
             </button>
@@ -287,7 +287,7 @@
             <button
               type="button"
               id="profileUploadBtn"
-              class="rux-btn profile-upload-btn"
+              class="rux-button profile-upload-btn"
             >
               <span class="material-symbols-outlined">upload</span>
               Upload photo
@@ -307,7 +307,7 @@
               <button
                 type="button"
                 id="profileThemeToggle"
-                class="rux-btn rux-btn--square"
+                class="rux-button rux-button--square"
                 aria-pressed="true"
               >
                 <span class="material-symbols-outlined">dark_mode</span>
@@ -318,7 +318,7 @@
               <button
                 type="button"
                 id="profileWeekStartToggle"
-                class="rux-btn rux-btn--square"
+                class="rux-button rux-button--square"
                 aria-pressed="false"
               >
                 <span class="material-symbols-outlined">toggle_off</span>
@@ -329,7 +329,7 @@
               <button
                 type="button"
                 id="profileViewToggle"
-                class="rux-btn rux-btn--square"
+                class="rux-button rux-button--square"
                 aria-pressed="false"
               >
                 <span class="material-symbols-outlined">view_column_2</span>
@@ -340,7 +340,7 @@
               <button
                 type="button"
                 id="profileRightRailToggle"
-                class="rux-btn rux-btn--square"
+                class="rux-button rux-button--square"
                 aria-pressed="true"
               >
                 <span class="material-symbols-outlined">right_panel_close</span>
@@ -351,7 +351,7 @@
               <button
                 type="button"
                 id="profileDebugSurfacesToggle"
-                class="rux-btn rux-btn--square"
+                class="rux-button rux-button--square"
                 aria-pressed="false"
               >
                 <span class="material-symbols-outlined">border_clear</span>
@@ -417,6 +417,14 @@
               <span class="rux-dropdown__icon material-symbols-outlined">print</span>
               <span>Print Full Schedule (Letter)</span>
             </button>
+            <button
+              type="button"
+              id="printBtnAllRows"
+              class="rux-dropdown__item"
+            >
+              <span class="rux-dropdown__icon material-symbols-outlined">print</span>
+              <span>Print All Rows (Legal)</span>
+            </button>
           </div>
           <hr class="rux-dropdown__divider" />
           <!-- Reports -->
@@ -471,7 +479,7 @@
               <div class="sidebar__rail">
                 <button
                   id="avatarBtn"
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="profile"
                   type="button"
                   title="Profile & Settings"
@@ -480,7 +488,7 @@
                 ></button>
                 <button
                   id="searchBtn"
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="search"
                   title="Search Trips"
                   aria-pressed="false"
@@ -488,7 +496,7 @@
                   <span class="material-symbols-outlined">search</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="trip"
                   title="Trip Editor"
                   aria-pressed="false"
@@ -496,7 +504,7 @@
                   <span class="material-symbols-outlined">add_circle</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="drivers"
                   title="Driver Assignments"
                   aria-pressed="false"
@@ -504,7 +512,7 @@
                   <span class="material-symbols-outlined">groups</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="notes"
                   title="Notes"
                   aria-pressed="false"
@@ -512,7 +520,7 @@
                   <span class="material-symbols-outlined">sticky_note_2</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="todo"
                   title="Daily Checklist"
                   aria-pressed="false"
@@ -520,7 +528,7 @@
                   <span class="material-symbols-outlined">checklist</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="driverManager"
                   title="Manage Drivers"
                   aria-pressed="false"
@@ -528,7 +536,7 @@
                   <span class="material-symbols-outlined">id_card</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="fleetManager"
                   title="Manage Vehicles"
                   aria-pressed="false"
@@ -537,7 +545,7 @@
                 </button>
                 <button
                   id="waitingListBtn"
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   title="Waiting List"
                   aria-pressed="false"
                 >
@@ -555,7 +563,7 @@
             >
               <div class="sidebar__rail">
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="search"
                   title="Search Trips"
                   aria-pressed="false"
@@ -563,7 +571,7 @@
                   <span class="material-symbols-outlined">search</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="trip"
                   title="Trip Editor"
                   aria-pressed="false"
@@ -571,7 +579,7 @@
                   <span class="material-symbols-outlined">add_circle</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="drivers"
                   title="Driver Assignments"
                   aria-pressed="false"
@@ -579,7 +587,7 @@
                   <span class="material-symbols-outlined">groups</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="notes"
                   title="Notes"
                   aria-pressed="false"
@@ -587,7 +595,7 @@
                   <span class="material-symbols-outlined">sticky_note_2</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="todo"
                   title="Daily Checklist"
                   aria-pressed="false"
@@ -595,7 +603,7 @@
                   <span class="material-symbols-outlined">checklist</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="driverManager"
                   title="Manage Drivers"
                   aria-pressed="false"
@@ -603,7 +611,7 @@
                   <span class="material-symbols-outlined">id_card</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   data-card="fleetManager"
                   title="Manage Vehicles"
                   aria-pressed="false"
@@ -611,7 +619,7 @@
                   <span class="material-symbols-outlined">directions_bus</span>
                 </button>
                 <button
-                  class="sidebar__icon-btn"
+                  class="rux-button rux-button--square"
                   title="Waiting List"
                   aria-pressed="false"
                   data-waiting-list-mirror
@@ -971,7 +979,7 @@
                   <div class="rux-panel__footer">
                     <button
                       type="button"
-                      class="rux-btn rux-btn--secondary"
+                      class="rux-button rux-button--secondary"
                       id="quoteInfoBtn"
                       aria-label="View Calculator Rules & Logic"
                     >
@@ -980,7 +988,7 @@
                     </button>
                     <button
                       type="button"
-                      class="rux-btn rux-btn--primary"
+                      class="rux-button rux-button--primary"
                       id="quoteCopySummary"
                     >
                       <span class="material-symbols-outlined">content_copy</span>
@@ -1076,7 +1084,7 @@
                     <button
                       id="driverWeekScheduleBtn"
                       type="button"
-                      class="rux-btn rux-btn--secondary rux-btn--sm"
+                      class="rux-button rux-button--secondary rux-button--small"
                       disabled
                     >
                       <span class="material-symbols-outlined">assignment</span>
@@ -1107,14 +1115,14 @@
                   <div class="rux-panel__footer notes__footer">
                     <button
                       type="button"
-                      class="rux-btn rux-btn--danger"
+                      class="rux-button rux-button--danger"
                       id="clearNotesBtn"
                     >
                       Clear
                     </button>
                     <button
                       type="button"
-                      class="rux-btn rux-btn--primary"
+                      class="rux-button rux-button--primary"
                       id="saveNotesBtn"
                     >
                       Save Notes
@@ -1161,7 +1169,7 @@
                     <div class="rux-header__actions">
                       <button
                         id="logClearFilterBtn"
-                        class="rux-btn rux-btn--square is-hidden"
+                        class="rux-button rux-button--square is-hidden"
                         type="button"
                         title="Show all activity"
                       >
@@ -1169,7 +1177,7 @@
                       </button>
                       <button
                         id="logRefreshBtn"
-                        class="rux-btn rux-btn--square"
+                        class="rux-button rux-button--square"
                         type="button"
                         title="Refresh"
                       >
@@ -1214,7 +1222,7 @@
                       <button
                         id="tripEditorTabDetails"
                         type="button"
-                        class="rux-btn rux-btn--toggle trip-editor__tab is-active"
+                        class="rux-button rux-button--toggle trip-editor__tab is-active"
                         role="tab"
                         data-tab-target="tab-details"
                         aria-controls="tab-details"
@@ -1226,7 +1234,7 @@
                       <button
                         id="tripEditorTabEstimate"
                         type="button"
-                        class="rux-btn rux-btn--toggle trip-editor__tab"
+                        class="rux-button rux-button--toggle trip-editor__tab"
                         role="tab"
                         data-tab-target="tab-estimate"
                         aria-controls="tab-estimate"
@@ -1238,7 +1246,7 @@
                       <button
                         id="tripEditorTabBilling"
                         type="button"
-                        class="rux-btn rux-btn--toggle trip-editor__tab"
+                        class="rux-button rux-button--toggle trip-editor__tab"
                         role="tab"
                         data-tab-target="tab-billing"
                         aria-controls="tab-billing"
@@ -1250,7 +1258,7 @@
                       <button
                         id="tripEditorTabDispatch"
                         type="button"
-                        class="rux-btn rux-btn--toggle trip-editor__tab"
+                        class="rux-button rux-button--toggle trip-editor__tab"
                         role="tab"
                         data-tab-target="tab-dispatch"
                         aria-controls="tab-dispatch"
@@ -1706,7 +1714,7 @@
                         <div class="form-group col-12">
                           <label id="tripRequirementsLabel">Requirements</label>
                           <div
-                            class="rux-btn--toggle-grid"
+                            class="rux-button-toggle-grid"
                             data-js="trip-requirements-section"
                             role="group"
                             aria-labelledby="tripRequirementsLabel"
@@ -1714,7 +1722,7 @@
                             <!-- Row 1: Sleeper, 56-Seats, One-Way -->
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="reqSleeper"
                               aria-pressed="false"
                             >
@@ -1727,7 +1735,7 @@
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="req56Pass"
                               aria-pressed="false"
                             >
@@ -1740,7 +1748,7 @@
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="oneWay"
                               aria-pressed="false"
                             >
@@ -1754,7 +1762,7 @@
                             <!-- Row 2: Fuel Card, Hotel, ADA Lift -->
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="reqFuelCard"
                               aria-pressed="false"
                             >
@@ -1767,7 +1775,7 @@
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="reqHotel"
                               aria-pressed="false"
                             >
@@ -1780,7 +1788,7 @@
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--toggle"
+                              class="rux-button rux-button--toggle"
                               id="reqLift"
                               aria-pressed="false"
                             >
@@ -1836,36 +1844,35 @@
                             value=""
                           />
                           <div
-                            class="rux-btn-group status-toggle-group"
+                            class="rux-button-group status-toggle-group"
                             data-field="paymentStatus"
                             role="group"
                             aria-label="Contract status"
                           >
-                            <div class="seg-ctrl__pill" aria-hidden="true"></div>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Pending Quote"
                             >
                               Pending
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Not Required"
                             >
                               N/A
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Contract Signed"
                             >
                               Signed
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="PO Received"
                             >
                               PO
@@ -1882,36 +1889,35 @@
                             value=""
                           />
                           <div
-                            class="rux-btn-group status-toggle-group"
+                            class="rux-button-group status-toggle-group"
                             data-field="invoiceStatus"
                             role="group"
                             aria-label="Invoice status"
                           >
-                            <div class="seg-ctrl__pill" aria-hidden="true"></div>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Pending Invoice"
                             >
                               Pending
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Invoiced"
                             >
                               Invoiced
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Deposit Received"
                             >
                               Deposit
                             </button>
                             <button
                               type="button"
-                              class="rux-btn rux-btn--secondary status-toggle-btn"
+                              class="rux-button rux-button--secondary status-toggle-btn"
                               data-value="Paid in Full"
                             >
                               Paid
@@ -1967,32 +1973,12 @@
                           />
                         </div>
 
-                        <div class="form-group col-4">
+                        <div class="form-group col-12">
                           <label for="ref1">Ref 1</label>
                           <input
                             type="text"
                             id="ref1"
                             name="ref1"
-                            placeholder=""
-                            autocomplete="off"
-                          />
-                        </div>
-                        <div class="form-group col-4">
-                          <label for="ref2">Ref 2</label>
-                          <input
-                            type="text"
-                            id="ref2"
-                            name="ref2"
-                            placeholder=""
-                            autocomplete="off"
-                          />
-                        </div>
-                        <div class="form-group col-4">
-                          <label for="ref3">Ref 3</label>
-                          <input
-                            type="text"
-                            id="ref3"
-                            name="ref3"
                             placeholder=""
                             autocomplete="off"
                           />
@@ -2135,7 +2121,7 @@
                         <div class="dispatch-requirements-row">
                           <button
                             type="button"
-                            class="rux-btn rux-btn--toggle dispatch-requirement-toggle"
+                            class="rux-button rux-button--toggle dispatch-requirement-toggle"
                             id="reqCoDriver"
                             aria-pressed="false"
                           >
@@ -2148,7 +2134,7 @@
                           </button>
                           <button
                             type="button"
-                            class="rux-btn rux-btn--toggle dispatch-requirement-toggle"
+                            class="rux-button rux-button--toggle dispatch-requirement-toggle"
                             id="reqRelief"
                             aria-pressed="false"
                           >
@@ -2161,7 +2147,7 @@
                           </button>
                           <button
                             type="button"
-                            class="rux-btn rux-btn--toggle dispatch-requirement-toggle"
+                            class="rux-button rux-button--toggle dispatch-requirement-toggle"
                             id="reqRelief2"
                             aria-pressed="false"
                           >
@@ -2201,7 +2187,7 @@
                   <div class="rux-panel__footer rux-panel__footer--sticky">
                     <button
                       type="button"
-                      class="rux-btn rux-btn--danger"
+                      class="rux-button rux-button--danger"
                       id="deleteBtn"
                       disabled
                     >
@@ -2210,7 +2196,7 @@
                     </button>
                     <button
                       type="button"
-                      class="rux-btn rux-btn--secondary"
+                      class="rux-button rux-button--secondary"
                       id="newBtn"
                     >
                       <span class="material-symbols-outlined">restart_alt</span>
@@ -2218,7 +2204,7 @@
                     </button>
                     <button
                       type="submit"
-                      class="rux-btn rux-btn--primary"
+                      class="rux-button rux-button--primary"
                       id="saveBtn"
                       form="tripForm"
                     >
@@ -2296,7 +2282,7 @@
                     <div class="rux-icon-toolbar">
                       <button
                         id="prevWeekBtn"
-                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        class="rux-button rux-button--secondary rux-button--icon"
                         type="button"
                         aria-label="Previous Week"
                         title="Previous Week"
@@ -2305,7 +2291,7 @@
                       </button>
                       <button
                         id="todayBtn"
-                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        class="rux-button rux-button--secondary rux-button--icon"
                         type="button"
                         aria-label="Go to today"
                         title="Go to today"
@@ -2315,7 +2301,7 @@
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
-                          class="rux-btn rux-btn--secondary rux-btn--icon"
+                          class="rux-button rux-button--secondary rux-button--icon"
                           type="button"
                           aria-label="Select week"
                           title="Select week"
@@ -2331,7 +2317,7 @@
                       </div>
                       <button
                         id="nextWeekBtn"
-                        class="rux-btn rux-btn--secondary rux-btn--icon"
+                        class="rux-button rux-button--secondary rux-button--icon"
                         type="button"
                         aria-label="Next Week"
                         title="Next Week"
@@ -2444,14 +2430,14 @@
         <div class="modal__foot">
           <button
             id="itineraryCopyBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
           >
             Copy
           </button>
           <button
             id="itinerarySaveBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             aria-label="Close"
           >
@@ -2483,7 +2469,7 @@
           <div class="rux-header__actions">
             <a
               id="pdfViewerOpenTabBtn"
-              class="rux-btn rux-btn--ghost"
+              class="rux-button rux-button--ghost"
               target="_blank"
               rel="noopener"
               title="Open in new tab"
@@ -2492,7 +2478,7 @@
             </a>
             <button
               id="pdfViewerPrintBtn"
-              class="rux-btn rux-btn--ghost"
+              class="rux-button rux-button--ghost"
               type="button"
               aria-label="Print"
               title="Print"
@@ -2501,7 +2487,7 @@
             </button>
             <button
               id="pdfViewerCloseBtn"
-              class="rux-btn rux-btn--ghost"
+              class="rux-button rux-button--ghost"
               type="button"
               aria-label="Close"
             >
@@ -2550,7 +2536,7 @@
 
         <div class="modal__foot">
           <button
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             data-close-details
             aria-label="Close"
@@ -2598,14 +2584,14 @@
         <div class="modal__foot">
           <button
             id="printNextDayReportBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
           >
             Print
           </button>
           <button
             id="closeNextDayReportBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             aria-label="Close"
           >
@@ -2652,14 +2638,14 @@
         <div class="modal__foot">
           <button
             id="printDailyMaintenancePlanBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
           >
             Print
           </button>
           <button
             id="closeDailyMaintenancePlanBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             aria-label="Close"
           >
@@ -2702,14 +2688,14 @@
         <div class="modal__foot rux-panel__footer">
           <button
             id="copyDriverWeekScheduleBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
           >
             Copy for SMS
           </button>
           <button
             id="closeDriverWeekScheduleBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
           >
             Close
@@ -2742,11 +2728,11 @@
         <div class="modal__body driver-contact__body">
           <!-- Tab buttons -->
           <div
-            class="driver-contact__tabs rux-btn-group"
+            class="driver-contact__tabs rux-button-group"
             role="tablist"
           >
             <button
-              class="rux-btn rux-btn--secondary driver-contact__tab is-active"
+              class="rux-button rux-button--secondary driver-contact__tab is-active"
               data-tab="contact"
               role="tab"
               type="button"
@@ -2754,7 +2740,7 @@
               Contact Info
             </button>
             <button
-              class="rux-btn rux-btn--secondary driver-contact__tab"
+              class="rux-button rux-button--secondary driver-contact__tab"
               data-tab="reminder"
               role="tab"
               type="button"
@@ -2762,7 +2748,7 @@
               Reminder
             </button>
             <button
-              class="rux-btn rux-btn--secondary driver-contact__tab"
+              class="rux-button rux-button--secondary driver-contact__tab"
               data-tab="trip"
               role="tab"
               type="button"
@@ -2792,14 +2778,14 @@
         <div class="modal__foot">
           <button
             id="copyDriverContactBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
           >
             Copy
           </button>
           <button
             id="closeDriverContactBtnFooter"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             aria-label="Close"
           >
@@ -2875,7 +2861,7 @@
         <div class="modal__foot rux-panel__footer">
           <button
             id="closeEnvelopeBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
             aria-label="Close"
           >
@@ -2883,21 +2869,21 @@
           </button>
           <button
             id="envelopeWhiteBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
           >
             White
           </button>
           <button
             id="envelopeYellowBtn"
-            class="rux-btn rux-btn--secondary"
+            class="rux-button rux-button--secondary"
             type="button"
           >
             Yellow
           </button>
           <button
             id="envelopePrintBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
           >
             Print
@@ -2918,7 +2904,7 @@
         <span class="trip-quick-edit__title"></span>
         <button
           type="button"
-          class="rux-btn rux-btn--square trip-quick-edit__close"
+          class="rux-button rux-button--square trip-quick-edit__close"
           id="quickEditCloseBtn"
         >
           <span class="material-symbols-outlined">close</span>
@@ -2935,7 +2921,7 @@
       <div class="trip-quick-edit__footer">
         <button
           type="button"
-          class="rux-btn rux-btn--primary"
+          class="rux-button rux-button--primary"
           id="quickEditSaveBtn"
         >
           Save
@@ -3091,7 +3077,7 @@
         <div class="modal__foot">
           <button
             id="quoteInfoCloseBtn"
-            class="rux-btn rux-btn--primary"
+            class="rux-button rux-button--primary"
             type="button"
             aria-label="Close"
           >

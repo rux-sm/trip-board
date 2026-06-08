@@ -712,12 +712,12 @@ samp {
 }
 
 .trip-quick-edit__tab:hover {
-  color: var(--rux-text-1);
+  color: var(--rux-state-text-hover);
 }
 
 .trip-quick-edit__tab.is-active {
-  background: var(--rux-bg-3);
-  color: var(--rux-text-1);
+  background: var(--rux-state-bg-hover);
+  color: var(--rux-state-text-hover);
 }
 
 .trip-quick-edit__body {
@@ -855,8 +855,8 @@ samp {
 }
 
 .trip-action-row__btn:hover {
-  background: var(--rux-bg-4);
-  color: var(--rux-text-1);
+  background: var(--rux-state-bg-hover);
+  color: var(--rux-state-text-hover);
 }
 
 .trip-action-row__btn .material-symbols-outlined {
@@ -887,7 +887,7 @@ samp {
   border: none;
   height: 1px;
   margin: 4px 0;
-  background-color: none;
+  background-color: transparent;
 }
 
 /* --- Menu Items --- */
@@ -941,25 +941,21 @@ samp {
   color: var(--rux-text-2);
 }
 
-/* Carbon Hover: 10% brighter background mix */
 .dropdown-item:hover,
 .context-item:hover,
 .context-menu__item:hover {
-  background-color: var(--rux-bg-overlay);
-  color: var(--rux-text-1);
+  background-color: var(--rux-state-bg-hover);
+  color: var(--rux-state-text-hover);
 }
 
-/* Carbon Active/Pressed state */
 .dropdown-item:active,
 .context-item:active,
 .context-menu__item:active {
-  background-color: var(--rux-bg-2);
+  background-color: var(--rux-state-bg-pressed);
 }
 
-/* Active Selection overrides */
 .dropdown-icon.is-active,
 .dropdown-item.is-active {
-  color: var(--rux-color-accent);
-  /* Carbon uses primary blue to indicate current selection */
+  color: var(--rux-state-text-accent);
   font-weight: 600;
 }

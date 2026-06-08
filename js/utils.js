@@ -378,7 +378,7 @@ function setRequirementTogglesFromTrip(t = {}) {
 }
 
 function resetRequirementToggles() {
-  document.querySelectorAll(".rux-btn--toggle").forEach((btn) => {
+  document.querySelectorAll(".rux-button--toggle").forEach((btn) => {
     btn.setAttribute("aria-pressed", "false");
   });
 }

@@ -4,8 +4,8 @@
 @import "layout.css?v=40";
 
 /* Core UI primitives (buttons, cards, headers, icons, toast, loading) */
-@import "button.css?v=40";
-@import "form.css?v=40";
+@import "buttons.css?v=40";
+@import "forms.css?v=40";
 @import "dropdown.css?v=40";
 @import "profile.css?v=40";
 @import "primitives.css?v=40";

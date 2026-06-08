@@ -101,7 +101,7 @@
 }
 
 .presence-strip__avatar:hover {
-  transform: scale(1.15);
+  transform: var(--rux-state-transform-hover-scale);
 }
 
 .presence-strip__avatar .profile-avatar {
@@ -224,7 +224,7 @@
   transition: box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
-.profile-color-swatch:hover  { transform: scale(1.15); }
+.profile-color-swatch:hover  { transform: var(--rux-state-transform-hover-scale); }
 .profile-color-swatch.is-selected { box-shadow: var(--focus-ring); }
 
 /* ── Pref rows ───────────────────────────────────────────────────────────── */

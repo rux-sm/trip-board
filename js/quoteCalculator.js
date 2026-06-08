@@ -262,11 +262,11 @@
       
       // Visual feedback
       const originalHtml = btn.innerHTML;
-      btn.classList.add("rux-btn--primary");
+      btn.classList.add("rux-button--primary");
       btn.innerHTML = `<span class="material-symbols-outlined">check</span> <span>Copied!</span>`;
       
       setTimeout(() => {
-        btn.classList.remove("rux-btn--primary");
+        btn.classList.remove("rux-button--primary");
         btn.innerHTML = originalHtml;
       }, 2000);
     } catch (err) {

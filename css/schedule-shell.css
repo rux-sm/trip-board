@@ -6,7 +6,7 @@
   --rux-schedule-outer-radius: var(--rux-radius-lg);
   --rux-schedule-surface-radius: var(--rux-radius-md);
   --rux-schedule-card-border-color: var(--rux-border-default);
-  --rux-schedule-surface-border-color: var(--rux-border-divider);
+  --rux-schedule-surface-border-color: var(--rux-border-default);
 }
 
 /* ==========================================================================
@@ -39,7 +39,6 @@
   flex-direction: column;
   overflow: visible;
   border-radius: var(--rux-schedule-outer-radius);
-  border: 1px solid var(--rux-schedule-card-border-color);
   background: var(--rux-bg-2);
 }
 
@@ -48,9 +47,9 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: var(--rux-btn-shadow-inset);
   pointer-events: none;
   z-index: 99999;
+
 }
 
 /* ── Agenda Header ──────────────────────────────────────────────────────── */
@@ -58,7 +57,7 @@
 .agenda-header {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: end;
+  align-items: center;
   column-gap: var(--rux-space-3);
   height: auto;
   flex-shrink: 0;
@@ -77,6 +76,7 @@
   font-size: var(--rux-size-6);
   font-weight: var(--rux-weight-semibold);
   color: var(--rux-text-1);
+  margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -227,13 +227,6 @@
   }
 }
 
-.agenda-header__icon-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--rux-space-3);
-}
-
 .date-picker-wrapper {
   display: flex;
   flex: 0 1 auto;
@@ -293,6 +286,9 @@
   min-height: 0;
   overflow: hidden;
   border-radius: var(--rux-schedule-surface-radius);
+  border: 1px solid var(--rux-debug-red); /* border ownership */
+  border: none;
+  box-shadow: var(--rux-shadow-2);
 }
 
 .schedule-surface::after {
@@ -300,9 +296,9 @@
   position: absolute;
   inset: 0;
   border-radius: var(--rux-schedule-surface-radius);
-  border: 1px solid var(--rux-schedule-surface-border-color);
-  box-shadow: var(--rux-btn-shadow-inset);
+  box-shadow: var(--rux-surface-shadow-inset);
   pointer-events: none;
+
   z-index: 99999;
 }
 
@@ -315,6 +311,7 @@
   overflow-y: auto;
   margin-bottom: 0;
   scrollbar-gutter: stable;
+  border-radius: var(--rux-schedule-surface-radius);
 }
 
 .schedule-viewport--fluid {

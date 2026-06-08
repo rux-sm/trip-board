@@ -9,6 +9,18 @@
 
 /* ── 1. The Block (Wrapper) ──────────────────────────────────────────────── */
 
+:root {
+  --rux-dropdown-toggle-bg-hover: var(--rux-fld-bg-hover);
+  --rux-dropdown-toggle-bg-pressed: var(--rux-state-bg-pressed);
+  --rux-dropdown-item-bg: var(--rux-bg-4);
+  --rux-dropdown-item-bg-hover: var(--rux-state-bg-hover);
+  --rux-dropdown-item-bg-pressed: var(--rux-state-bg-pressed);
+  --rux-dropdown-item-bg-selected: var(--rux-state-bg-selected);
+  --rux-dropdown-item-bg-selected-hover: var(--rux-state-bg-selected-hover);
+  --rux-dropdown-item-bg-selected-pressed: var(--rux-state-bg-selected-pressed);
+  --rux-dropdown-item-text-selected: var(--rux-state-text-selected);
+}
+
 /* * Class: .rux-dropdown
  * Purpose: Acts as the anchor point for the absolute-positioned menu.
  * Owns (Skin): None. (Completely invisible)
@@ -49,10 +61,12 @@
   
   background-color: var(--rux-fld-bg);
   border: 1px solid var(--rux-border-default);
+  border: none;
   border-radius: var(--rux-fld-radius);
   color: var(--rux-text-1);
   font-size: var(--rux-fld-font-size);
   font-weight: var(--rux-fld-font-weight);
+  box-shadow: var(--rux-input-shadow);
 
 
   white-space: nowrap;      /* 1. Forces text to stay on one line */
@@ -62,7 +76,10 @@
   
   cursor: pointer;
   outline: none;
-  transition: all 0.15s ease;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .rux-dropdown__toggle--centered {
@@ -84,6 +101,15 @@
 
 .rux-dropdown__toggle.is-empty {
   color: var(--rux-text-placeholder);
+}
+
+.rux-dropdown__toggle:hover {
+  background: var(--rux-dropdown-toggle-bg-hover);
+}
+
+.rux-dropdown__toggle:active {
+  background: var(--rux-dropdown-toggle-bg-pressed);
+  box-shadow: var(--rux-button-shadow-pressed);
 }
 
 /* * Purpose: Visual feedback when the user focuses the toggle via keyboard, 
@@ -199,7 +225,7 @@
   padding: var(--rux-fld-padding);
   flex-shrink: 0;
   
-  background: var(--rux-bg-4);
+  background: var(--rux-dropdown-item-bg);
   border: none;
   border-radius: var(--rux-radius-md);
   color: var(--rux-text-1);
@@ -208,27 +234,39 @@
   text-align: left;
   
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .rux-dropdown__item:hover,
 .rux-dropdown__item:focus-visible {
-  background-color: var(--rux-bg-overlay);
+  background: var(--rux-dropdown-item-bg-hover);
   outline: none;
+}
+
+.rux-dropdown__item:active {
+  background: var(--rux-dropdown-item-bg-pressed);
 }
 
 .rux-dropdown__item--active,
 .rux-dropdown__item[aria-selected="true"] {
-  background-color: var(--rux-btn-bg-primary);
-  color: var(--rux-color-white);
+  background: var(--rux-dropdown-item-bg-selected);
+  color: var(--rux-dropdown-item-text-selected);
 }
 
 .rux-dropdown__item--active:hover,
 .rux-dropdown__item--active:focus-visible,
 .rux-dropdown__item[aria-selected="true"]:hover,
 .rux-dropdown__item[aria-selected="true"]:focus-visible {
-  background-color: var(--rux-btn-bg-primary);
-  color: var(--rux-color-white);
+  background: var(--rux-dropdown-item-bg-selected-hover);
+  color: var(--rux-dropdown-item-text-selected);
+}
+
+.rux-dropdown__item--active:active,
+.rux-dropdown__item[aria-selected="true"]:active {
+  background: var(--rux-dropdown-item-bg-selected-pressed);
+  color: var(--rux-dropdown-item-text-selected);
 }
 
 /* ── Item Layout Modifiers ───────────────────────────────────────────────── */
