@@ -122,7 +122,7 @@ if (document.readyState === "loading") {
 const CONFIG = {
   APP_NAME: "ETB Schedule",
   APP_VERSION: "",
-  SUPABASE_URL: "https://zydejdsyyuyzruvdbeyp.supabase.co",
+  SUPABASE_URL: "https://rux-supabase-etb.rux-smercado.workers.dev",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZGVqZHN5eXV5enJ1dmRiZXlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzU0MjEsImV4cCI6MjA5NDU1MTQyMX0.LmjLOYZkwkc9vv72HS91UaJ8JgPHPznmUwwpL0cvyos",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
