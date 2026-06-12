@@ -143,10 +143,8 @@
   backdrop-filter: var(--rux-blur--glass);
   -webkit-backdrop-filter: var(--rux-blur--glass); /* Required for Safari */
 
-  /* 3. Add depth (Optional but recommended) */
   border-inline-end: 1px solid var(--rux-border--glass);
   border-bottom: 1px solid var(--rux-border--glass);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 /* Day columns */
@@ -327,10 +325,8 @@
   backdrop-filter: var(--rux-blur--glass);
   -webkit-backdrop-filter: var(--rux-blur--glass); /* Required for Safari */
 
-  /* 3. Add depth (Optional but recommended) */
   border-inline-end: 1px solid var(--rux-border--glass);
   border-bottom: 1px solid var(--rux-border--glass);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
   /* border-inline-end: from general rule — single line, no ::after */
 }
 
@@ -482,7 +478,7 @@
   inset: 0;
   border-radius: var(--rux-radius-card);
   border: 1px solid var(--card-border-02);
-  box-shadow: var(--rux-surface-shadow-inset);
+  box-shadow: none;
   pointer-events: none;
   z-index: 99999;
 }

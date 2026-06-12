@@ -44,7 +44,7 @@
   --rux-button-bg-primary:           var(--accent);
   --rux-button-bg-primary-hover:     var(--accent-hi);
   --rux-button-bg-primary-pressed:   var(--accent-lo);
-  --rux-button-bg-secondary:         oklch(27% 0 0);
+  --rux-button-bg-secondary:         oklch(from var(--rux-color-gray) 36% c h); 
   --rux-button-bg-secondary-hover:   oklch(34% 0 0);
   --rux-button-bg-secondary-pressed: oklch(20% 0 0);
   --rux-button-bg-danger:            oklch(55% 0.20 24);

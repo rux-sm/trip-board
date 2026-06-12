@@ -15,6 +15,8 @@
   /* 1A. Color Seeds
   ──────────────────────────────────────────────────────────────── */
 
+  --rux-color-neutral: oklch(50% 0.004 260);
+
   --rux-color-black: oklch(0% 0 250);
   --rux-color-white: oklch(100% 0 250);
   --rux-color-gray: oklch(50% 0.004 260);
@@ -148,17 +150,17 @@
       46.76%   Scrollbar
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-bg-1: #0a0a0a; /* App canvas — pure black */
-  --rux-bg-2: #161616; /* Panels, sidebar, inputs */
-  --rux-bg-3: #161616; /* Headers, footers, menus */
-  --rux-bg-4: #161616; /* Cards, grouped sections */
+  --rux-bg-1: oklch(from var(--rux-color-gray) 0% c h); /* App canvas — pure black */
+  --rux-bg-2: oklch(from var(--rux-color-gray) 24% c h); /* Panels, sidebar, inputs */
+  --rux-bg-3: oklch(from var(--rux-color-gray) 20% c h); /* Headers, footers, menus */
+  --rux-bg-4: oklch(from var(--rux-color-gray) 24% c h); /* Cards, grouped sections */
   --rux-bg-5: oklch(from var(--rux-color-gray) 32% c h); /* Modals — highest elevation */
   --rux-bg-notes: oklch(from var(--rux-color-yellow) 80% 0.15 h); /* Form fields, dropdowns, popovers */
   --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h); /* Scrim / backdrop */
-  --rux-bg-schedule-headers: oklch(from var(--rux-color-gray) 33% c h);
+  --rux-bg-schedule-headers: var(--rux-bg-1);
   --rux-bg-schedule-headers-a: color-mix(in srgb, var(--rux-bg-schedule-headers) 100%);
   --rux-bg-schedule-headers-b: oklch(from var(--rux-color-gray) 28% c h);
-  --rux-bg-schedule: oklch(22% 0 250%);/* App canvas — pure black */
+  --rux-bg-schedule: var(--rux-bg-1); /* App canvas */
   --rux-bg-trip-bar: oklch(from var(--rux-color-gray) 32% c h); /* App canvas — pure black */
   --rux-bg-scrollbar-track: oklch(from var(--rux-color-gray) 26% c h / 100%); /* Scrollbar track — matches panel bg */
   --rux-bg-scrollbar-thumb: oklch(from var(--rux-color-gray) 60% c h);
@@ -224,7 +226,7 @@
 
   --rux-border-1: oklch(from var(--rux-color-white) l c h / 4%); /* Subtle */
   --rux-border-default: oklch(from var(--rux-color-white) 40% c h / 100%); /* Default */
-  --rux-border-schedule: oklch(from var(--rux-color-white) 20% c h / 100%); /* Default */
+  --rux-border-schedule: oklch(from var(--rux-color-white) 35% c h / 100%); /* Default */
   --rux-border-2: var(--rux-border-default); /* Legacy default alias */
   --rux-border-3: oklch(from var(--rux-color-white) l c h / 24%); /* Strong */
   --rux-border-s: var(--rux-bg-2); /* Matches panel bg for a seamless look */

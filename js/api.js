@@ -110,7 +110,7 @@ function tripFromParams(p, base = {}, isCreate = true) {
     envelopeTripContact: m(p.envelopeTripContact, "envelopeTripContact"),
     envelopeTripPhone: m(p.envelopeTripPhone, "envelopeTripPhone"),
     envelopeTripNotes: m(p.envelopeTripNotes, "envelopeTripNotes"),
-    itineraryPdfUrl: p2str(p.itineraryPdfUrl) || p2str(base.itineraryPdfUrl),
+    itineraryPdfUrl: m(p.itineraryPdfUrl, "itineraryPdfUrl"),
     paymentType: m(p.paymentType, "paymentType"),
     estimatedMileage: m(p.estimatedMileage, "estimatedMileage"),
     drivingHours: m(p.drivingHours, "drivingHours"),
