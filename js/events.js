@@ -1963,6 +1963,10 @@ function wireProfilePopover() {
     });
   });
 
+  dom.printBarOpacity?.addEventListener("input", () => {
+    if (dom.printBarOpacityVal) dom.printBarOpacityVal.textContent = dom.printBarOpacity.value;
+  });
+
   // ── Reports ────────────────────────────────────────────────────────────────
 
   dom.nextDayReportBtn?.addEventListener("click", () => {

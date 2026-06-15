@@ -133,6 +133,8 @@ const dom = {
   printBtn2: $("printBtn2"),
   printBtn2Full: $("printBtn2Full"),
   printBtnAllRows: $("printBtnAllRows"),
+  printBarOpacity: $("printBarOpacity"),
+  printBarOpacityVal: $("printBarOpacityVal"),
   driverManagerBtn: $("driverManagerBtn"),
   fleetManagerBtn: $("fleetManagerBtn"),
   driverManagerCard: $("driverManagerCard"),

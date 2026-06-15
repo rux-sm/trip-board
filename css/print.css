@@ -1016,6 +1016,14 @@
   left: var(--tripbar-inset-left, 4px) !important;
   right: var(--tripbar-inset-right, 6px) !important;
   max-height: none !important;
+  background: color-mix(in srgb, var(--tripbar-active-variant-color) var(--rux-print-bar-bg-mix), var(--rux-print-cell-bg)) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border: 1px solid color-mix(in srgb, var(--tripbar-active-variant-color) 60%, transparent) !important;
+  border-left: 4px solid var(--tripbar-active-variant-color) !important;
+  border-radius: 0 !important;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
   z-index: 10;

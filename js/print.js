@@ -504,6 +504,11 @@ function buildPrintScheduleAllRowsLegal() {
   printRoot.innerHTML = "";
   printRoot.classList.remove("print-mode-legal", "print-mode-legal-v2", "print-mode-letter-full", "print-mode-legal-full");
   printRoot.classList.add("print-mode-legal-full");
+
+  const barMix = dom.printBarOpacity ? dom.printBarOpacity.value + "%" : null;
+  if (barMix) printRoot.style.setProperty("--rux-print-bar-bg-mix", barMix);
+  else printRoot.style.removeProperty("--rux-print-bar-bg-mix");
+
   printRoot.appendChild(buildPage(allRows.slice(0, 5)));
   printRoot.appendChild(buildPage(allRows.slice(5)));
 

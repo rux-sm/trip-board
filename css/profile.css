@@ -238,6 +238,27 @@
   color: var(--rux-text-1);
 }
 
+/* ── Print options ───────────────────────────────────────────────────────── */
+
+.profile-popover__print-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--rux-space-1) var(--rux-space-3) var(--rux-space-2);
+}
+
+.profile-popover__print-option-label {
+  font-size: var(--rux-size-2);
+  color: var(--rux-text-2);
+  user-select: none;
+}
+
+.profile-popover__print-range {
+  width: 100%;
+  accent-color: var(--rux-color-accent, #0066cc);
+  cursor: pointer;
+}
+
 /* ── Upload ──────────────────────────────────────────────────────────────── */
 
 .profile-upload-btn {
